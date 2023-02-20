@@ -28,7 +28,7 @@ module Tanshuku
           r.attributes = { url:, key: generate_key }
         end
 
-      Tanshuku::Engine.routes.url_for(controller: "tanshuku/urls", action: :show, key: record.key)
+      record.shortened_url
     rescue ActiveRecord::RecordNotUnique => e
       if retries < 10
         shorten(url, retries: retries + 1)
@@ -58,6 +58,10 @@ module Tanshuku
 
     def self.report_exception(exception:, original_url:)
       logger.warn("Tanshuku - Failed to shorten a URL: #{exception.inspect} for #{original_url.inspect}")
+    end
+
+    def shortened_url
+      Tanshuku::Engine.routes.url_for(controller: "tanshuku/urls", action: :show, key:)
     end
   end
 end
