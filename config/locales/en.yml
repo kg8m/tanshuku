@@ -1,0 +1,15 @@
+en:
+  activerecord:
+    errors:
+      models:
+        tanshuku/url:
+          attributes:
+            url:
+              invalid: should start with https:// or http://
+    models:
+      tanshuku/url: Shortened URL
+    attributes:
+      tanshuku/url:
+        url: URL
+        hashed_url: hashed URL
+        key: unique key
