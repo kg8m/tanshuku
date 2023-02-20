@@ -5,7 +5,7 @@ ja:
         tanshuku/url:
           attributes:
             url:
-              invalid: は https:// または http:// で始まる必要があります
+              invalid: は https://、 http://、 / のいずれかで始まる必要があります
     models:
       tanshuku/url: 短縮URL
     attributes:

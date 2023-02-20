@@ -5,7 +5,7 @@ en:
         tanshuku/url:
           attributes:
             url:
-              invalid: should start with https:// or http://
+              invalid: should start with https://, http://, or /
     models:
       tanshuku/url: Shortened URL
     attributes:
