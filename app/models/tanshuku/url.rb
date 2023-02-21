@@ -41,6 +41,13 @@ module Tanshuku
       original_url
     end
 
+    def self.find_by_url(url)
+      normalized_url = normalize_url(url)
+      hashed_url = hash_url(normalized_url)
+
+      find_by(hashed_url:)
+    end
+
     # Normalize a trailing slash, `?` for an empty query, and so on, and sort query keys.
     def self.normalize_url(url)
       parsed_url = Addressable::URI.parse(url)
