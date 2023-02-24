@@ -9,7 +9,7 @@ require "securerandom"
 module Tanshuku
   class Url < ActiveRecord::Base
     MAX_URL_LENGTH = 10_000
-    URL_PATTERN = %r{\A(?:https?:/)?/\w+}
+    URL_PATTERN = %r{\A(?:https?://\w+|/)}
     KEY_LENGTH = 20
 
     validates :url, :hashed_url, :key, presence: true
