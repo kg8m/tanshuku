@@ -23,12 +23,14 @@ module Tanshuku
     def self.shorten(original_url, retries: 0)
       url = normalize_url(original_url)
 
-      record =
-        create_or_find_by!(hashed_url: hash_url(url)) do |r|
-          r.attributes = { url:, key: generate_key }
-        end
+      transaction do
+        record =
+          create_or_find_by!(hashed_url: hash_url(url)) do |r|
+            r.attributes = { url:, key: generate_key }
+          end
 
-      record.shortened_url
+        record.shortened_url
+      end
     rescue ActiveRecord::RecordNotUnique => e
       if retries < 10
         shorten(url, retries: retries + 1)
