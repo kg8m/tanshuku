@@ -21,6 +21,8 @@ module Tanshuku
     # validates :url, :hashed_url, :key, uniqueness: true
 
     def self.shorten(original_url, retries: 0)
+      raise ArgumentError, "original_url should be present" unless original_url
+
       url = normalize_url(original_url)
 
       transaction do
