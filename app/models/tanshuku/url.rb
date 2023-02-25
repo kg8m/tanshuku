@@ -35,7 +35,8 @@ module Tanshuku
 
           record.shortened_url
         end
-      rescue ActiveRecord::RecordNotUnique => e
+      # ActiveRecord::RecordNotFound is raised when the key is duplicated.
+      rescue ActiveRecord::RecordNotFound => e
         if retries < 10
           retries += 1
           retry
