@@ -20,25 +20,29 @@ module Tanshuku
     # duplicated. Then rescue the exception and try to retry.
     # validates :url, :hashed_url, :key, uniqueness: true
 
-    def self.shorten(original_url, retries: 0)
+    def self.shorten(original_url)
       raise ArgumentError, "original_url should be present" unless original_url
 
       url = normalize_url(original_url)
+      retries = 0
 
-      transaction do
-        record =
-          create_or_find_by!(hashed_url: hash_url(url)) do |r|
-            r.attributes = { url:, key: generate_key }
-          end
+      begin
+        transaction do
+          record =
+            create_or_find_by!(hashed_url: hash_url(url)) do |r|
+              r.attributes = { url:, key: generate_key }
+            end
 
-        record.shortened_url
-      end
-    rescue ActiveRecord::RecordNotUnique => e
-      if retries < 10
-        shorten(url, retries: retries + 1)
-      else
-        report_exception(exception: e, original_url:)
-        original_url
+          record.shortened_url
+        end
+      rescue ActiveRecord::RecordNotUnique => e
+        if retries < 10
+          retries += 1
+          retry
+        else
+          report_exception(exception: e, original_url:)
+          original_url
+        end
       end
     rescue StandardError => e
       report_exception(exception: e, original_url:)
