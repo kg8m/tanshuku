@@ -14,7 +14,7 @@ module Tanshuku
 
     validates :url, :hashed_url, :key, presence: true
     validates :url, length: { maximum: MAX_URL_LENGTH }
-    validates :url, format: { with: URL_PATTERN }
+    validates :url, format: { with: URL_PATTERN }, allow_blank: true
 
     # Don't validate uniqueness of unique attributes. Raise ActiveRecord::RecordNotUnique instead if the attributes get
     # duplicated. Then rescue the exception and try to retry.
