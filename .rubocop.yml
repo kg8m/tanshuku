@@ -1,0 +1,102 @@
+inherit_mode:
+  merge:
+    - Exclude
+    - Include
+
+require:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  EnabledByDefault: true
+  Exclude:
+    - "spec/dummy/**/*"
+
+# Gem comments are unnecessary for this project.
+Bundler/GemComment:
+  Enabled: false
+# Version specifications in `Gemfile`s are unnecessary for this project.
+Bundler/GemVersion:
+  Enabled: false
+
+Layout/LineLength:
+  AllowedPatterns:
+    - "'.{50,}'"
+    - '".{50,}"'
+    - "\\.and_wrap_original\\b"
+    - "^\\s*it\\b.+\\bdo$"
+# I want to use single line block chains.
+Layout/SingleLineBlockChain:
+  Enabled: false
+
+# Forcing full qualifying constants isn't worth doing.
+Lint/ConstantResolution:
+  Enabled: false
+Lint/UnusedBlockArgument:
+  AutoCorrect: false
+Lint/UnusedMethodArgument:
+  AutoCorrect: false
+
+Metrics/MethodLength:
+  Max: 30
+
+# I want to use "if" and so on for contexts.
+RSpec/ContextWording:
+  Enabled: false
+RSpec/DescribeClass:
+  Exclude:
+    - "**/spec/config/**/*"
+# Forcing using `described_class` isn't readable.
+RSpec/DescribedClass:
+  Enabled: false
+# Long examples are sometimes rational.
+RSpec/ExampleLength:
+  Enabled: false
+# Expectations in hooks are sometimes rational.
+RSpec/ExpectInHook:
+  Enabled: false
+RSpec/MultipleExpectations:
+  Max: 10
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
+RSpec/NestedGroups:
+  Max: 10
+
+# Forcing explicit constant visibility isn't worth doing.
+Style/ConstantVisibility:
+  Enabled: false
+# Copyright is unnecessary for this project.
+Style/Copyright:
+  Enabled: false
+
+# TODO: Write docs and enable Style/Documentation and Style/DocumentationMethod.
+# cf. https://github.com/kg8m/tanshuku/issues/2
+Style/Documentation:
+  Enabled: false
+Style/DocumentationMethod:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Exclude:
+    - "bin/*"
+# Forcing parentheses of all method calls isn't readable.
+# e.g., redirect_to, raise, create_table, t.string, RSpec's expectations, assertions, and so on
+Style/MethodCallWithArgsParentheses:
+  Enabled: false
+# Forcing `else` isn't worth doing.
+Style/MissingElse:
+  Enabled: false
+Style/RedundantBegin:
+  AutoCorrect: false
+
+# Use double quotes for consistency with Rails.
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: consistent_comma
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: consistent_comma
