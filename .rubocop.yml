@@ -34,6 +34,8 @@ Layout/SingleLineBlockChain:
 # Forcing full qualifying constants isn't worth doing.
 Lint/ConstantResolution:
   Enabled: false
+Lint/RedundantCopDisableDirective:
+  AutoCorrect: false
 Lint/UnusedBlockArgument:
   AutoCorrect: false
 Lint/UnusedMethodArgument:
@@ -51,6 +53,8 @@ RSpec/DescribeClass:
 # Forcing using `described_class` isn't readable.
 RSpec/DescribedClass:
   Enabled: false
+RSpec/EmptyHook:
+  AutoCorrect: false
 # Long examples are sometimes rational.
 RSpec/ExampleLength:
   Enabled: false
