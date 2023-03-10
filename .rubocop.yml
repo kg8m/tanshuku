@@ -64,7 +64,7 @@ RSpec/ExpectInHook:
 RSpec/MultipleExpectations:
   Max: 10
 RSpec/MultipleMemoizedHelpers:
-  Max: 10
+  Max: 15
 RSpec/NestedGroups:
   Max: 10
 

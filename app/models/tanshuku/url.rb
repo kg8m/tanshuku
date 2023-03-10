@@ -8,6 +8,8 @@ require "securerandom"
 
 module Tanshuku
   class Url < ActiveRecord::Base
+    DEFAULT_NAMESPACE = ""
+
     MAX_URL_LENGTH = 10_000
     URL_PATTERN = %r{\A(?:https?://\w+|/)}
     KEY_LENGTH = 20
@@ -20,7 +22,7 @@ module Tanshuku
     # duplicated. Then rescue the exception and try to retry.
     # validates :url, :hashed_url, :key, uniqueness: true
 
-    def self.shorten(original_url)
+    def self.shorten(original_url, namespace: DEFAULT_NAMESPACE)
       raise ArgumentError, "original_url should be present" unless original_url
 
       url = normalize_url(original_url)
@@ -29,7 +31,7 @@ module Tanshuku
       begin
         transaction do
           record =
-            create_or_find_by!(hashed_url: hash_url(url)) do |r|
+            create_or_find_by!(hashed_url: hash_url(url, namespace:)) do |r|
               r.attributes = { url:, key: generate_key }
             end
 
@@ -50,9 +52,9 @@ module Tanshuku
       original_url
     end
 
-    def self.find_by_url(url)
+    def self.find_by_url(url, namespace: DEFAULT_NAMESPACE)
       normalized_url = normalize_url(url)
-      hashed_url = hash_url(normalized_url)
+      hashed_url = hash_url(normalized_url, namespace:)
 
       find_by(hashed_url:)
     end
@@ -64,8 +66,8 @@ module Tanshuku
       parsed_url.normalize.to_s
     end
 
-    def self.hash_url(url)
-      Digest::SHA512.hexdigest(url)
+    def self.hash_url(url, namespace: DEFAULT_NAMESPACE)
+      Digest::SHA512.hexdigest(namespace.to_s + url)
     end
 
     def self.generate_key

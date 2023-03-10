@@ -100,22 +100,96 @@ RSpec.describe Tanshuku::Url do
     end
 
     ["https://google.com/", "http://google.com/", "/", "/path"].each do |valid_original_url|
-      let(:original_url) { valid_original_url }
+      context "when original_url is #{valid_original_url.inspect}" do
+        let(:original_url) { valid_original_url }
 
-      it "creates a new Tanshuku::Url record, doesn't report any exceptions, and returns a shortened URL string" do
-        result =
-          assert_difference -> { Tanshuku::Url.count }, 1 do
-            Tanshuku::Url.shorten(original_url)
+        context "and namespace isn't given" do
+          context "and there are no records for the same URL" do
+            before do
+              expect(Tanshuku::Url.where(url: original_url)).not_to exist
+            end
+
+            after do
+              expect(Tanshuku::Url.where(url: original_url)).to exist
+            end
+
+            it "creates a new record, doesn't report any exceptions, and returns a shortened URL string" do
+              result =
+                assert_difference -> { Tanshuku::Url.count }, 1 do
+                  Tanshuku::Url.shorten(original_url)
+                end
+              expect(result).not_to eq original_url
+              expect(result).to match SpecUtilities::SHORTENED_URL_PATTERN
+
+              expect(reported_exceptions).to be_empty
+
+              created = Tanshuku::Url.last
+              expect(created.url).to eq original_url
+              expect(created.hashed_url).to match(/\A\w{128}\z/)
+              expect(created.key).to match(/\A\w{20}\z/)
+            end
           end
-        expect(result).not_to eq original_url
-        expect(result).to match SpecUtilities::SHORTENED_URL_PATTERN
 
-        expect(reported_exceptions).to be_empty
+          context "and there is a record for the same URL" do
+            let!(:existing_record) { Tanshuku::Url.shorten(original_url) }
 
-        created = Tanshuku::Url.last
-        expect(created.url).to eq original_url
-        expect(created.hashed_url).to match(/\A\w{128}\z/)
-        expect(created.key).to match(/\A\w{20}\z/)
+            before do
+              expect(Tanshuku::Url.where(url: original_url)).to exist
+            end
+
+            it "doesn't create an additional record" do
+              result =
+                assert_no_difference -> { Tanshuku::Url.count } do
+                  Tanshuku::Url.shorten(original_url)
+                end
+
+              expect(result).to eq existing_record
+            end
+          end
+        end
+
+        context "and namespace is given" do
+          context "and there are no records with the same namespace for the same URL" do
+            let!(:existing_shortened_url_without_namespace) { Tanshuku::Url.shorten(original_url) }
+            let!(:existing_shortened_url_with_other_namespace) do
+              Tanshuku::Url.shorten(original_url, namespace: "existing")
+            end
+
+            before do
+              existings = Tanshuku::Url.where(url: original_url)
+              expect(existings).to exist
+              expect(existings.map(&:shortened_url)).to contain_exactly(
+                existing_shortened_url_without_namespace,
+                existing_shortened_url_with_other_namespace
+              )
+            end
+
+            it "creates a new record, doesn't report any exceptions, and returns a shortened URL string" do
+              result =
+                assert_difference -> { Tanshuku::Url.count }, 1 do
+                  Tanshuku::Url.shorten(original_url, namespace: "new")
+                end
+              expect(result).not_to eq original_url
+              expect(result).to match SpecUtilities::SHORTENED_URL_PATTERN
+
+              expect(reported_exceptions).to be_empty
+
+              created = Tanshuku::Url.last
+              expect(created.url).to eq original_url
+              expect(created.hashed_url).to match(/\A\w{128}\z/)
+              expect(created.key).to match(/\A\w{20}\z/)
+            end
+
+            it "doesn't create an additional record with the same namespace for the same URL" do
+              result =
+                assert_no_difference -> { Tanshuku::Url.count } do
+                  Tanshuku::Url.shorten(original_url, namespace: "existing")
+                end
+
+              expect(result).to eq existing_shortened_url_with_other_namespace
+            end
+          end
+        end
       end
     end
 
@@ -150,7 +224,7 @@ RSpec.describe Tanshuku::Url do
     end
 
     context "when original_urls are essentially same" do
-      let(:original_url1) { "https://google.com/" }
+      let(:original_url1) { "https://google.com/"  }
       let(:original_url2) { "https://google.com"   }
       let(:original_url3) { "https://google.com/?" }
       let(:original_url4) { "https://google.com?"  }
@@ -303,70 +377,239 @@ RSpec.describe Tanshuku::Url do
         expect(Tanshuku::Url).not_to exist
       end
 
-      it "doesn't find any record" do
-        result = Tanshuku::Url.find_by_url(url)
-        expect(result).to be_nil
+      context "and namespace isn't given" do
+        it "doesn't find any record" do
+          result = Tanshuku::Url.find_by_url(url)
+          expect(result).to be_nil
+        end
+      end
+
+      context "and namespace is given" do
+        it "doesn't find any record" do
+          result = Tanshuku::Url.find_by_url(url, namespace: "test")
+          expect(result).to be_nil
+        end
       end
     end
 
     context "when there is only 1 Tanshuku::Url record" do
-      let!(:shortened_url) { Tanshuku::Url.shorten(url) }
-
       let(:url) { "https://google.com/" }
 
-      let(:all_urls) { [url] }
+      let(:all_shortened_urls) { [shortened_url] }
 
       before do
-        expect(Tanshuku::Url).to have_attributes(count: all_urls.size)
+        expect(Tanshuku::Url).to have_attributes(count: all_shortened_urls.size)
       end
 
-      context "and the very url is given" do
-        it "finds the record" do
-          result = Tanshuku::Url.find_by_url(url)
-          expect(result.url).to eq url
-          expect(result.shortened_url).to eq shortened_url
+      context "without namespace" do
+        let!(:shortened_url) { Tanshuku::Url.shorten(url) }
+
+        context "and the very url is given" do
+          context "and namespace isn't given" do
+            it "finds the record without namespace" do
+              result = Tanshuku::Url.find_by_url(url)
+              expect(result.url).to eq url
+              expect(result.shortened_url).to eq shortened_url
+            end
+          end
+
+          context "and a namespace is given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(url, namespace: "test")
+              expect(result).to be_nil
+            end
+          end
+        end
+
+        context "and an essentially same url is given" do
+          let(:essentially_same_url) { "https://google.com" }
+
+          context "and namespace isn't given" do
+            it "finds the record without namespace" do
+              result = Tanshuku::Url.find_by_url(essentially_same_url)
+              expect(result.url).to eq url
+              expect(result.shortened_url).to eq shortened_url
+            end
+          end
+
+          context "and a namespace is given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(essentially_same_url, namespace: "test")
+              expect(result).to be_nil
+            end
+          end
+        end
+
+        context "and an unknown url is given" do
+          let(:unknown_url) { "https://google.com/foo" }
+
+          context "and namespace isn't given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(unknown_url)
+              expect(result).to be_nil
+            end
+          end
+
+          context "and a namespace is given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(unknown_url, namespace: "test")
+              expect(result).to be_nil
+            end
+          end
         end
       end
 
-      context "and an essentially same url is given" do
-        let(:essentially_same_url) { "https://google.com" }
+      context "with namespace" do
+        let!(:shortened_url) { Tanshuku::Url.shorten(url, namespace: "test") }
 
-        it "finds the record" do
-          result = Tanshuku::Url.find_by_url(essentially_same_url)
-          expect(result.url).to eq url
-          expect(result.shortened_url).to eq shortened_url
+        context "and the very url is given" do
+          context "and namespace isn't given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(url)
+              expect(result).to be_nil
+            end
+          end
+
+          context "and the same namespace is given" do
+            it "finds the record with namespace" do
+              result = Tanshuku::Url.find_by_url(url, namespace: "test")
+              expect(result.url).to eq url
+              expect(result.shortened_url).to eq shortened_url
+            end
+          end
+
+          context "and an unknown namespace is given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(url, namespace: "unknown")
+              expect(result).to be_nil
+            end
+          end
+        end
+
+        context "and an essentially same url is given" do
+          let(:essentially_same_url) { "https://google.com" }
+
+          context "and namespace isn't given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(essentially_same_url)
+              expect(result).to be_nil
+            end
+          end
+
+          context "and the same namespace is given" do
+            it "finds the record with namespace" do
+              result = Tanshuku::Url.find_by_url(essentially_same_url, namespace: "test")
+              expect(result.url).to eq url
+              expect(result.shortened_url).to eq shortened_url
+            end
+          end
+
+          context "and an unknown namespace is given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(url, namespace: "unknown")
+              expect(result).to be_nil
+            end
+          end
+        end
+
+        context "and an unknown url is given" do
+          let(:unknown_url) { "https://google.com/foo" }
+
+          context "and namespace isn't given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(unknown_url)
+              expect(result).to be_nil
+            end
+          end
+
+          context "and the same namespace is given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(unknown_url, namespace: "test")
+              expect(result).to be_nil
+            end
+          end
+
+          context "and an unknown namespace is given" do
+            it "doesn't find any record" do
+              result = Tanshuku::Url.find_by_url(unknown_url, namespace: "unknown")
+              expect(result).to be_nil
+            end
+          end
         end
       end
     end
 
     context "when there are some Tanshuku::Url records" do
-      let!(:shortened_url1) { Tanshuku::Url.shorten(url1) }
-      let!(:shortened_url2) { Tanshuku::Url.shorten(url2) }
-      let!(:shortened_url3) { Tanshuku::Url.shorten(url3) }
+      let!(:shortened_url_without_namespace1) { Tanshuku::Url.shorten(url1)                    }
+      let!(:shortened_url_without_namespace2) { Tanshuku::Url.shorten(url2)                    }
+      let!(:shortened_url_without_namespace3) { Tanshuku::Url.shorten(url3)                    }
+      let!(:shortened_url_with_namespace1)    { Tanshuku::Url.shorten(url1, namespace: "test") }
+      let!(:shortened_url_with_namespace2)    { Tanshuku::Url.shorten(url2, namespace: "test") }
+      let!(:shortened_url_with_namespace3)    { Tanshuku::Url.shorten(url3, namespace: "test") }
 
       let(:url1) { "https://google.com/" }
       let(:url2) { "https://google.com/foo"       }
       let(:url3) { "https://google.com/bar?baz=1" }
 
-      let(:all_urls) { [url1, url2, url3] }
+      let(:all_shortened_urls) do
+        [
+          shortened_url_without_namespace1,
+          shortened_url_without_namespace2,
+          shortened_url_without_namespace3,
+          shortened_url_with_namespace1,
+          shortened_url_with_namespace2,
+          shortened_url_with_namespace3,
+        ]
+      end
 
       before do
-        expect(Tanshuku::Url).to have_attributes(count: all_urls.size)
+        expect(Tanshuku::Url).to have_attributes(count: all_shortened_urls.size)
       end
 
       context "and the very url is given" do
-        it "finds the each correspond record" do
-          result1 = Tanshuku::Url.find_by_url(url1)
-          expect(result1.url).to eq url1
-          expect(result1.shortened_url).to eq shortened_url1
+        context "and namespace isn't given" do
+          it "finds the each correspond record without namespace" do
+            result1 = Tanshuku::Url.find_by_url(url1)
+            expect(result1.url).to eq url1
+            expect(result1.shortened_url).to eq shortened_url_without_namespace1
 
-          result2 = Tanshuku::Url.find_by_url(url2)
-          expect(result2.url).to eq url2
-          expect(result2.shortened_url).to eq shortened_url2
+            result2 = Tanshuku::Url.find_by_url(url2)
+            expect(result2.url).to eq url2
+            expect(result2.shortened_url).to eq shortened_url_without_namespace2
 
-          result3 = Tanshuku::Url.find_by_url(url3)
-          expect(result3.url).to eq url3
-          expect(result3.shortened_url).to eq shortened_url3
+            result3 = Tanshuku::Url.find_by_url(url3)
+            expect(result3.url).to eq url3
+            expect(result3.shortened_url).to eq shortened_url_without_namespace3
+          end
+        end
+
+        context "and the same namespace is given" do
+          it "finds the each correspond record with namespace" do
+            result1 = Tanshuku::Url.find_by_url(url1, namespace: "test")
+            expect(result1.url).to eq url1
+            expect(result1.shortened_url).to eq shortened_url_with_namespace1
+
+            result2 = Tanshuku::Url.find_by_url(url2, namespace: "test")
+            expect(result2.url).to eq url2
+            expect(result2.shortened_url).to eq shortened_url_with_namespace2
+
+            result3 = Tanshuku::Url.find_by_url(url3, namespace: "test")
+            expect(result3.url).to eq url3
+            expect(result3.shortened_url).to eq shortened_url_with_namespace3
+          end
+        end
+
+        context "and unknown namespace is given" do
+          it "doesn't find any record" do
+            result1 = Tanshuku::Url.find_by_url(url1, namespace: "unknown")
+            expect(result1).to be_nil
+
+            result2 = Tanshuku::Url.find_by_url(url2, namespace: "unknown")
+            expect(result2).to be_nil
+
+            result3 = Tanshuku::Url.find_by_url(url3, namespace: "unknown")
+            expect(result3).to be_nil
+          end
         end
       end
 
@@ -374,14 +617,38 @@ RSpec.describe Tanshuku::Url do
         let(:essentially_same_url1) { "https://google.com"      }
         let(:essentially_same_url2) { "https://google.com/foo?" }
 
-        it "finds the each correspond record" do
-          result1 = Tanshuku::Url.find_by_url(essentially_same_url1)
-          expect(result1.url).to eq url1
-          expect(result1.shortened_url).to eq shortened_url1
+        context "and namespace isn't given" do
+          it "finds the each correspond record without namespace" do
+            result1 = Tanshuku::Url.find_by_url(essentially_same_url1)
+            expect(result1.url).to eq url1
+            expect(result1.shortened_url).to eq shortened_url_without_namespace1
 
-          result2 = Tanshuku::Url.find_by_url(essentially_same_url2)
-          expect(result2.url).to eq url2
-          expect(result2.shortened_url).to eq shortened_url2
+            result2 = Tanshuku::Url.find_by_url(essentially_same_url2)
+            expect(result2.url).to eq url2
+            expect(result2.shortened_url).to eq shortened_url_without_namespace2
+          end
+        end
+
+        context "and the same namespace is given" do
+          it "finds the each correspond record with namespace" do
+            result1 = Tanshuku::Url.find_by_url(essentially_same_url1, namespace: "test")
+            expect(result1.url).to eq url1
+            expect(result1.shortened_url).to eq shortened_url_with_namespace1
+
+            result2 = Tanshuku::Url.find_by_url(essentially_same_url2, namespace: "test")
+            expect(result2.url).to eq url2
+            expect(result2.shortened_url).to eq shortened_url_with_namespace2
+          end
+        end
+
+        context "and an unknown namespace is given" do
+          it "doesn't find any record" do
+            result1 = Tanshuku::Url.find_by_url(essentially_same_url1, namespace: "unknown")
+            expect(result1).to be_nil
+
+            result2 = Tanshuku::Url.find_by_url(essentially_same_url2, namespace: "unknown")
+            expect(result2).to be_nil
+          end
         end
       end
     end
@@ -423,46 +690,93 @@ RSpec.describe Tanshuku::Url do
   end
 
   describe ".hash_url" do
-    subject { Tanshuku::Url.hash_url(url) }
+    context "when namespace isn't given" do
+      subject { Tanshuku::Url.hash_url(url) }
 
-    [
-      {
-        url: "https://google.com/",
-        hashed: "b5bac6dda08881f53df1535ce71d209e2fcc83cd0a98034116abee9da5ed87969a72811f2b9ec273dbeaa08f29c43ae7be290e67a47bc43ccb88557cd77f2061",
-      },
-      {
-        url: "https://google.com/foo",
-        hashed: "98353b81ce549b52e79d1ba37a7dc6493ccd62d9bdef3d0bc78bb677275b74f2c3a15b0b50cbf6045da04e3e21bb4db91d4e6ae7be896eade2c0a8affac01182",
-      },
-      {
-        url: "https://google.com/foo/",
-        hashed: "4179fe5b5a5e671b1d6c84a7ae8724d06c507c6e53e9f28b223b8827c3964712c75875ba664e36e3abe312f58eaee7cefe6284ceedb88985d974e0071a513ba4",
-      },
-      {
-        url: "https://google.com/?foo=1",
-        hashed: "e2119a6489b149eeb50a4854b6d7f4402df9b939b070a330f1972a31aeeeda51869456e1c30e309b0aed486cba58ef9d88d1360b1b3d5838d3d5421b1624d372",
-      },
-      {
-        url: "https://google.com/?bar=2&foo=1",
-        hashed: "220c365881bac0d4cbe8bea7e705c56c29a32d2781e8b6268b783c4d112a4cb3a1cfa7ef24687a64b9aa40e483807c06e116315e11031d4b10aa3e572a9313d8",
-      },
-      {
-        url: "https://google.com/?bar=2&baz=3&foo=1",
-        hashed: "6541abae4921ca8f59ddbf521f314da19c3f3e98bad33953f3e891a0ebea4c87d1f125bef4db7ec9b4df3fbafffbc5fefcc323b70a5adcaa321bbe3232fa1f95",
-      },
-      {
-        url: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1",
-        hashed: "1757260d89a53660dc9b90729e067d0c6e07c52ac1058df6529a7966a31d58de7317c5e86b85b5413173438d56f05b117ca2678e38ca66361adffdafa98b27ea",
-      },
-      {
-        url: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1",
-        hashed: "c72f59d21137c1ebd71162bdbf0af6448a3c731f40ad1d635b8adb2ebc89fd0da2a72bf140bd607224bc44b138687a999c5a3db607335e2bd7beddfc5506a83a",
-      },
-    ].each do |testcase|
-      context "when url is #{testcase[:url].inspect}" do
-        let(:url) { testcase[:url] }
+      [
+        {
+          url: "https://google.com/",
+          hashed: "b5bac6dda08881f53df1535ce71d209e2fcc83cd0a98034116abee9da5ed87969a72811f2b9ec273dbeaa08f29c43ae7be290e67a47bc43ccb88557cd77f2061",
+        },
+        {
+          url: "https://google.com/foo",
+          hashed: "98353b81ce549b52e79d1ba37a7dc6493ccd62d9bdef3d0bc78bb677275b74f2c3a15b0b50cbf6045da04e3e21bb4db91d4e6ae7be896eade2c0a8affac01182",
+        },
+        {
+          url: "https://google.com/foo/",
+          hashed: "4179fe5b5a5e671b1d6c84a7ae8724d06c507c6e53e9f28b223b8827c3964712c75875ba664e36e3abe312f58eaee7cefe6284ceedb88985d974e0071a513ba4",
+        },
+        {
+          url: "https://google.com/?foo=1",
+          hashed: "e2119a6489b149eeb50a4854b6d7f4402df9b939b070a330f1972a31aeeeda51869456e1c30e309b0aed486cba58ef9d88d1360b1b3d5838d3d5421b1624d372",
+        },
+        {
+          url: "https://google.com/?bar=2&foo=1",
+          hashed: "220c365881bac0d4cbe8bea7e705c56c29a32d2781e8b6268b783c4d112a4cb3a1cfa7ef24687a64b9aa40e483807c06e116315e11031d4b10aa3e572a9313d8",
+        },
+        {
+          url: "https://google.com/?bar=2&baz=3&foo=1",
+          hashed: "6541abae4921ca8f59ddbf521f314da19c3f3e98bad33953f3e891a0ebea4c87d1f125bef4db7ec9b4df3fbafffbc5fefcc323b70a5adcaa321bbe3232fa1f95",
+        },
+        {
+          url: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1",
+          hashed: "1757260d89a53660dc9b90729e067d0c6e07c52ac1058df6529a7966a31d58de7317c5e86b85b5413173438d56f05b117ca2678e38ca66361adffdafa98b27ea",
+        },
+        {
+          url: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1",
+          hashed: "c72f59d21137c1ebd71162bdbf0af6448a3c731f40ad1d635b8adb2ebc89fd0da2a72bf140bd607224bc44b138687a999c5a3db607335e2bd7beddfc5506a83a",
+        },
+      ].each do |testcase|
+        context "and url is #{testcase[:url].inspect}" do
+          let(:url) { testcase[:url] }
 
-        it { is_expected.to eq testcase[:hashed] }
+          it { is_expected.to eq testcase[:hashed] }
+        end
+      end
+    end
+
+    context "when namespace is given" do
+      subject { Tanshuku::Url.hash_url(url, namespace: "test") }
+
+      [
+        {
+          url: "https://google.com/",
+          hashed: "dd1831c079c4bd0557da2d47b5b3a57bf789fdd07e4ab7b716e331bd792fb149a24628752cf8337a92d31e7e50d4b70c3cc22838fa1fbdd61c37ad4236994d4d",
+        },
+        {
+          url: "https://google.com/foo",
+          hashed: "98c98e6bf6814d314003acc8dc3126ee9ba0f7daa86c91539a079f6e9d463aaaf203ef3b0524c184efa39b3ece2404ce5556f0fc69944e3f7f8d31906efec5b3",
+        },
+        {
+          url: "https://google.com/foo/",
+          hashed: "3b94f7b2322f838fa968c7f85a3df6a1a243ac88390d192203db114ccdc4ec2312e684bb06a5d0374608d2904d967326545e9c780aed2f5945b86c7ec36b401a",
+        },
+        {
+          url: "https://google.com/?foo=1",
+          hashed: "3716d3606ebbe84135e5f7b421fc86bf3af89c0fc7ad8cbc5c8a00b576448d0f4e43baaa9ddd97db867caa0281e4d34c806e483f7947f40a4e8b7e16d325cdc4",
+        },
+        {
+          url: "https://google.com/?bar=2&foo=1",
+          hashed: "ef47adfa8d26da75a7a6b5cd0d5c9cd2b0c4783310d7719bef78f7fb3ee5616576fce0d0415a6a631469150e60f313fca9d28078a55c750c8d41b36741afcba2",
+        },
+        {
+          url: "https://google.com/?bar=2&baz=3&foo=1",
+          hashed: "ba25e16a00dd981d6d6235d276bdfde09f257dc57147d8dd64b58d02e90d5a3e1f8cf65a9292e02a9e27bbafd1a9df6c81723cbf0067ec252e317a6e0a4ef602",
+        },
+        {
+          url: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1",
+          hashed: "ea0a5f26f426d5b93641e68050ec8507abb4a6f8615db88959c2e5c9dd1ff0dc3dd1e7a58ae05262156cc718a38e97f495be736425029c6b8818a65e940d58d3",
+        },
+        {
+          url: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1",
+          hashed: "5c5aed95cdf91e889ebaf27b3c1c1501c53bd5c9a0ecd0aa75e5534033bc5583823927f74062c8fcc7a01aa56a86fff55cb66d4fcf3e358872f299a7034032b1",
+        },
+      ].each do |testcase|
+        context "and url is #{testcase[:url].inspect}" do
+          let(:url) { testcase[:url] }
+
+          it { is_expected.to eq testcase[:hashed] }
+        end
       end
     end
   end
@@ -476,8 +790,8 @@ RSpec.describe Tanshuku::Url do
   end
 
   describe ".report_exception" do
-    let(:exception) { RuntimeError.new("This is a test exception.") }
-    let(:original_url) { "https://google.com/" }
+    let(:exception)    { RuntimeError.new("This is a test exception.") }
+    let(:original_url) { "https://google.com/"                         }
 
     before do
       allow(Rails.logger).to receive(:warn).and_call_original
