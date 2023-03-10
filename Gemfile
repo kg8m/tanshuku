@@ -11,6 +11,7 @@ gem "rubocop"
 gem "rubocop-performance"
 gem "rubocop-rake"
 gem "rubocop-rspec"
+gem "rubocop-thread_safety"
 
 group :test do
   gem "rspec"

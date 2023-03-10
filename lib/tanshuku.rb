@@ -6,7 +6,9 @@ require_relative "tanshuku/version"
 
 module Tanshuku
   def self.config
-    @config ||= Configuration.new
+    Mutex.new.synchronize do
+      @config ||= Configuration.new
+    end
   end
 
   def self.configure

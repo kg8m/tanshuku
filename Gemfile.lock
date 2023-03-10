@@ -194,6 +194,8 @@ GEM
     rubocop-rspec (2.18.1)
       rubocop (~> 1.33)
       rubocop-capybara (~> 2.17)
+    rubocop-thread_safety (0.4.4)
+      rubocop (>= 0.53.0)
     ruby-progressbar (1.11.0)
     sprockets (4.2.0)
       concurrent-ruby (~> 1.0)
@@ -224,6 +226,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rake
   rubocop-rspec
+  rubocop-thread_safety
   sprockets-rails
   sqlite3
   tanshuku!

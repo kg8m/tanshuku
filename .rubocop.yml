@@ -7,6 +7,7 @@ require:
   - rubocop-performance
   - rubocop-rake
   - rubocop-rspec
+  - rubocop-thread_safety
 
 AllCops:
   EnabledByDefault: true
@@ -69,6 +70,11 @@ Style/ConstantVisibility:
 # Copyright is unnecessary for this project.
 Style/Copyright:
   Enabled: false
+Style/DisableCopsWithinSourceCodeDirective:
+  AutoCorrect: false
+  AllowedCops:
+    # For tests
+    - ThreadSafety/NewThread
 
 # TODO: Write docs and enable Style/Documentation and Style/DocumentationMethod.
 # cf. https://github.com/kg8m/tanshuku/issues/2

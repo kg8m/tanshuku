@@ -271,10 +271,12 @@ RSpec.describe Tanshuku::Url do
 
         assert_difference -> { Tanshuku::Url.count }, 1 do
           [
+            # rubocop:disable ThreadSafety/NewThread
             Thread.new { result1 = Tanshuku::Url.shorten(original_url) },
             Thread.new { result2 = Tanshuku::Url.shorten(original_url) },
             Thread.new { result3 = Tanshuku::Url.shorten(original_url) },
             Thread.new { result4 = Tanshuku::Url.shorten(original_url) },
+            # rubocop:enable ThreadSafety/NewThread
           ].each(&:join)
         end
 
