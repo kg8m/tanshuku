@@ -75,7 +75,7 @@ module Tanshuku
     end
 
     def self.report_exception(exception:, original_url:)
-      logger.warn("Tanshuku - Failed to shorten a URL: #{exception.inspect} for #{original_url.inspect}")
+      Tanshuku.config.exception_reporter.call(exception:, original_url:)
     end
 
     def shortened_url

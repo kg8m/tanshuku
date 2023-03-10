@@ -798,11 +798,50 @@ RSpec.describe Tanshuku::Url do
       expect(Rails.logger).not_to have_received(:warn)
     end
 
-    it "reports the given exception and the given original_url via Rails.logger.warn" do
-      Tanshuku::Url.report_exception(exception:, original_url:)
-      expect(Rails.logger).to have_received(:warn).with(
-        "Tanshuku - Failed to shorten a URL: #{exception.inspect} for #{original_url.inspect}"
-      )
+    context "when exception_reporter isn't configured" do
+      before do
+        expect(Tanshuku.config).to have_attributes(
+          exception_reporter: Tanshuku::Configuration::DefaultExceptionReporter
+        )
+      end
+
+      it "reports the given exception and the given original_url via Rails.logger.warn" do
+        Tanshuku::Url.report_exception(exception:, original_url:)
+        expect(Rails.logger).to have_received(:warn).with(
+          "Tanshuku - Failed to shorten a URL: #{exception.inspect} for #{original_url.inspect}"
+        )
+      end
+    end
+
+    context "when exception_reporter is configured" do
+      let(:reported_exceptions) { [] }
+      let(:reported_original_urls) { [] }
+
+      before do
+        Tanshuku.configure do |config|
+          config.exception_reporter =
+            lambda { |exception:, original_url:|
+              reported_exceptions << exception
+              reported_original_urls << original_url
+            }
+        end
+
+        expect(reported_exceptions).to be_empty
+        expect(reported_original_urls).to be_empty
+      end
+
+      after do
+        Tanshuku.configure do |config|
+          config.exception_reporter = Tanshuku::Configuration::DefaultExceptionReporter
+        end
+      end
+
+      it "reports the given exception and the given original_url via the custom reporter" do
+        Tanshuku::Url.report_exception(exception:, original_url:)
+        expect(Rails.logger).not_to have_received(:warn)
+        expect(reported_exceptions).to eq [exception]
+        expect(reported_original_urls).to eq [original_url]
+      end
     end
   end
 
