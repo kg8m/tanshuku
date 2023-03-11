@@ -22,7 +22,7 @@ module Tanshuku
     # duplicated. Then rescue the exception and try to retry.
     # validates :url, :hashed_url, :key, uniqueness: true
 
-    def self.shorten(original_url, namespace: DEFAULT_NAMESPACE)
+    def self.shorten(original_url, namespace: DEFAULT_NAMESPACE, url_options: {})
       raise ArgumentError, "original_url should be present" unless original_url
 
       url = normalize_url(original_url)
@@ -35,7 +35,7 @@ module Tanshuku
               r.attributes = { url:, key: generate_key }
             end
 
-          record.shortened_url
+          record.shortened_url(url_options)
         end
       # ActiveRecord::RecordNotFound is raised when the key is duplicated.
       rescue ActiveRecord::RecordNotFound => e
@@ -78,8 +78,13 @@ module Tanshuku
       Tanshuku.config.exception_reporter.call(exception:, original_url:)
     end
 
-    def shortened_url
-      Tanshuku::Engine.routes.url_for(controller: "tanshuku/urls", action: :show, key:)
+    def shortened_url(url_options = {})
+      url_options = url_options.symbolize_keys
+      url_options[:controller] = "tanshuku/urls"
+      url_options[:action] = :show
+      url_options[:key] = key
+
+      Tanshuku::Engine.routes.url_for(url_options)
     end
   end
 end

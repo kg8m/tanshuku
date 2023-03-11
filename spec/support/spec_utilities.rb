@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module SpecUtilities
-  SHORTENED_URL_PATTERN = %r{\Ahttp://localhost/t/(\w+)\z}
+  SHORTENED_URL_PATTERN = %r{\Ahttp://localhost/t/(\w{20})\z}
 
   def shorten_and_find_record(url)
     shortened_url = Tanshuku::Url.shorten(url)

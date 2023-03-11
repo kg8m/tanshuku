@@ -193,6 +193,25 @@ RSpec.describe Tanshuku::Url do
       end
     end
 
+    context "when url_options is given" do
+      let(:original_url) { "https://google.com/" }
+
+      it "creates a new record and returns a shortened URL string with the given url_options" do
+        result =
+          assert_difference -> { Tanshuku::Url.count }, 1 do
+            Tanshuku::Url.shorten(original_url, url_options: { protocol: :https, host: "example.com", foo: 1 })
+          end
+        expect(result).not_to eq original_url
+        expect(result).not_to match SpecUtilities::SHORTENED_URL_PATTERN
+        expect(result).to match(%r{\Ahttps://example\.com/t/\w{20}\?foo=1\z})
+
+        created = Tanshuku::Url.last
+        expect(created.url).to eq original_url
+        expect(created.hashed_url).to match(/\A\w{128}\z/)
+        expect(created.key).to match(/\A\w{20}\z/)
+      end
+    end
+
     context "when called multiple times for the same URL" do
       let(:original_url) { "https://google.com/" }
 
@@ -869,40 +888,114 @@ RSpec.describe Tanshuku::Url do
     context "when Tanshuku::Engine.default_url_options is nil" do
       let(:default_url_options) { nil }
 
-      it "raises NoMethodError due to `nil.merge`" do
-        expect { tanshuku_url.shortened_url }.to raise_error NoMethodError, "undefined method `merge' for nil:NilClass"
+      context "and url_options isn't given" do
+        it "raises NoMethodError due to `nil.merge`" do
+          expect { tanshuku_url.shortened_url }.to raise_error(
+            NoMethodError,
+            "undefined method `merge' for nil:NilClass"
+          )
+        end
+      end
+
+      context "and url_options is given" do
+        let(:url_options) { { host: "example.com", protocol: :https } }
+
+        it "raises NoMethodError due to `nil.merge`" do
+          expect { tanshuku_url.shortened_url(url_options) }.to raise_error(
+            NoMethodError,
+            "undefined method `merge' for nil:NilClass"
+          )
+        end
       end
     end
 
     context "when Tanshuku::Engine.default_url_options is an empty hash" do
       let(:default_url_options) { {} }
 
-      it "raises ArgumentError due to missing host" do
-        expect { tanshuku_url.shortened_url }.to raise_error ArgumentError, /Missing host to link to!/
+      context "and url_options isn't given" do
+        it "raises ArgumentError due to missing host" do
+          expect { tanshuku_url.shortened_url }.to raise_error ArgumentError, /Missing host to link to!/
+        end
+      end
+
+      context "and url_options is given" do
+        let(:url_options) { { host: "example.com", protocol: :https } }
+
+        it "returns a shortened URL with the given url_options" do
+          expect(tanshuku_url.shortened_url(url_options)).to eq "https://example.com/t/#{tanshuku_url.key}"
+        end
       end
     end
 
     context "when Tanshuku::Engine.default_url_options has nil host" do
       let(:default_url_options) { { host: nil } }
 
-      it "raises ArgumentError due to missing host" do
-        expect { tanshuku_url.shortened_url }.to raise_error ArgumentError, /Missing host to link to!/
+      context "and url_options isn't given" do
+        it "raises ArgumentError due to missing host" do
+          expect { tanshuku_url.shortened_url }.to raise_error ArgumentError, /Missing host to link to!/
+        end
+      end
+
+      context "and url_options is given" do
+        let(:url_options) { { host: "example.com", protocol: :https } }
+
+        it "returns a shortened URL with the given url_options" do
+          expect(tanshuku_url.shortened_url(url_options)).to eq "https://example.com/t/#{tanshuku_url.key}"
+        end
       end
     end
 
     context "when Tanshuku::Engine.default_url_options has a string host" do
       let(:default_url_options) { { host: "google.com" } }
 
-      it "returns a shortened URL" do
-        expect(tanshuku_url.shortened_url).to eq "http://google.com/t/#{tanshuku_url.key}"
+      context "and url_options isn't given" do
+        it "returns a shortened URL" do
+          expect(tanshuku_url.shortened_url).to eq "http://google.com/t/#{tanshuku_url.key}"
+        end
+      end
+
+      context "and url_options is given" do
+        let(:url_options) { { host: "example.com", protocol: :https } }
+
+        it "returns a shortened URL with the given url_options" do
+          expect(tanshuku_url.shortened_url(url_options)).to eq "https://example.com/t/#{tanshuku_url.key}"
+        end
       end
     end
 
     context "when Tanshuku::Engine.default_url_options has a string host and some options" do
       let(:default_url_options) { { host: "google.com", protocol: :https, port: 50_443 } }
 
-      it "returns a shortened URL" do
-        expect(tanshuku_url.shortened_url).to eq "https://google.com:50443/t/#{tanshuku_url.key}"
+      context "and url_options isn't given" do
+        it "returns a shortened URL" do
+          expect(tanshuku_url.shortened_url).to eq "https://google.com:50443/t/#{tanshuku_url.key}"
+        end
+      end
+
+      context "and url_options is given" do
+        let(:url_options) { { host: "example.com", protocol: :https } }
+
+        it "returns a shortened URL with the given url_options merged to the default_url_options" do
+          expect(tanshuku_url.shortened_url(url_options)).to eq "https://example.com:50443/t/#{tanshuku_url.key}"
+        end
+      end
+    end
+
+    context "when url_options contains :controller, :action, or :key" do
+      let(:default_url_options) { {} }
+      let(:url_options) do
+        {
+          host: "example.com",
+          protocol: :https,
+          controller: "dummy_controller",
+          action: :dummy_action,
+          key: "dummy_key",
+          foo: 1,
+        }
+      end
+
+      it "ignores :controller, :action, and :key" do
+        expect(tanshuku_url.shortened_url(url_options)).to eq "https://example.com/t/#{tanshuku_url.key}?foo=1"
       end
     end
   end
