@@ -79,14 +79,12 @@ Style/DisableCopsWithinSourceCodeDirective:
   AllowedCops:
     # For tests
     - ThreadSafety/NewThread
-
-# TODO: Write docs and enable Style/Documentation and Style/DocumentationMethod.
-# cf. https://github.com/kg8m/tanshuku/issues/2
 Style/Documentation:
-  Enabled: false
+  Exclude:
+    - "db/migrate/*"
 Style/DocumentationMethod:
-  Enabled: false
-
+  Exclude:
+    - "db/migrate/*"
 Style/FrozenStringLiteralComment:
   Exclude:
     - "bin/*"

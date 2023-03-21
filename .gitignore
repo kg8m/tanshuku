@@ -1,4 +1,5 @@
 /.bundle/
+/.yardoc/
 /pkg/
 /spec/dummy/db/*.sqlite3
 /spec/dummy/db/*.sqlite3-*

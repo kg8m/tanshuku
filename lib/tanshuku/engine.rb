@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Tanshuku
+  # Tanshuku's Rails engine.
   class Engine < ::Rails::Engine
     isolate_namespace Tanshuku
 

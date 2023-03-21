@@ -13,6 +13,8 @@ gem "rubocop-rake"
 gem "rubocop-rspec"
 gem "rubocop-thread_safety"
 
+gem "yard"
+
 group :test do
   gem "rspec"
   gem "rspec-rails"

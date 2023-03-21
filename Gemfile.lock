@@ -211,9 +211,12 @@ GEM
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.4.2)
+    webrick (1.7.0)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.5)
+    yard (0.9.28)
+      webrick (~> 1.7.0)
     zeitwerk (2.6.7)
 
 PLATFORMS
@@ -230,6 +233,7 @@ DEPENDENCIES
   sprockets-rails
   sqlite3
   tanshuku!
+  yard
 
 BUNDLED WITH
    2.4.8
