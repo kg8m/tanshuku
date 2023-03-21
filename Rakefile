@@ -8,6 +8,11 @@ load "rails/tasks/engine.rake"
 load "rails/tasks/statistics.rake"
 
 require "bundler/gem_tasks"
+require "rspec/core/rake_task"
+require "rubocop/rake_task"
+
+RSpec::Core::RakeTask.new(:spec)
+RuboCop::RakeTask.new
 
 namespace :yard do
   desc "Start YARD server"
@@ -16,3 +21,5 @@ namespace :yard do
     sh "yard server --reload"
   end
 end
+
+task default: %i[rubocop spec]
