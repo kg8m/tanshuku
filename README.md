@@ -52,7 +52,7 @@ end
 
 If an exception occurs when shortening a URL, Tanshuku reports it with configured `config.exception_reporter` object.
 
-Default value is `Tanshuku::Configuration::DefaultExceptionReporter`. It logs the exception and the original URL with `Rails.logger.warn`.
+Default value is [`Tanshuku::Configuration::DefaultExceptionReporter`](https://kg8m.github.io/tanshuku/Tanshuku/Configuration/DefaultExceptionReporter.html). It logs the exception and the original URL with `Rails.logger.warn`.
 
 Value of `config.exception_reporter` should respond to `#call` with keyword arguments `exception:` and `original_url:`.
 
@@ -68,6 +68,10 @@ Tanshuku.configure do |config|
 end
 ```
 
+#### More information
+
+cf. [`Tanshuku::Configuration`'s API documentation](https://kg8m.github.io/tanshuku/Tanshuku/Configuration.html)
+
 ### 3. Generate shortened URLs
 
 #### Basic cases
@@ -78,7 +82,7 @@ You can generate a shortened URL with `Tanshuku::Url.shorten`. For example:
 Tanshuku::Url.shorten("https://google.com/")  #=> "https://example.com/t/abcdefghij0123456789"
 ```
 
-[`config.default_url_options`](#configdefault_url_options) is used for the shortened URL.
+[`config.default_url_options`](https://kg8m.github.io/tanshuku/Tanshuku/Configuration.html#default_url_options-instance_method) is used for the shortened URL.
 
 **Note**: If a `Tanshuku::Url` record for the given URL already exists, no additional record will be created and always the existing record is used.
 
@@ -122,6 +126,10 @@ Tanshuku::Url.shorten("https://google.com/", namespace: "c")  #=> "https://examp
 Tanshuku::Url.shorten("https://google.com/", namespace: "a")  #=> "https://example.com/t/ab01cd23ef45gh67ij89"
 Tanshuku::Url.shorten("https://google.com/", namespace: "a")  #=> "https://example.com/t/ab01cd23ef45gh67ij89"
 ```
+
+#### More information
+
+cf. [`Tanshuku::Url.shorten`'s API documentation](https://kg8m.github.io/tanshuku/Tanshuku/Url.html#shorten-class_method)
 
 ### 4. Share the shortened URLs
 

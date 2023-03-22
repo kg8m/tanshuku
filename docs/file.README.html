@@ -120,7 +120,7 @@
 
 <p>If an exception occurs when shortening a URL, Tanshuku reports it with configured <code>config.exception_reporter</code> object.</p>
 
-<p>Default value is <code>Tanshuku::Configuration::DefaultExceptionReporter</code>. It logs the exception and the original URL with <code>Rails.logger.warn</code>.</p>
+<p>Default value is href="https://kg8m.github.io/tanshuku/Tanshuku/Configuration/DefaultExceptionReporter.html"></a>. It logs the exception and the original URL with <code>Rails.logger.warn</code>.</p>
 
 <p>Value of <code>config.exception_reporter</code> should respond to <code>#call</code> with keyword arguments <code>exception:</code> and <code>original_url:</code>.</p>
 
@@ -135,6 +135,10 @@
 <span class='kw'>end</span>
 </code></pre>
 
+<h4 id="label-More+information">More information</h4>
+
+<p>cf. API documentation[https://kg8m.github.io/tanshuku/Tanshuku/Configuration.html]</p>
+
 <h3 id="label-3.+Generate+shortened+URLs">3. Generate shortened URLs</h3>
 
 <h4 id="label-Basic+cases">Basic cases</h4>
@@ -144,7 +148,7 @@
 <pre class="code ruby"><code class="ruby"><span class='const'><span class='object_link'><a href="Tanshuku.html" title="Tanshuku (module)">Tanshuku</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Tanshuku/Url.html" title="Tanshuku::Url (class)">Url</a></span></span><span class='period'>.</span><span class='id identifier rubyid_shorten'><span class='object_link'><a href="Tanshuku/Url.html#shorten-class_method" title="Tanshuku::Url.shorten (method)">shorten</a></span></span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>https://google.com/</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>  <span class='comment'>#=&gt; &quot;https://example.com/t/abcdefghij0123456789&quot;
 </span></code></pre>
 
-<p>href="#configdefault_url_options"></a> is used for the shortened URL.</p>
+<p>href="https://kg8m.github.io/tanshuku/Tanshuku/Configuration.html#default_url_options-instance_method"></a> is used for the shortened URL.</p>
 
 <p><strong>Note</strong>: If a <code>Tanshuku::Url</code> record for the given URL already exists, no additional record will be created and always the existing record is used.</p>
 
@@ -188,7 +192,7 @@
 
 <h4 id="label-More+information">More information</h4>
 
-<p><a href="https://www.rubydoc.info/gems/tanshuku/Tanshuku/Url#shorten-class_method">www.rubydoc.info/gems/tanshuku/Tanshuku/Url#shorten-class_method</a></p>
+<p>cf. API documentation[https://kg8m.github.io/tanshuku/Tanshuku/Url.html#shorten-class_method]</p>
 
 <h3 id="label-4.+Share+the+shortened+URLs">4. Share the shortened URLs</h3>
 
@@ -232,7 +236,7 @@
 </div></div>
 
       <div id="footer">
-  Generated on Thu Mar 23 01:58:47 2023 by
+  Generated on Thu Mar 23 02:34:28 2023 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.28 (ruby-3.2.1).
 </div>

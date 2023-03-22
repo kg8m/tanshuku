@@ -44,6 +44,25 @@ module Tanshuku
     #   Tanshuku::Url.shorten("https://google.com/")  #=> "http://localhost/t/abcdefghij0123456789"
     # @example If failed to shorten a URL.
     #   Tanshuku::Url.shorten("https://google.com/")  #=> "https://google.com/"
+    # @example With ad hoc URL options.
+    #   Tanshuku::Url.shorten("https://google.com/", url_options: { host: "verycool.example.com" })
+    #   #=> "https://verycool.example.com/t/0123456789abcdefghij"
+    #
+    #   Tanshuku::Url.shorten("https://google.com/", url_options: { protocol: :http })
+    #   #=> "http://example.com/t/abcde01234fghij56789"
+    # @example With a namespace.
+    #   # When no record exists for "https://google.com/", a new record will be created.
+    #   Tanshuku::Url.shorten("https://google.com/")  #=> "https://example.com/t/abc012def345ghi678j9"
+    #
+    #   # Even when a record already exists for "https://google.com/", an additional record will be created if namespace
+    #   # is specified.
+    #   Tanshuku::Url.shorten("https://google.com/", namespace: "a")  #=> "https://example.com/t/ab01cd23ef45gh67ij89"
+    #   Tanshuku::Url.shorten("https://google.com/", namespace: "b")  #=> "https://example.com/t/a0b1c2d3e4f5g6h7i8j9"
+    #   Tanshuku::Url.shorten("https://google.com/", namespace: "c")  #=> "https://example.com/t/abcd0123efgh4567ij89"
+    #
+    #   # When the same URL and the same namespace is specified, no additional record will be created.
+    #   Tanshuku::Url.shorten("https://google.com/", namespace: "a")  #=> "https://example.com/t/ab01cd23ef45gh67ij89"
+    #   Tanshuku::Url.shorten("https://google.com/", namespace: "a")  #=> "https://example.com/t/ab01cd23ef45gh67ij89"
     def self.shorten(original_url, namespace: DEFAULT_NAMESPACE, url_options: {})
       raise ArgumentError, "original_url should be present" unless original_url
 
