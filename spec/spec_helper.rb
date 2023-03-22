@@ -33,4 +33,10 @@ RSpec.configure do |config|
 
   config.include ActiveSupport::Testing::Assertions
   config.include SpecUtilities
+
+  # `Rails::Generators::Testing::Behaviour` expects `FileUtils` to be included in generator tests.
+  config.include FileUtils, type: :generator
+
+  require "rails/generators/testing/behaviour"
+  config.include Rails::Generators::Testing::Behaviour, type: :generator
 end
