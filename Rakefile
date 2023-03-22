@@ -20,6 +20,11 @@ namespace :yard do
     puts "See http://localhost:8808/"
     sh "yard server --reload"
   end
+
+  desc "Generate YARD docs"
+  task :generate do
+    sh "yard --output-dir docs"
+  end
 end
 
 task default: %i[rubocop spec]
