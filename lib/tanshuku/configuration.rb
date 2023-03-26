@@ -54,5 +54,24 @@ module Tanshuku
     #         }
     #     end
     attribute :exception_reporter, default: DefaultExceptionReporter
+
+    def initialize(...)
+      super
+      @mutex = Mutex.new
+    end
+
+    # Configures Tanshuku thread-safely.
+    #
+    # @yieldparam config [Tanshuku::Configuration] A configuration object that is yielded.
+    # @yieldreturn [void]
+    #
+    # @return [void]
+    #
+    # @api private
+    def configure
+      @mutex.synchronize do
+        yield self
+      end
+    end
   end
 end

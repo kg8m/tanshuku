@@ -77,7 +77,7 @@ Style/Copyright:
 Style/DisableCopsWithinSourceCodeDirective:
   AutoCorrect: false
   AllowedCops:
-    # For tests
+    - ThreadSafety/InstanceVariableInClassMethod
     - ThreadSafety/NewThread
 Style/Documentation:
   Exclude:
