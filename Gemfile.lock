@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    tanshuku (0.0.13)
+    tanshuku (0.0.14)
       addressable (>= 2.8)
       rails (>= 7)
 
