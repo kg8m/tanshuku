@@ -7,8 +7,8 @@ module Tanshuku
     module DefaultExceptionReporter
       # The default error-reporting procedure. Calls +Rails.logger.warn+.
       #
-      # @param exception: [Exception] An error instance at shortening a URL.
-      # @param original_url: [String] The original URL failed to shorten.
+      # @param exception [Exception] An error instance at shortening a URL.
+      # @param original_url [String] The original URL failed to shorten.
       #
       # @return [void]
       def self.call(exception:, original_url:)
