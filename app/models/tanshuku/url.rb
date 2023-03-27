@@ -99,7 +99,7 @@ module Tanshuku
     # @param namespace [String] A namespace for the URL.
     #
     # @return [Tanshuku::Url] A {Tanshuku::Url} instance if found.
-    # @reutnr [nil] +nil+ unless found.
+    # @return [nil] +nil+ unless found.
     def self.find_by_url(url, namespace: DEFAULT_NAMESPACE)
       normalized_url = normalize_url(url)
       hashed_url = hash_url(normalized_url, namespace:)
