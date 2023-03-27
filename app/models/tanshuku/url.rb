@@ -34,8 +34,8 @@ module Tanshuku
     #   +shorten("https://google.com")+ have the same result.
     #
     # @param original_url [String] The original, i.e., non-shortened, URL.
-    # @param namespace: [String] A namespace for shorteting URL. Shortened URLs are unique in namespaces.
-    # @param url_options: [Hash] An option for Rails' +url_for+.
+    # @param namespace [String] A namespace for shorteting URL. Shortened URLs are unique in namespaces.
+    # @param url_options [Hash] An option for Rails' +url_for+.
     #
     # @return [String] A shortened URL if succeeded to shorten the original URL.
     # @return [String] The original URL if failed to shorten it.
@@ -96,10 +96,10 @@ module Tanshuku
     # Finds a {Tanshuku::Url} record by a non-shortened URL.
     #
     # @param url [String] A non-shortened URL.
-    # @param namespace: [String] A namespace for the URL.
+    # @param namespace [String] A namespace for the URL.
     #
     # @return [Tanshuku::Url] A {Tanshuku::Url} instance if found.
-    # @reutnr [nil] +nil+ unless found.
+    # @return [nil] +nil+ unless found.
     def self.find_by_url(url, namespace: DEFAULT_NAMESPACE)
       normalized_url = normalize_url(url)
       hashed_url = hash_url(normalized_url, namespace:)
@@ -122,7 +122,7 @@ module Tanshuku
     # Hashes a URL with +Digest::SHA512.hexdigest+.
     #
     # @param url [String] A non-hashed URL.
-    # @param namespace: [String] A namespace for the URL.
+    # @param namespace [String] A namespace for the URL.
     #
     # @return [String] A hashed 128-character string.
     def self.hash_url(url, namespace: DEFAULT_NAMESPACE)
@@ -140,8 +140,8 @@ module Tanshuku
     #
     # @note This method calls {Tanshuku::Configuration#exception_reporter}'s +call+ and returns its return value.
     #
-    # @param exception: [Exception] An error instance at shortening a URL.
-    # @param original_url: [String] The original URL failed to shorten.
+    # @param exception [Exception] An error instance at shortening a URL.
+    # @param original_url [String] The original URL failed to shorten.
     #
     # @return [void]
     def self.report_exception(exception:, original_url:)

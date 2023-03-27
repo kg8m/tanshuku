@@ -40,3 +40,20 @@ jobs:
       - name: RSpec
         run: bundle exec rspec
         timeout-minutes: 5
+
+  yard-check:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      # https://github.com/ruby/setup-ruby
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true
+
+      - name: Check YARD docs
+        run: bundle exec rake yard:check
+        timeout-minutes: 5

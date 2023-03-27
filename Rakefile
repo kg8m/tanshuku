@@ -21,10 +21,10 @@ namespace :yard do
     sh "yard server --reload"
   end
 
-  desc "Generate YARD docs"
-  task :generate do
-    sh "yard --output-dir docs"
+  desc "Check YARD docs"
+  task :check do
+    sh "yard --no-output --no-cache --fail-on-warning"
   end
 end
 
-task default: %i[rubocop spec]
+task default: %i[rubocop spec yard:check]
