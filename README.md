@@ -175,3 +175,18 @@ bin/rails db:migrate
 ### \*\* (anything you want) isn't implemented?
 
 Does Tanshuku have some missing features? Please [create an issue](https://github.com/kg8m/tanshuku/issues/new).
+
+## How to develop
+
+1. Fork this repository
+1. `git clone` your fork
+1. `bundle install`
+1. Update sources
+1. `rake`
+1. Fix `rake` errors if `rake` fails
+1. Create a pull request
+
+## How to release
+
+1. Make your repository fresh
+1. `rake release`
