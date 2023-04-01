@@ -3,7 +3,7 @@
 RSpec.describe Tanshuku::Configuration do
   let!(:configuration) { Tanshuku::Configuration.new }
 
-  describe "#default_url_options" do
+  describe "attributes" do
     it "has an attribute :default_url_options" do
       expect(configuration).to have_attributes(default_url_options: {})
 
