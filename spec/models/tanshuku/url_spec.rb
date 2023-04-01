@@ -4,38 +4,167 @@ RSpec.describe Tanshuku::Url do
   describe "validations" do
     let!(:record) { Tanshuku::Url.new(valid_attrs) }
 
-    describe "url format" do
-      before do
-        record.url = url
-      end
+    describe "url length" do
+      default_max_url_length = 10_000
 
-      ["https://google.com/", "http://google.com", "/", "/path"].each do |valid_url_string|
-        context "when url is #{valid_url_string.inspect}" do
-          let(:url) { valid_url_string }
+      context "when max_url_length isn't configured" do
+        before do
+          expect(Tanshuku.config).to have_attributes(max_url_length: default_max_url_length)
+        end
 
-          it "is valid" do
-            expect(record).to be_valid
+        [
+          { label: "nil", value: nil },
+          { label: "an empty string", value: "" },
+          { label: "a 1-char string", value: "a" },
+          { label: "a 100-char string", value: "a" * 100 },
+          { label: "a string with the default max URL length", value: "a" * default_max_url_length },
+        ].each do |testcase|
+          context "and url is #{testcase[:label]}" do
+            before do
+              record.url = testcase[:value]
+            end
+
+            it "doesn't have any error for url length" do
+              record.valid?
+              expect(record.errors).not_to be_of_kind :url, :too_long
+            end
+          end
+        end
+
+        context "and url is a string over the default max URL length" do
+          before do
+            record.url = "a" * (default_max_url_length + 1)
+          end
+
+          it "has a error for url length" do
+            record.valid?
+            expect(record.errors).to be_of_kind :url, :too_long
           end
         end
       end
 
-      [
-        "https",
-        "https:",
-        "https:/",
-        "https://",
-        "http",
-        "http:",
-        "http:/",
-        "http://",
-        "invalid",
-      ].each do |invalid_url_string|
-        context "when url is #{invalid_url_string.inspect}" do
-          let(:url) { invalid_url_string }
+      context "when max_url_length is configured" do
+        custom_max_url_length = 20_000
 
+        before do
+          Tanshuku.configure do |config|
+            config.max_url_length = custom_max_url_length
+          end
+        end
+
+        after do
+          Tanshuku.configure do |config|
+            config.max_url_length = default_max_url_length
+          end
+        end
+
+        [
+          { label: "nil", value: nil },
+          { label: "an empty string", value: "" },
+          { label: "a 1-char string", value: "a" },
+          { label: "a 100-char string", value: "a" * 100 },
+          { label: "a string with the default max URL length", value: "a" * default_max_url_length },
+          { label: "a string over the default max URL length", value: "a" * (default_max_url_length + 1) },
+          { label: "a string with the custom max URL length", value: "a" * custom_max_url_length },
+        ].each do |testcase|
+          context "and url is #{testcase[:label]}" do
+            before do
+              record.url = testcase[:value]
+            end
+
+            it "doesn't have any error for url length" do
+              record.valid?
+              expect(record.errors).not_to be_of_kind :url, :too_long
+            end
+          end
+        end
+
+        context "and url is a string over the custom max URL length" do
+          before do
+            record.url = "a" * (custom_max_url_length + 1)
+          end
+
+          it "has a error for url length" do
+            record.valid?
+            expect(record.errors).to be_of_kind :url, :too_long
+          end
+        end
+      end
+    end
+
+    describe "url format" do
+      default_url_pattern = %r{\A(?:https?://\w+|/)}
+
+      context "when url_pattern isn't configured" do
+        before do
+          expect(Tanshuku.config).to have_attributes(url_pattern: default_url_pattern)
+
+          record.url = url
+        end
+
+        ["https://google.com/", "http://google.com", "/", "/path"].each do |valid_url_string|
+          context "when url is #{valid_url_string.inspect}" do
+            let(:url) { valid_url_string }
+
+            it "is valid" do
+              expect(record).to be_valid
+            end
+          end
+        end
+
+        [
+          "https",
+          "https:",
+          "https:/",
+          "https://",
+          "http",
+          "http:",
+          "http:/",
+          "http://",
+          "invalid",
+        ].each do |invalid_url_string|
+          context "and url is #{invalid_url_string.inspect}" do
+            let(:url) { invalid_url_string }
+
+            it "is invalid" do
+              expect(record).to be_invalid
+              expect(record.errors).to be_of_kind :url, :invalid
+            end
+          end
+        end
+      end
+
+      context "when url_pattern is configured" do
+        custom_url_pattern = %r{\A/}
+
+        before do
+          Tanshuku.configure do |config|
+            config.url_pattern = custom_url_pattern
+          end
+        end
+
+        after do
+          Tanshuku.configure do |config|
+            config.url_pattern = default_url_pattern
+          end
+        end
+
+        context "and url matches with the custom URL pattern" do
+          it "is valid" do
+            ["/", "/foo", "/foo/bar/baz", "/foo.bar", "/foo-bar"].each do |valid_url|
+              record.url = valid_url
+              expect(record).to be_valid, "url: #{valid_url.inspect}"
+            end
+          end
+        end
+
+        context "and url doesn't match with the custom URL pattern" do
           it "is invalid" do
-            expect(record).to be_invalid
-            expect(record.errors).to be_of_kind :url, :invalid
+            ["foo", "foo/bar/baz", "foo.bar", "foo-bar"].each do |invalid_url|
+              record.url = invalid_url
+              expect(record).to be_invalid, "url: #{invalid_url.inspect}"
+              expect(record.errors).to(be_of_kind(:url, :invalid), "url: #{invalid_url.inspect}")
+            end
           end
         end
       end
@@ -691,14 +820,13 @@ RSpec.describe Tanshuku::Url do
       { original: "https://google.com/?foo=1&bar=2&", normalized: "https://google.com/?bar=2&foo=1" },
       { original: "https://google.com/?foo=1&&bar=2", normalized: "https://google.com/?bar=2&foo=1" },
       { original: "https://google.com/?foo=1&bar=2&baz=3", normalized: "https://google.com/?bar=2&baz=3&foo=1" },
-      {
-        original: "https://google.com/?foo=1&bar=2&a[b][c]=4&a[b][d]=5",
-        normalized: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1",
-      },
-      {
-        original: "https://google.com/?foo=1&bar=2&a[]=4&a[]=5&a[]=6",
-        normalized: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1",
-      },
+      { original: "https://google.com/?foo=1&bar=2&a[b][c]=4&a[b][d]=5", normalized: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1" },
+      { original: "https://google.com/?foo=1&bar=2&a[]=4&a[]=5&a[]=6", normalized: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1" },
+      { original: "https://google.com/#some-hash", normalized: "https://google.com/#some-hash" },
+      { original: "https://google.com#some-hash", normalized: "https://google.com/#some-hash" },
+      { original: "https://google.com/?#some-hash", normalized: "https://google.com/#some-hash" },
+      { original: "https://google.com?#some-hash", normalized: "https://google.com/#some-hash" },
+      { original: "https://google.com/?foo=ほげ#ふが", normalized: "https://google.com/?foo=%E3%81%BB%E3%81%92#%E3%81%B5%E3%81%8C" },
     ].each do |testcase|
       context "when url is #{testcase[:original].inspect}" do
         let(:url) { testcase[:original] }
@@ -709,102 +837,212 @@ RSpec.describe Tanshuku::Url do
   end
 
   describe ".hash_url" do
-    context "when namespace isn't given" do
-      subject { Tanshuku::Url.hash_url(url) }
+    before do
+      allow(Digest::SHA512).to receive(:hexdigest).and_call_original
+      expect(Digest::SHA512).not_to have_received(:hexdigest)
+    end
 
-      [
-        {
-          url: "https://google.com/",
-          hashed: "b5bac6dda08881f53df1535ce71d209e2fcc83cd0a98034116abee9da5ed87969a72811f2b9ec273dbeaa08f29c43ae7be290e67a47bc43ccb88557cd77f2061",
-        },
-        {
-          url: "https://google.com/foo",
-          hashed: "98353b81ce549b52e79d1ba37a7dc6493ccd62d9bdef3d0bc78bb677275b74f2c3a15b0b50cbf6045da04e3e21bb4db91d4e6ae7be896eade2c0a8affac01182",
-        },
-        {
-          url: "https://google.com/foo/",
-          hashed: "4179fe5b5a5e671b1d6c84a7ae8724d06c507c6e53e9f28b223b8827c3964712c75875ba664e36e3abe312f58eaee7cefe6284ceedb88985d974e0071a513ba4",
-        },
-        {
-          url: "https://google.com/?foo=1",
-          hashed: "e2119a6489b149eeb50a4854b6d7f4402df9b939b070a330f1972a31aeeeda51869456e1c30e309b0aed486cba58ef9d88d1360b1b3d5838d3d5421b1624d372",
-        },
-        {
-          url: "https://google.com/?bar=2&foo=1",
-          hashed: "220c365881bac0d4cbe8bea7e705c56c29a32d2781e8b6268b783c4d112a4cb3a1cfa7ef24687a64b9aa40e483807c06e116315e11031d4b10aa3e572a9313d8",
-        },
-        {
-          url: "https://google.com/?bar=2&baz=3&foo=1",
-          hashed: "6541abae4921ca8f59ddbf521f314da19c3f3e98bad33953f3e891a0ebea4c87d1f125bef4db7ec9b4df3fbafffbc5fefcc323b70a5adcaa321bbe3232fa1f95",
-        },
-        {
-          url: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1",
-          hashed: "1757260d89a53660dc9b90729e067d0c6e07c52ac1058df6529a7966a31d58de7317c5e86b85b5413173438d56f05b117ca2678e38ca66361adffdafa98b27ea",
-        },
-        {
-          url: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1",
-          hashed: "c72f59d21137c1ebd71162bdbf0af6448a3c731f40ad1d635b8adb2ebc89fd0da2a72bf140bd607224bc44b138687a999c5a3db607335e2bd7beddfc5506a83a",
-        },
-      ].each do |testcase|
-        context "and url is #{testcase[:url].inspect}" do
-          let(:url) { testcase[:url] }
+    context "when url_hasher isn't configured" do
+      before do
+        expect(Tanshuku.config).to have_attributes(url_hasher: Tanshuku::Configuration::DefaultUrlHasher)
+      end
 
-          it { is_expected.to eq testcase[:hashed] }
+      context "and namespace isn't given" do
+        [
+          {
+            url: "https://google.com/",
+            hashed: "b5bac6dda08881f53df1535ce71d209e2fcc83cd0a98034116abee9da5ed87969a72811f2b9ec273dbeaa08f29c43ae7be290e67a47bc43ccb88557cd77f2061",
+          },
+          {
+            url: "https://google.com/foo",
+            hashed: "98353b81ce549b52e79d1ba37a7dc6493ccd62d9bdef3d0bc78bb677275b74f2c3a15b0b50cbf6045da04e3e21bb4db91d4e6ae7be896eade2c0a8affac01182",
+          },
+          {
+            url: "https://google.com/foo/",
+            hashed: "4179fe5b5a5e671b1d6c84a7ae8724d06c507c6e53e9f28b223b8827c3964712c75875ba664e36e3abe312f58eaee7cefe6284ceedb88985d974e0071a513ba4",
+          },
+          {
+            url: "https://google.com/?foo=1",
+            hashed: "e2119a6489b149eeb50a4854b6d7f4402df9b939b070a330f1972a31aeeeda51869456e1c30e309b0aed486cba58ef9d88d1360b1b3d5838d3d5421b1624d372",
+          },
+          {
+            url: "https://google.com/?bar=2&foo=1",
+            hashed: "220c365881bac0d4cbe8bea7e705c56c29a32d2781e8b6268b783c4d112a4cb3a1cfa7ef24687a64b9aa40e483807c06e116315e11031d4b10aa3e572a9313d8",
+          },
+          {
+            url: "https://google.com/?bar=2&baz=3&foo=1",
+            hashed: "6541abae4921ca8f59ddbf521f314da19c3f3e98bad33953f3e891a0ebea4c87d1f125bef4db7ec9b4df3fbafffbc5fefcc323b70a5adcaa321bbe3232fa1f95",
+          },
+          {
+            url: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1",
+            hashed: "1757260d89a53660dc9b90729e067d0c6e07c52ac1058df6529a7966a31d58de7317c5e86b85b5413173438d56f05b117ca2678e38ca66361adffdafa98b27ea",
+          },
+          {
+            url: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1",
+            hashed: "c72f59d21137c1ebd71162bdbf0af6448a3c731f40ad1d635b8adb2ebc89fd0da2a72bf140bd607224bc44b138687a999c5a3db607335e2bd7beddfc5506a83a",
+          },
+        ].each do |testcase|
+          context "and url is #{testcase[:url].inspect}" do
+            let(:url) { testcase[:url] }
+
+            it "returns a hashed URL" do
+              result = Tanshuku::Url.hash_url(url)
+              expect(result).to eq testcase[:hashed]
+              expect(Digest::SHA512).to have_received(:hexdigest).with(url)
+            end
+          end
+        end
+      end
+
+      context "and namespace is given" do
+        [
+          {
+            url: "https://google.com/",
+            hashed: "dd1831c079c4bd0557da2d47b5b3a57bf789fdd07e4ab7b716e331bd792fb149a24628752cf8337a92d31e7e50d4b70c3cc22838fa1fbdd61c37ad4236994d4d",
+          },
+          {
+            url: "https://google.com/foo",
+            hashed: "98c98e6bf6814d314003acc8dc3126ee9ba0f7daa86c91539a079f6e9d463aaaf203ef3b0524c184efa39b3ece2404ce5556f0fc69944e3f7f8d31906efec5b3",
+          },
+          {
+            url: "https://google.com/foo/",
+            hashed: "3b94f7b2322f838fa968c7f85a3df6a1a243ac88390d192203db114ccdc4ec2312e684bb06a5d0374608d2904d967326545e9c780aed2f5945b86c7ec36b401a",
+          },
+          {
+            url: "https://google.com/?foo=1",
+            hashed: "3716d3606ebbe84135e5f7b421fc86bf3af89c0fc7ad8cbc5c8a00b576448d0f4e43baaa9ddd97db867caa0281e4d34c806e483f7947f40a4e8b7e16d325cdc4",
+          },
+          {
+            url: "https://google.com/?bar=2&foo=1",
+            hashed: "ef47adfa8d26da75a7a6b5cd0d5c9cd2b0c4783310d7719bef78f7fb3ee5616576fce0d0415a6a631469150e60f313fca9d28078a55c750c8d41b36741afcba2",
+          },
+          {
+            url: "https://google.com/?bar=2&baz=3&foo=1",
+            hashed: "ba25e16a00dd981d6d6235d276bdfde09f257dc57147d8dd64b58d02e90d5a3e1f8cf65a9292e02a9e27bbafd1a9df6c81723cbf0067ec252e317a6e0a4ef602",
+          },
+          {
+            url: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1",
+            hashed: "ea0a5f26f426d5b93641e68050ec8507abb4a6f8615db88959c2e5c9dd1ff0dc3dd1e7a58ae05262156cc718a38e97f495be736425029c6b8818a65e940d58d3",
+          },
+          {
+            url: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1",
+            hashed: "5c5aed95cdf91e889ebaf27b3c1c1501c53bd5c9a0ecd0aa75e5534033bc5583823927f74062c8fcc7a01aa56a86fff55cb66d4fcf3e358872f299a7034032b1",
+          },
+        ].each do |testcase|
+          context "and url is #{testcase[:url].inspect}" do
+            let(:url) { testcase[:url] }
+
+            it "returns a hashed URL with the namespace" do
+              result = Tanshuku::Url.hash_url(url, namespace: "test")
+              expect(result).to eq testcase[:hashed]
+              expect(Digest::SHA512).to have_received(:hexdigest).with("test#{url}")
+            end
+          end
         end
       end
     end
 
-    context "when namespace is given" do
-      subject { Tanshuku::Url.hash_url(url, namespace: "test") }
+    context "when url_hasher is configured" do
+      before do
+        Tanshuku.configure do |config|
+          config.url_hasher = ->(url, namespace:) { "#{namespace}-#{url.upcase}" }
+        end
+      end
 
-      [
-        {
-          url: "https://google.com/",
-          hashed: "dd1831c079c4bd0557da2d47b5b3a57bf789fdd07e4ab7b716e331bd792fb149a24628752cf8337a92d31e7e50d4b70c3cc22838fa1fbdd61c37ad4236994d4d",
-        },
-        {
-          url: "https://google.com/foo",
-          hashed: "98c98e6bf6814d314003acc8dc3126ee9ba0f7daa86c91539a079f6e9d463aaaf203ef3b0524c184efa39b3ece2404ce5556f0fc69944e3f7f8d31906efec5b3",
-        },
-        {
-          url: "https://google.com/foo/",
-          hashed: "3b94f7b2322f838fa968c7f85a3df6a1a243ac88390d192203db114ccdc4ec2312e684bb06a5d0374608d2904d967326545e9c780aed2f5945b86c7ec36b401a",
-        },
-        {
-          url: "https://google.com/?foo=1",
-          hashed: "3716d3606ebbe84135e5f7b421fc86bf3af89c0fc7ad8cbc5c8a00b576448d0f4e43baaa9ddd97db867caa0281e4d34c806e483f7947f40a4e8b7e16d325cdc4",
-        },
-        {
-          url: "https://google.com/?bar=2&foo=1",
-          hashed: "ef47adfa8d26da75a7a6b5cd0d5c9cd2b0c4783310d7719bef78f7fb3ee5616576fce0d0415a6a631469150e60f313fca9d28078a55c750c8d41b36741afcba2",
-        },
-        {
-          url: "https://google.com/?bar=2&baz=3&foo=1",
-          hashed: "ba25e16a00dd981d6d6235d276bdfde09f257dc57147d8dd64b58d02e90d5a3e1f8cf65a9292e02a9e27bbafd1a9df6c81723cbf0067ec252e317a6e0a4ef602",
-        },
-        {
-          url: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1",
-          hashed: "ea0a5f26f426d5b93641e68050ec8507abb4a6f8615db88959c2e5c9dd1ff0dc3dd1e7a58ae05262156cc718a38e97f495be736425029c6b8818a65e940d58d3",
-        },
-        {
-          url: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1",
-          hashed: "5c5aed95cdf91e889ebaf27b3c1c1501c53bd5c9a0ecd0aa75e5534033bc5583823927f74062c8fcc7a01aa56a86fff55cb66d4fcf3e358872f299a7034032b1",
-        },
-      ].each do |testcase|
-        context "and url is #{testcase[:url].inspect}" do
-          let(:url) { testcase[:url] }
+      after do
+        Tanshuku.configure do |config|
+          config.url_hasher = Tanshuku::Configuration::DefaultUrlHasher
+        end
+      end
 
-          it { is_expected.to eq testcase[:hashed] }
+      context "and namespace isn't given" do
+        it "returns a string via the custom URL hasher" do
+          result = Tanshuku::Url.hash_url("https://google.com/")
+          expect(result).to eq "-HTTPS://GOOGLE.COM/"
+          expect(Digest::SHA512).not_to have_received(:hexdigest)
+        end
+      end
+
+      context "and namespace is given" do
+        it "returns a string via the custom URL hasher" do
+          result = Tanshuku::Url.hash_url("https://google.com/", namespace: "test")
+          expect(result).to eq "test-HTTPS://GOOGLE.COM/"
+          expect(Digest::SHA512).not_to have_received(:hexdigest)
         end
       end
     end
   end
 
   describe ".generate_key" do
-    it "returns a random 20-character alphanumeric string" do
-      results = Array.new(10).map { Tanshuku::Url.generate_key }
-      expect(results.size).to eq results.uniq.size
-      expect(results).to all(match(/\A[a-zA-Z0-9]{20}\z/))
+    before do
+      allow(SecureRandom).to receive(:alphanumeric).and_call_original
+      expect(SecureRandom).not_to have_received(:alphanumeric)
+    end
+
+    context "when key_generator isn't configured" do
+      let(:default_key_length) { 20 }
+
+      before do
+        expect(Tanshuku.config).to have_attributes(key_generator: Tanshuku::Configuration::DefaultKeyGenerator)
+      end
+
+      context "and key_length isn't configured" do
+        before do
+          expect(Tanshuku.config).to have_attributes(key_length: default_key_length)
+        end
+
+        it "returns a random 20-character alphanumeric string via SecureRandom.alphanumeric" do
+          results = Array.new(10).map { Tanshuku::Url.generate_key }
+          expect(results.size).to eq results.uniq.size
+          expect(results).to all(match(/\A[a-zA-Z0-9]{#{default_key_length}}\z/))
+          expect(SecureRandom).to have_received(:alphanumeric).with(default_key_length).exactly(10).times
+        end
+      end
+
+      context "and key_length is configured" do
+        let(:custom_key_length) { 10 }
+
+        before do
+          Tanshuku.configure do |config|
+            config.key_length = custom_key_length
+          end
+        end
+
+        after do
+          Tanshuku.configure do |config|
+            config.key_length = default_key_length
+          end
+        end
+
+        it "returns a random alphanumeric string with the custom length via SecureRandom.alphanumeric" do
+          results = Array.new(10).map { Tanshuku::Url.generate_key }
+          expect(results.size).to eq results.uniq.size
+          expect(results).to all(match(/\A[a-zA-Z0-9]{#{custom_key_length}}\z/))
+          expect(SecureRandom).to have_received(:alphanumeric).with(custom_key_length).exactly(10).times
+        end
+      end
+    end
+
+    context "when key_generator is configured" do
+      count = 0
+
+      before do
+        Tanshuku.configure do |config|
+          config.key_generator = -> { (count += 1).to_s }
+        end
+      end
+
+      after do
+        Tanshuku.configure do |config|
+          config.key_generator = Tanshuku::Configuration::DefaultKeyGenerator
+        end
+      end
+
+      it "returns a string via the custom key generator" do
+        results = Array.new(10).map { Tanshuku::Url.generate_key }
+        expect(results).to eq Array(1..10).map(&:to_s)
+        expect(SecureRandom).not_to have_received(:alphanumeric)
+      end
     end
   end
 
