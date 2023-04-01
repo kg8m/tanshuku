@@ -2,22 +2,16 @@
 
 require "active_record"
 require "addressable"
-require "digest/sha2"
 require "rack"
-require "securerandom"
 
 module Tanshuku
   # An +ActiveRecord::Base+ inherited class for a shortened URL. This class also have some logics for shortening URLs.
   class Url < ActiveRecord::Base
     DEFAULT_NAMESPACE = ""
 
-    MAX_URL_LENGTH = 10_000
-    URL_PATTERN = %r{\A(?:https?://\w+|/)}
-    KEY_LENGTH = 20
-
     validates :url, :hashed_url, :key, presence: true
-    validates :url, length: { maximum: MAX_URL_LENGTH }
-    validates :url, format: { with: URL_PATTERN }, allow_blank: true
+    validates :url, length: { maximum: proc { Tanshuku.config.max_url_length } }
+    validates :url, format: { with: proc { Tanshuku.config.url_pattern } }, allow_blank: true
 
     # Don't validate uniqueness of unique attributes. Raise ActiveRecord::RecordNotUnique instead if the attributes get
     # duplicated. Then rescue the exception and try to retry.
@@ -119,21 +113,25 @@ module Tanshuku
       parsed_url.normalize.to_s
     end
 
-    # Hashes a URL with +Digest::SHA512.hexdigest+.
+    # Hashes a URL.
+    #
+    # @note This method calls {Tanshuku::Configuration#url_hasher}'s +call+ and returns its return value.
     #
     # @param url [String] A non-hashed URL.
     # @param namespace [String] A namespace for the URL.
     #
-    # @return [String] A hashed 128-character string.
+    # @return [String] Depends on your {Tanshuku::Configuration#url_hasher} configuration.
     def self.hash_url(url, namespace: DEFAULT_NAMESPACE)
-      Digest::SHA512.hexdigest(namespace.to_s + url)
+      Tanshuku.config.url_hasher.call(url, namespace:)
     end
 
-    # Generates a key with +SecureRandom.alphanumeric+.
+    # Generates a unique key for a shortened URL.
     #
-    # @return [String] A 20-character alphanumeric string.
+    # @note This method calls {Tanshuku::Configuration#key_generator}'s +call+ and returns its return value.
+    #
+    # @return [String] Depends on your {Tanshuku::Configuration#key_generator} configuration.
     def self.generate_key
-      SecureRandom.alphanumeric(KEY_LENGTH)
+      Tanshuku.config.key_generator.call
     end
 
     # Reports an exception when failed to shorten a URL.
