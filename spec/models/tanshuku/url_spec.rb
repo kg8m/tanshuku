@@ -820,14 +820,13 @@ RSpec.describe Tanshuku::Url do
       { original: "https://google.com/?foo=1&bar=2&", normalized: "https://google.com/?bar=2&foo=1" },
       { original: "https://google.com/?foo=1&&bar=2", normalized: "https://google.com/?bar=2&foo=1" },
       { original: "https://google.com/?foo=1&bar=2&baz=3", normalized: "https://google.com/?bar=2&baz=3&foo=1" },
-      {
-        original: "https://google.com/?foo=1&bar=2&a[b][c]=4&a[b][d]=5",
-        normalized: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1",
-      },
-      {
-        original: "https://google.com/?foo=1&bar=2&a[]=4&a[]=5&a[]=6",
-        normalized: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1",
-      },
+      { original: "https://google.com/?foo=1&bar=2&a[b][c]=4&a[b][d]=5", normalized: "https://google.com/?a%5Bb%5D%5Bc%5D=4&a%5Bb%5D%5Bd%5D=5&bar=2&foo=1" },
+      { original: "https://google.com/?foo=1&bar=2&a[]=4&a[]=5&a[]=6", normalized: "https://google.com/?a%5B%5D=4&a%5B%5D=5&a%5B%5D=6&bar=2&foo=1" },
+      { original: "https://google.com/#some-hash", normalized: "https://google.com/#some-hash" },
+      { original: "https://google.com#some-hash", normalized: "https://google.com/#some-hash" },
+      { original: "https://google.com/?#some-hash", normalized: "https://google.com/#some-hash" },
+      { original: "https://google.com?#some-hash", normalized: "https://google.com/#some-hash" },
+      { original: "https://google.com/?foo=ほげ#ふが", normalized: "https://google.com/?foo=%E3%81%BB%E3%81%92#%E3%81%B5%E3%81%8C" },
     ].each do |testcase|
       context "when url is #{testcase[:original].inspect}" do
         let(:url) { testcase[:original] }
