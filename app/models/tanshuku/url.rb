@@ -7,6 +7,20 @@ require "rack"
 module Tanshuku
   # An +ActiveRecord::Base+ inherited class for a shortened URL. This class also have some logics for shortening URLs.
   class Url < ActiveRecord::Base
+    # @!attribute [rw] url
+    #   @return [String] Original, i.e., non-shortened, URL of the record.
+    #
+    # @!attribute [rw] hashed_url
+    #   @return [String] A hashed string of the record's original URL.
+    #   @note This attribute is used for uniqueness of the original URL.
+    #   @api private
+    #
+    # @!attribute [rw] key
+    #   @return [String] A unique key for the record.
+    #
+    # @!attribute [rw] created_at
+    #   @return [ActiveSupport::TimeWithZone] A timestamp when the record is created.
+
     DEFAULT_NAMESPACE = ""
 
     validates :url, :hashed_url, :key, presence: true
@@ -141,7 +155,7 @@ module Tanshuku
     # @param exception [Exception] An error instance at shortening a URL.
     # @param original_url [String] The original URL failed to shorten.
     #
-    # @return [void]
+    # @return [void] Depends on your {Tanshuku::Configuration#exception_reporter} configuration.
     def self.report_exception(exception:, original_url:)
       Tanshuku.config.exception_reporter.call(exception:, original_url:)
     end

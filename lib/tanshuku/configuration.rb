@@ -31,7 +31,7 @@ module Tanshuku
 
     # The default error-reporter. Calls +Rails.logger.warn+.
     module DefaultExceptionReporter
-      # The default error-reporting procedure. Calls +Rails.logger.warn+.
+      # Calls +Rails.logger.warn+ and logs the exception and the original URL.
       #
       # @param exception [Exception] An error instance at shortening a URL.
       # @param original_url [String] The original URL failed to shorten.
@@ -151,10 +151,12 @@ module Tanshuku
 
     # @!attribute [rw] exception_reporter
     #   A error-reporter class, module, or object used when shortening a URL fails. This should respond to +#call+ with
-    #   keyword arguments +exception:+ and +original_url:+. Defaults to
+    #   required keyword arguments +exception:+ and +original_url:+. Defaults to
     #   {Tanshuku::Configuration::DefaultExceptionReporter}.
     #
-    #   @return [#call] An object that responds to +#call+ with keyword arguments +exception:+ and +original_url:+.
+    #   @return [#call]
+    #     A class, module, or object that responds to +#call+ with required keyword arguments +exception:+ and
+    #     +original_url:+.
     #   @return [void] If you set an invalid object.
     #
     #   @note The example below means that an exception and a URL will be reported to Sentry (https://sentry.io).
@@ -180,6 +182,8 @@ module Tanshuku
     # @yieldreturn [void]
     #
     # @return [void]
+    #
+    # @note Use {Tanshuku.configure} as a public API for configuration.
     #
     # @api private
     def configure
