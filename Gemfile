@@ -13,6 +13,7 @@ gem "rubocop-rake"
 gem "rubocop-rspec"
 gem "rubocop-thread_safety"
 
+gem "bump"
 gem "yard"
 
 group :test do
