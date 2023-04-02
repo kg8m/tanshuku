@@ -1,0 +1,20 @@
+# https://docs.github.com/en/actions/using-workflows/triggering-a-workflow
+# https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+*"
+
+name: Create a Release
+
+jobs:
+  create-github-release:
+    name: Create a Release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: gh release create
+        run: gh release create "${{ github.ref_name }}" --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    timeout-minutes: 5
