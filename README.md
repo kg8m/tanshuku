@@ -189,4 +189,6 @@ Does Tanshuku have some missing features? Please [create an issue](https://githu
 ## How to release
 
 1. Make your repository fresh
+1. `bump current` and confirm the current version
+1. `bump patch`, `bump minor`, or `bump major`
 1. `rake release`
