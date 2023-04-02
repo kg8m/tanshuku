@@ -7,6 +7,9 @@ on:
 
 name: Create a Release
 
+permissions:
+  contents: write
+
 jobs:
   create-github-release:
     name: Create a Release
