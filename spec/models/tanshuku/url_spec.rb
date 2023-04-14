@@ -992,7 +992,7 @@ RSpec.describe Tanshuku::Url do
         end
 
         it "returns a random 20-character alphanumeric string via SecureRandom.alphanumeric" do
-          results = Array.new(10).map { Tanshuku::Url.generate_key }
+          results = Array.new(10) { Tanshuku::Url.generate_key }
           expect(results.size).to eq results.uniq.size
           expect(results).to all(match(/\A[a-zA-Z0-9]{#{default_key_length}}\z/))
           expect(SecureRandom).to have_received(:alphanumeric).with(default_key_length).exactly(10).times
@@ -1015,7 +1015,7 @@ RSpec.describe Tanshuku::Url do
         end
 
         it "returns a random alphanumeric string with the custom length via SecureRandom.alphanumeric" do
-          results = Array.new(10).map { Tanshuku::Url.generate_key }
+          results = Array.new(10) { Tanshuku::Url.generate_key }
           expect(results.size).to eq results.uniq.size
           expect(results).to all(match(/\A[a-zA-Z0-9]{#{custom_key_length}}\z/))
           expect(SecureRandom).to have_received(:alphanumeric).with(custom_key_length).exactly(10).times
@@ -1039,7 +1039,7 @@ RSpec.describe Tanshuku::Url do
       end
 
       it "returns a string via the custom key generator" do
-        results = Array.new(10).map { Tanshuku::Url.generate_key }
+        results = Array.new(10) { Tanshuku::Url.generate_key }
         expect(results).to eq Array(1..10).map(&:to_s)
         expect(SecureRandom).not_to have_received(:alphanumeric)
       end
