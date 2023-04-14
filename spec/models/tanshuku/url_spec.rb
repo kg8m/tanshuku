@@ -716,7 +716,7 @@ RSpec.describe Tanshuku::Url do
 
       context "and the very url is given" do
         context "and namespace isn't given" do
-          it "finds the each correspond record without namespace" do
+          it "finds the each corresponding record without namespace" do
             result1 = Tanshuku::Url.find_by_url(url1)
             expect(result1.url).to eq url1
             expect(result1.shortened_url).to eq shortened_url_without_namespace1
@@ -732,7 +732,7 @@ RSpec.describe Tanshuku::Url do
         end
 
         context "and the same namespace is given" do
-          it "finds the each correspond record with namespace" do
+          it "finds the each corresponding record with namespace" do
             result1 = Tanshuku::Url.find_by_url(url1, namespace: "test")
             expect(result1.url).to eq url1
             expect(result1.shortened_url).to eq shortened_url_with_namespace1
@@ -766,7 +766,7 @@ RSpec.describe Tanshuku::Url do
         let(:essentially_same_url2) { "https://google.com/foo?" }
 
         context "and namespace isn't given" do
-          it "finds the each correspond record without namespace" do
+          it "finds the each corresponding record without namespace" do
             result1 = Tanshuku::Url.find_by_url(essentially_same_url1)
             expect(result1.url).to eq url1
             expect(result1.shortened_url).to eq shortened_url_without_namespace1
@@ -778,7 +778,7 @@ RSpec.describe Tanshuku::Url do
         end
 
         context "and the same namespace is given" do
-          it "finds the each correspond record with namespace" do
+          it "finds the each corresponding record with namespace" do
             result1 = Tanshuku::Url.find_by_url(essentially_same_url1, namespace: "test")
             expect(result1.url).to eq url1
             expect(result1.shortened_url).to eq shortened_url_with_namespace1
