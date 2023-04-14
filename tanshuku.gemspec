@@ -9,9 +9,11 @@ Gem::Specification.new do |spec|
   spec.email = ["takumi.kagiyama@gmail.com"]
 
   spec.summary = "Tanshuku is a simple and performance aware Rails engine for shortening URLs."
-  spec.description = "Tanshuku is a simple and performance aware Rails engine for shortening URLs. " \
-                     "Tanshuku generates a shortened URL per a normalized original URL." \
-                     "Tanshuku redirects from a shortened URL to its corresponding original URL."
+  spec.description = <<~TXT.strip.tr("\n", " ")
+    Tanshuku is a simple and performance aware Rails engine for shortening URLs.
+    Tanshuku generates a shortened URL per a normalized original URL.
+    Tanshuku redirects from a shortened URL to its corresponding original URL.
+  TXT
   spec.homepage = "https://github.com/kg8m/tanshuku"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 3.2"
