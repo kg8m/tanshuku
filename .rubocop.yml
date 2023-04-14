@@ -4,6 +4,7 @@ inherit_mode:
     - Include
 
 require:
+  - rubocop-md
   - rubocop-performance
   - rubocop-rake
   - rubocop-rspec
@@ -21,6 +22,8 @@ Bundler/GemComment:
 Bundler/GemVersion:
   Enabled: false
 
+Layout/ExtraSpacing:
+  AllowBeforeTrailingComments: true
 Layout/LineLength:
   AllowedPatterns:
     - "'.{50,}'"
@@ -88,6 +91,9 @@ Style/DocumentationMethod:
 Style/FrozenStringLiteralComment:
   Exclude:
     - "bin/*"
+Style/InlineComment:
+  Exclude:
+    - "**/*.md"
 # Forcing parentheses of all method calls isn't readable.
 # e.g., redirect_to, raise, create_table, t.string, RSpec's expectations, assertions, and so on
 Style/MethodCallWithArgsParentheses:

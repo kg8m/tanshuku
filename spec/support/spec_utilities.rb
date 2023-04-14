@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# A module for utility methods for specs.
 module SpecUtilities
   module_function
 

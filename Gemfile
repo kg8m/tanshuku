@@ -8,6 +8,7 @@ gem "sprockets-rails"
 gem "sqlite3"
 
 gem "rubocop"
+gem "rubocop-md"
 gem "rubocop-performance"
 gem "rubocop-rake"
 gem "rubocop-rspec"
