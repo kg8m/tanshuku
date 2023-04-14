@@ -32,6 +32,7 @@ RSpec.configure do |config|
   end
 
   config.include ActiveSupport::Testing::Assertions
+  config.include ActiveSupport::Testing::TimeHelpers
   config.include SpecUtilities
 
   # `Rails::Generators::Testing::Behaviour` expects `FileUtils` to be included in generator tests.

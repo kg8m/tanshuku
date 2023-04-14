@@ -20,8 +20,9 @@ module Tanshuku
     #
     # @return [void]
     def copy_migration_file
-      filename = "20230220123456_create_tanshuku_urls.rb"
-      copy_file "../../../db/migrate/#{filename}", "db/migrate/#{filename}"
+      old_filename = "20230220123456_create_tanshuku_urls.rb"
+      new_filename = old_filename.sub("20230220123456", Time.now.strftime("%Y%m%d%H%M%S"))
+      copy_file "../../../db/migrate/#{old_filename}", "db/migrate/#{new_filename}"
     end
   end
 end
