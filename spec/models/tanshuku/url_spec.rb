@@ -826,7 +826,7 @@ RSpec.describe Tanshuku::Url do
       { original: "https://google.com#some-hash", normalized: "https://google.com/#some-hash" },
       { original: "https://google.com/?#some-hash", normalized: "https://google.com/#some-hash" },
       { original: "https://google.com?#some-hash", normalized: "https://google.com/#some-hash" },
-      { original: "https://google.com/?foo=ほげ#ふが", normalized: "https://google.com/?foo=%E3%81%BB%E3%81%92#%E3%81%B5%E3%81%8C" },
+      { original: "https://google.com/?foo=#{CGI.escape("ほげ")}##{CGI.escape("ふが")}", normalized: "https://google.com/?foo=%E3%81%BB%E3%81%92#%E3%81%B5%E3%81%8C" },
     ].each do |testcase|
       context "when url is #{testcase[:original].inspect}" do
         let(:url) { testcase[:original] }
