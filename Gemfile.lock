@@ -236,7 +236,9 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  addressable
   bump
+  rails
   rspec
   rspec-rails
   rubocop

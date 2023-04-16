@@ -4,6 +4,18 @@ source "https://rubygems.org"
 
 gemspec
 
+if ENV.fetch("ADDRESSABLE_VERSION", "") == ""
+  gem "addressable"
+else
+  gem "addressable", ENV.fetch("ADDRESSABLE_VERSION")
+end
+
+if ENV.fetch("RAILS_VERSION", "") == ""
+  gem "rails"
+else
+  gem "rails", ENV.fetch("RAILS_VERSION")
+end
+
 gem "sprockets-rails"
 gem "sqlite3"
 
