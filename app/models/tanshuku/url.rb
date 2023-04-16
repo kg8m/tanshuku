@@ -5,6 +5,8 @@ require "addressable"
 require "rack"
 
 module Tanshuku
+  # rubocop:disable Rails/ApplicationRecord
+  #
   # An +ActiveRecord::Base+ inherited class for a shortened URL. This class also have some logics for shortening URLs.
   class Url < ActiveRecord::Base
     # @!attribute [rw] url
@@ -174,4 +176,5 @@ module Tanshuku
       Tanshuku::Engine.routes.url_for(url_options)
     end
   end
+  # rubocop:enable Rails/ApplicationRecord
 end

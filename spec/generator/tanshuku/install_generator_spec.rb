@@ -6,7 +6,9 @@ RSpec.describe Tanshuku::InstallGenerator do
   tests described_class
   destination Dir.mktmpdir(File.basename(__FILE__), SpecUtilities.gem_root.join("tmp"))
 
+  # rubocop:disable Rails/TimeZone
   let(:now) { Time.now }
+  # rubocop:enable Rails/TimeZone
 
   let(:rails_root) { Pathname.new(destination_root) }
 
