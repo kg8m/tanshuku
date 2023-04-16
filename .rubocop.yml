@@ -6,11 +6,13 @@ inherit_mode:
 require:
   - rubocop-md
   - rubocop-performance
+  - rubocop-rails
   - rubocop-rake
   - rubocop-rspec
   - rubocop-thread_safety
 
 AllCops:
+  TargetRubyVersion: 3.1
   EnabledByDefault: true
   Exclude:
     - "spec/dummy/**/*"
@@ -47,6 +49,16 @@ Lint/UnusedMethodArgument:
 Metrics/MethodLength:
   Max: 30
 
+Rails/DynamicFindBy:
+  AllowedMethods:
+    - find_by_url
+Rails/Present:
+  Exclude:
+    - "Gemfile"
+# Comments are unnecessary.
+Rails/SchemaComment:
+  Enabled: false
+
 # I want to use "if" and so on for contexts.
 RSpec/ContextWording:
   Enabled: false
@@ -80,6 +92,9 @@ Style/Copyright:
 Style/DisableCopsWithinSourceCodeDirective:
   AutoCorrect: false
   AllowedCops:
+    - Rails/ApplicationRecord
+    - Rails/RakeEnvironment
+    - Rails/TimeZone
     - ThreadSafety/InstanceVariableInClassMethod
     - ThreadSafety/NewThread
 Style/Documentation:

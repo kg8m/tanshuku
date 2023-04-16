@@ -20,9 +20,11 @@ module Tanshuku
     #
     # @return [void]
     def copy_migration_file
+      # rubocop:disable Rails/TimeZone
       old_filename = "20230220123456_create_tanshuku_urls.rb"
       new_filename = old_filename.sub("20230220123456", Time.now.strftime("%Y%m%d%H%M%S"))
       copy_file "../../../db/migrate/#{old_filename}", "db/migrate/#{new_filename}"
+      # rubocop:enable Rails/TimeZone
     end
   end
 end

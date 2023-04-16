@@ -14,6 +14,7 @@ require "rubocop/rake_task"
 RSpec::Core::RakeTask.new(:spec)
 RuboCop::RakeTask.new
 
+# rubocop:disable Rails/RakeEnvironment
 namespace :yard do
   desc "Start YARD server"
   task :server do
@@ -26,5 +27,6 @@ namespace :yard do
     sh "yard --no-output --no-cache --fail-on-warning"
   end
 end
+# rubocop:enable Rails/RakeEnvironment
 
 task default: %i[rubocop spec yard:check]

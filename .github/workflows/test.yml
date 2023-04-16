@@ -21,12 +21,32 @@ jobs:
           bundler-cache: true
 
       - name: RuboCop
-        run: bundle exec rubocop
+        run: bundle exec rake rubocop
         timeout-minutes: 5
 
   rspec:
     timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby-version:
+          - "3.1"
+          - "ruby"
+        rails-version:
+          - ""
+        addressable-version:
+          - "~> 2.4.0"
+          - "~> 2.5.0"
+          - "~> 2.6.0"
+          - "~> 2.7.0"
+          - ""
     runs-on: ubuntu-latest
+    env:
+      # Ignore `Gemfile.lock` on CI.
+      BUNDLE_GEMFILE: ${{ github.workspace }}/Gemfile.ci
+
+      RAILS_VERSION: ${{ matrix.rails-version }}
+      ADDRESSABLE_VERSION: ${{ matrix.addressable-version }}
     steps:
       - uses: actions/checkout@v3
 
@@ -34,11 +54,11 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.2"
+          ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
 
       - name: RSpec
-        run: bundle exec rspec
+        run: bundle exec rake spec
         timeout-minutes: 5
 
   yard-check:
