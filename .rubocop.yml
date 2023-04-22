@@ -76,6 +76,9 @@ RSpec/ExampleLength:
 # Expectations in hooks are sometimes rational.
 RSpec/ExpectInHook:
   Enabled: false
+# Indexed `let` is sometimes rational, e.g., when arbitrary multiple records are needed.
+RSpec/IndexedLet:
+  Enabled: false
 RSpec/MultipleExpectations:
   Max: 10
 RSpec/MultipleMemoizedHelpers:
