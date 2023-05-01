@@ -13,9 +13,9 @@ changelog:
     - title: Dependencies 🍺
       labels:
         - dependencies
-      exclude:
-        labels:
-          - dev-dependencies
     - title: Other Changes ✨
       labels:
         - "*"
+  exclude:
+    labels:
+      - dev-dependencies
