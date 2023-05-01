@@ -46,6 +46,8 @@ Lint/UnusedBlockArgument:
 Lint/UnusedMethodArgument:
   AutoCorrect: false
 
+Metrics/AbcSize:
+  Max: 32
 Metrics/MethodLength:
   Max: 30
 
@@ -103,9 +105,11 @@ Style/DisableCopsWithinSourceCodeDirective:
 Style/Documentation:
   Exclude:
     - "db/migrate/*"
+    - "tools/*"
 Style/DocumentationMethod:
   Exclude:
     - "db/migrate/*"
+    - "tools/*"
 Style/FrozenStringLiteralComment:
   Exclude:
     - "bin/*"

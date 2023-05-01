@@ -1,0 +1,27 @@
+# https://github.com/dependabot/fetch-metadata
+name: Dependabot Auto-labeling
+
+on: pull_request_target
+
+permissions:
+  pull-requests: read
+
+jobs:
+  dependabot-autolabeling:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+    steps:
+      - name: Fetch Dependabot metadata
+        id: dependabot-metadata
+        uses: dependabot/fetch-metadata@v1
+      - name: Add the "dev-dependencies" label if the updated dependency is for development
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if bundle exec ruby -r ./tools/reverse_dependencies -e "exit ReverseDependencies.tanshuku_depends_on?('${{ steps.dependabot-metadata.outputs.dependency-names }}')"; then
+            echo "Updated dependencies are for production."
+          else
+            gh pr edit "${PR_URL}" --add-label "dev-dependencies"
+          fi
