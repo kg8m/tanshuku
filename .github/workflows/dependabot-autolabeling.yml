@@ -4,7 +4,7 @@ name: Dependabot Auto-labeling
 on: pull_request_target
 
 permissions:
-  pull-requests: read
+  pull-requests: write
 
 jobs:
   dependabot-autolabeling:
