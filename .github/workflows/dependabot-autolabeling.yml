@@ -12,6 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
     steps:
+      - uses: actions/checkout@v3
+
+      # https://github.com/ruby/setup-ruby
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ruby
+          bundler-cache: true
+
       - name: Fetch Dependabot metadata
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@v1
