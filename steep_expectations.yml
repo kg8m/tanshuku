@@ -1,0 +1,19 @@
+---
+- file: lib/generators/tanshuku/install_generator.rb
+  diagnostics:
+  - range:
+      start:
+        line: 10
+        character: 49
+      end:
+        line: 10
+        character: 56
+    severity: ERROR
+    message: |-
+      Cannot pass a value of type `(::String | nil)` as an argument of type `(::string | ::_ToPath)`
+        (::String | nil) <: (::string | ::_ToPath)
+          nil <: (::string | ::_ToPath)
+            nil <: ::string
+              nil <: (::String | ::_ToStr)
+                nil <: ::String
+    code: Ruby::ArgumentTypeMismatch
