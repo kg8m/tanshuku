@@ -16,19 +16,23 @@ else
   gem "rails", ENV.fetch("RAILS_VERSION")
 end
 
-gem "sprockets-rails"
-gem "sqlite3"
+group :development, :test do
+  gem "sprockets-rails"
+  gem "sqlite3"
+end
 
-gem "rubocop"
-gem "rubocop-md"
-gem "rubocop-performance"
-gem "rubocop-rails"
-gem "rubocop-rake"
-gem "rubocop-rspec"
-gem "rubocop-thread_safety"
+group :development do
+  gem "rubocop", require: false
+  gem "rubocop-md", require: false
+  gem "rubocop-performance", require: false
+  gem "rubocop-rails", require: false
+  gem "rubocop-rake", require: false
+  gem "rubocop-rspec", require: false
+  gem "rubocop-thread_safety", require: false
 
-gem "bump"
-gem "yard"
+  gem "bump", require: false
+  gem "yard", require: false
+end
 
 group :test do
   gem "rspec"
