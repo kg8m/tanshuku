@@ -97,6 +97,7 @@ Style/Copyright:
 Style/DisableCopsWithinSourceCodeDirective:
   AutoCorrect: false
   AllowedCops:
+    - Lint/RescueException
     - Rails/ApplicationRecord
     - Rails/RakeEnvironment
     - Rails/TimeZone
