@@ -1,0 +1,9 @@
+module Rack
+  module Utils
+    # https://github.com/ruby/gem_rbs_collection/blob/34275028974d6352fe7666a6e833def7a6efb4a5/gems/rack/2.2/rack.rbs#L1159
+    # This method can be called without block. If then, `method(:unescape)` is used instead.
+    # https://github.com/rack/rack/blob/v3.0.7/lib/rack/utils.rb#L109-L111
+    # https://github.com/rack/rack/blob/v3.0.7/lib/rack/query_parser.rb#L46-L67
+    def self.parse_query: (String? qs, ?String? d) ?{ -> untyped } -> untyped | ...
+  end
+end

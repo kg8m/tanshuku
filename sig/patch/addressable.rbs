@@ -1,0 +1,16 @@
+module Addressable
+  class URI
+    # https://github.com/sporkmonger/addressable/blob/addressable-2.8.4/lib/addressable/uri.rb#L1600
+    attr_reader query: String
+
+    # https://github.com/sporkmonger/addressable/blob/addressable-2.8.4/lib/addressable/uri.rb#L101-L162
+    def self.parse: (String | Addressable::URI | _ToStr uri) -> Addressable::URI
+
+    # https://github.com/sporkmonger/addressable/blob/addressable-2.8.4/lib/addressable/uri.rb#L1716-L1760
+    type query_values = Hash[untyped, untyped] | _ToHash[untyped, untyped] | Array[untyped]
+    def query_values=: (query_values new_query_values) -> query_values
+
+    # https://github.com/sporkmonger/addressable/blob/addressable-2.8.4/lib/addressable/uri.rb#L2157-L2175
+    def normalize: () -> Addressable::URI
+  end
+end

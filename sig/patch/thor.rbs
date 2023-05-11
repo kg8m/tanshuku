@@ -1,0 +1,13 @@
+class Thor
+  class Group
+  end
+
+  module Actions
+    type file_manipulation_config = { verbose: bool, mode: :preserve | untyped }
+
+    # https://github.com/rails/thor/blob/v1.2.1/lib/thor/actions/file_manipulation.rb#L21-L35
+    def copy_file:
+      (String source, ?file_manipulation_config config) ?{ (String content) -> String } -> void |
+      (String source, String destination, ?file_manipulation_config config) ?{ (String content) -> String } -> void
+  end
+end
