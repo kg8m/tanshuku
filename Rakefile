@@ -15,6 +15,18 @@ RSpec::Core::RakeTask.new(:spec)
 RuboCop::RakeTask.new
 
 # rubocop:disable Rails/RakeEnvironment
+namespace :steep do
+  desc "Prepare for typecheck"
+  task :prepare do
+    sh "bundle exec rbs collection install"
+  end
+
+  desc "Run typecheck"
+  task :check do
+    sh "bundle exec steep check --with-expectations"
+  end
+end
+
 namespace :yard do
   desc "Start YARD server"
   task :server do
