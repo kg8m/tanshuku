@@ -31,12 +31,12 @@ namespace :yard do
   desc "Start YARD server"
   task :server do
     puts "See http://localhost:8808/"
-    sh "yard server --reload"
+    sh "bundle exec yard server --reload"
   end
 
   desc "Check YARD docs"
   task :check do
-    sh "yard --no-output --no-cache --fail-on-warning"
+    sh "bundle exec yard --no-output --no-cache --fail-on-warning"
   end
 end
 # rubocop:enable Rails/RakeEnvironment
