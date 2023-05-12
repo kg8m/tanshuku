@@ -1,0 +1,4 @@
+# Mark the dummy Rails application codes as having been generated and vendored.
+spec/dummy/*                               linguist-generated=true  linguist-vendored=true
+spec/dummy/config/initializers/tanshuku.rb linguist-generated=false linguist-vendored=false
+spec/dummy/config/routes.rb                linguist-generated=false linguist-vendored=false
