@@ -1,0 +1,6 @@
+module Tanshuku
+  self.@config: Configuration
+
+  def self.config: -> Configuration
+  def self.configure: { (Configuration config) -> void } -> void
+end

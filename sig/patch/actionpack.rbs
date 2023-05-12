@@ -1,0 +1,20 @@
+module ActionDispatch
+  module Routing
+    class Mapper
+      module HttpHelpers
+        # https://github.com/ruby/gem_rbs_collection/blob/34275028974d6352fe7666a6e833def7a6efb4a5/gems/actionpack/6.0/actionpack-generated.rbs#L9222
+        # https://github.com/rails/rails/blob/v7.0.4.3/actionpack/lib/action_dispatch/routing/mapper.rb#L687-L689
+        # https://github.com/rails/rails/blob/v7.0.4.3/actionpack/lib/action_dispatch/routing/mapper.rb#L732-L737
+        # https://github.com/rails/rails/blob/v7.0.4.3/actionpack/lib/action_dispatch/routing/mapper.rb#L1609-L1641
+        def get: (*untyped args) ?{ () -> untyped } -> untyped | ...
+      end
+    end
+
+    class RouteSet
+      # https://github.com/ruby/gem_rbs_collection/blob/34275028974d6352fe7666a6e833def7a6efb4a5/gems/actionpack/6.0/actionpack-generated.rbs#L10598
+      # https://github.com/rails/rails/blob/v7.0.4.3/actionpack/lib/action_dispatch/routing/route_set.rb#L408-L413
+      # https://github.com/rails/rails/blob/v7.0.4.3/actionpack/lib/action_dispatch/routing/route_set.rb#L423-L431
+      def draw: () { () [self: ActionDispatch::Routing::Mapper] -> untyped } -> nil | ...
+    end
+  end
+end

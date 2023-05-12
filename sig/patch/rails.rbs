@@ -1,0 +1,20 @@
+module Rails
+  class Railtie
+    # https://github.com/ruby/gem_rbs_collection/blob/34275028974d6352fe7666a6e833def7a6efb4a5/gems/railties/6.0/railties-generated.rbs#L4548
+    # https://github.com/rails/rails/blob/v7.0.4.3/railties/lib/rails/railtie.rb#L146
+    def self.config: () -> untyped
+  end
+
+  class Engine < Railtie
+    # https://github.com/ruby/gem_rbs_collection/blob/34275028974d6352fe7666a6e833def7a6efb4a5/gems/railties/6.0/railties-generated.rbs#L2010
+    # https://github.com/rails/rails/blob/v7.0.4.3/railties/lib/rails/railtie.rb#L224-L231
+    def self.routes: () ?{ () -> untyped } -> ActionDispatch::Routing::RouteSet
+  end
+
+  module Generators
+    class Base < Thor::Group
+      # https://github.com/rails/rails/blob/v7.0.4.3/railties/lib/rails/generators/base.rb#L18
+      include Thor::Actions
+    end
+  end
+end
