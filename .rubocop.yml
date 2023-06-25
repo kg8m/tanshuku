@@ -88,6 +88,9 @@ RSpec/MultipleMemoizedHelpers:
 RSpec/NestedGroups:
   Max: 10
 
+# Some non-ASCII symbols, e.g., “, ’, and so on, can be used.
+Style/AsciiComments:
+  Enabled: false
 # Forcing explicit constant visibility isn't worth doing.
 Style/ConstantVisibility:
   Enabled: false

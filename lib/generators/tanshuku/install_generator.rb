@@ -7,7 +7,8 @@ module Tanshuku
   #
   # @api private
   class InstallGenerator < Rails::Generators::Base
-    source_root File.expand_path("../templates", __dir__)
+    # Assign `_ = __dir__` because Steep reports `__dir__` which can be a `nil` but I don’t want to care about that.
+    source_root File.expand_path("../templates", _ = __dir__)
 
     # Generates a configuration file +config/initializers/tanshuku.rb+.
     #

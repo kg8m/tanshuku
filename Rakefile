@@ -23,7 +23,7 @@ namespace :steep do
 
   desc "Run typecheck"
   task :check do
-    sh "bundle exec steep check --with-expectations"
+    sh "bundle exec steep check"
   end
 end
 
