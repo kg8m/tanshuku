@@ -104,7 +104,7 @@ module Tanshuku
     include GeneratedAttributeMethods
 
     def self.shorten: (String original_url, ?namespace: String, ?url_options: Hash[String | Symbol, untyped]) -> String
-    def self.find_by_url: (String url, ?namespace: String) -> ActiveRecord::Base?
+    def self.find_by_url: (String url, ?namespace: String) -> Tanshuku::Url?
     def self.normalize_url: (String url) -> String
     def self.hash_url: (String url, ?namespace: String) -> String
     def self.generate_key: -> String
