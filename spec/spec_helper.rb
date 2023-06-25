@@ -17,7 +17,7 @@ if ActiveSupport::TestCase.respond_to?(:fixture_path=)
   ActiveSupport::TestCase.fixtures :all
 end
 
-require_relative "./support/spec_utilities"
+require_relative "support/spec_utilities"
 
 RSpec.configure do |config|
   # Disable RSpec exposing methods globally on `Module` and `main`
