@@ -14,19 +14,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
+      # https://github.com/ruby/setup-ruby
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ruby
+          bundler-cache: true
+
       - name: Generate token
         id: generate_token
         uses: getsentry/action-github-app-token@v2
         with:
           app_id: ${{ secrets.KG8M_BOT_APP_ID }}
           private_key: ${{ secrets.KG8M_BOT_PRIVATE_KEY }}
+
       - name: Update RBS collection
         run: bundle exec rbs collection update > ../output.txt
+
       - name: Read ../output.txt
         id: read-output
         uses: juliangruber/read-file-action@v1
         with:
           path: ../output.txt
+
       # https://github.com/peter-evans/create-pull-request
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
