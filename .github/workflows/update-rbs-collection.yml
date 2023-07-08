@@ -5,6 +5,9 @@ on:
     # Run every Saturday at 10:00 JST.
     - cron: "0 1 * * 6"
 
+  # For debug
+  workflow_dispatch:
+
 jobs:
   udd:
     timeout-minutes: 5
