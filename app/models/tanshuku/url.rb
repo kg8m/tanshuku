@@ -13,7 +13,7 @@ module Tanshuku
     #   @return [String] Original, i.e., non-shortened, URL of the record.
     #
     # @!attribute [rw] hashed_url
-    #   @return [String] A hashed string of the record's original URL.
+    #   @return [String] A hashed string of the record’s original URL.
     #   @note This attribute is used for uniqueness of the original URL.
     #   @api private
     #
@@ -29,12 +29,12 @@ module Tanshuku
     validates :url, length: { maximum: proc { Tanshuku.config.max_url_length } }
     validates :url, format: { with: proc { Tanshuku.config.url_pattern } }, allow_blank: true
 
-    # Don't validate uniqueness of unique attributes. Raise ActiveRecord::RecordNotUnique instead if the attributes get
+    # Don’t validate uniqueness of unique attributes. Raise ActiveRecord::RecordNotUnique instead if the attributes get
     # duplicated. Then rescue the exception and try to retry.
     # validates :url, :hashed_url, :key, uniqueness: true
 
     # Shortens a URL. Builds and saves a {Tanshuku::Url} record with generating a unique key for the given URL and
-    # namespace. Then returns the record's shortened URL with the given URL options.
+    # namespace. Then returns the record’s shortened URL with the given URL options.
     #
     # @note
     #   If a {Tanshuku::Url} record already exists, no additional record will be created and the existing record will be
@@ -45,7 +45,7 @@ module Tanshuku
     #
     # @param original_url [String] The original, i.e., non-shortened, URL.
     # @param namespace [String] A namespace for shorteting URL. Shortened URLs are unique in namespaces.
-    # @param url_options [Hash] An option for Rails' +url_for+.
+    # @param url_options [Hash] An option for Rails’ +url_for+.
     #
     # @return [String] A shortened URL if succeeded to shorten the original URL.
     # @return [String] The original URL if failed to shorten it.
@@ -61,10 +61,10 @@ module Tanshuku
     #   Tanshuku::Url.shorten("https://google.com/", url_options: { protocol: :http })
     #   #=> "http://example.com/t/abcde01234fghij56789"
     # @example With a namespace.
-    #   # When no record exists for "https://google.com/", a new record will be created.
+    #   # When no record exists for “https://google.com/”, a new record will be created.
     #   Tanshuku::Url.shorten("https://google.com/")  #=> "https://example.com/t/abc012def345ghi678j9"
     #
-    #   # Even when a record already exists for "https://google.com/", an additional record will be created if namespace
+    #   # Even when a record already exists for “https://google.com/”, an additional record will be created if namespace
     #   # is specified.
     #   Tanshuku::Url.shorten("https://google.com/", namespace: "a")  #=> "https://example.com/t/ab01cd23ef45gh67ij89"
     #   Tanshuku::Url.shorten("https://google.com/", namespace: "b")  #=> "https://example.com/t/a0b1c2d3e4f5g6h7i8j9"
@@ -131,7 +131,7 @@ module Tanshuku
 
     # Hashes a URL.
     #
-    # @note This method calls {Tanshuku::Configuration#url_hasher}'s +call+ and returns its return value.
+    # @note This method calls {Tanshuku::Configuration#url_hasher}’s +call+ and returns its return value.
     #
     # @param url [String] A non-hashed URL.
     # @param namespace [String] A namespace for the URL.
@@ -143,7 +143,7 @@ module Tanshuku
 
     # Generates a unique key for a shortened URL.
     #
-    # @note This method calls {Tanshuku::Configuration#key_generator}'s +call+ and returns its return value.
+    # @note This method calls {Tanshuku::Configuration#key_generator}’s +call+ and returns its return value.
     #
     # @return [String] Depends on your {Tanshuku::Configuration#key_generator} configuration.
     def self.generate_key
@@ -152,7 +152,7 @@ module Tanshuku
 
     # Reports an exception when failed to shorten a URL.
     #
-    # @note This method calls {Tanshuku::Configuration#exception_reporter}'s +call+ and returns its return value.
+    # @note This method calls {Tanshuku::Configuration#exception_reporter}’s +call+ and returns its return value.
     #
     # @param exception [Exception] An error instance at shortening a URL.
     # @param original_url [String] The original URL failed to shorten.
@@ -162,9 +162,9 @@ module Tanshuku
       Tanshuku.config.exception_reporter.call(exception:, original_url:)
     end
 
-    # The record's shortened URL.
+    # The record’s shortened URL.
     #
-    # @param url_options [Hash] An option for Rails' +url_for+.
+    # @param url_options [Hash] An option for Rails’ +url_for+.
     #
     # @return [String] A shortened URL.
     def shortened_url(url_options = {})

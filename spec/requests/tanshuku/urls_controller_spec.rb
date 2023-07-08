@@ -36,7 +36,7 @@ RSpec.describe Tanshuku::UrlsController do
       end
 
       context "and a known key is given" do
-        it "redirects to the key's original URL with status code 301" do
+        it "redirects to the key’s original URL with status code 301" do
           get "/t/#{known_key}"
           expect(response).to redirect_to url1.url
           expect(response).to have_attributes(status: 301)

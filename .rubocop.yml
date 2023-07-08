@@ -36,7 +36,7 @@ Layout/LineLength:
 Layout/SingleLineBlockChain:
   Enabled: false
 
-# Forcing full qualifying constants isn't worth doing.
+# Forcing full qualifying constants isn’t worth doing.
 Lint/ConstantResolution:
   Enabled: false
 Lint/RedundantCopDisableDirective:
@@ -67,7 +67,7 @@ RSpec/ContextWording:
 RSpec/DescribeClass:
   Exclude:
     - "**/spec/config/**/*"
-# Forcing using `described_class` isn't readable.
+# Forcing using `described_class` isn’t readable.
 RSpec/DescribedClass:
   Enabled: false
 RSpec/EmptyHook:
@@ -91,7 +91,7 @@ RSpec/NestedGroups:
 # Some non-ASCII symbols, e.g., “, ’, and so on, can be used.
 Style/AsciiComments:
   Enabled: false
-# Forcing explicit constant visibility isn't worth doing.
+# Forcing explicit constant visibility isn’t worth doing.
 Style/ConstantVisibility:
   Enabled: false
 # Copyright is unnecessary for this project.
@@ -120,11 +120,11 @@ Style/FrozenStringLiteralComment:
 Style/InlineComment:
   Exclude:
     - "**/*.md"
-# Forcing parentheses of all method calls isn't readable.
-# e.g., redirect_to, raise, create_table, t.string, RSpec's expectations, assertions, and so on
+# Forcing parentheses of all method calls isn’t readable.
+# e.g., redirect_to, raise, create_table, t.string, RSpec’s expectations, assertions, and so on
 Style/MethodCallWithArgsParentheses:
   Enabled: false
-# Forcing `else` isn't worth doing.
+# Forcing `else` isn’t worth doing.
 Style/MissingElse:
   Enabled: false
 Style/RedundantBegin:
