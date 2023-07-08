@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  udd:
+  update-rbs-collection:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
