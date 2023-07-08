@@ -34,6 +34,9 @@ group :development do
 
   gem "bump", require: false
   gem "yard", require: false
+
+  # For `yard server`
+  gem "thin", require: false
 end
 
 group :test do
