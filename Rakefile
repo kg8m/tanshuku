@@ -30,7 +30,6 @@ end
 namespace :yard do
   desc "Start YARD server"
   task :server do
-    puts "See http://localhost:8808/"
     sh "bundle exec yard server --reload"
   end
 
