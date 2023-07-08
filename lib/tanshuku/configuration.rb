@@ -11,7 +11,7 @@ module Tanshuku
       # Calls +Digest::SHA512.hexdigest+ with the given URL string and the given namespace.
       #
       # @param url [String] A URL to hash.
-      # @param namespace [String] A namespace for the URL's uniqueness.
+      # @param namespace [String] A namespace for the URL’s uniqueness.
       #
       # @return [String] A SHA512 digest string from the given url and namespace.
       def self.call(url, namespace:)
@@ -45,7 +45,7 @@ module Tanshuku
     include ActiveModel::Attributes
 
     # @!attribute [rw] default_url_options
-    #   Default URL options for Rails' +url_for+. Defaults to +{}+.
+    #   Default URL options for Rails’ +url_for+. Defaults to +{}+.
     #
     #   @return [Hash]
     #   @return [void] If you set an invalid object.
@@ -102,7 +102,7 @@ module Tanshuku
     #   @return [Integer]
     #   @return [void] If you set an invalid object.
     #
-    #   @note Don't forget to fix the limit of the +tanshuku_urls.key+ column if you change this value.
+    #   @note Don’t forget to fix the limit of the +tanshuku_urls.key+ column if you change this value.
     #
     #   @note
     #     The example below means that {Tanshuku::Url#key} has 10-char string.

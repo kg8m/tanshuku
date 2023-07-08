@@ -7,7 +7,7 @@ RSpec.describe Tanshuku::Url do
     describe "url length" do
       default_max_url_length = 10_000
 
-      context "when max_url_length isn't configured" do
+      context "when max_url_length isn’t configured" do
         before do
           expect(Tanshuku.config).to have_attributes(max_url_length: default_max_url_length)
         end
@@ -24,7 +24,7 @@ RSpec.describe Tanshuku::Url do
               record.url = testcase[:value]
             end
 
-            it "doesn't have any error for url length" do
+            it "doesn’t have any error for url length" do
               record.valid?
               expect(record.errors).not_to be_of_kind :url, :too_long
             end
@@ -72,7 +72,7 @@ RSpec.describe Tanshuku::Url do
               record.url = testcase[:value]
             end
 
-            it "doesn't have any error for url length" do
+            it "doesn’t have any error for url length" do
               record.valid?
               expect(record.errors).not_to be_of_kind :url, :too_long
             end
@@ -95,7 +95,7 @@ RSpec.describe Tanshuku::Url do
     describe "url format" do
       default_url_pattern = %r{\A(?:https?://\w+|/)}
 
-      context "when url_pattern isn't configured" do
+      context "when url_pattern isn’t configured" do
         before do
           expect(Tanshuku.config).to have_attributes(url_pattern: default_url_pattern)
 
@@ -158,7 +158,7 @@ RSpec.describe Tanshuku::Url do
           end
         end
 
-        context "and url doesn't match with the custom URL pattern" do
+        context "and url doesn’t match with the custom URL pattern" do
           it "is invalid" do
             ["foo", "foo/bar/baz", "foo.bar", "foo-bar"].each do |invalid_url|
               record.url = invalid_url
@@ -184,7 +184,7 @@ RSpec.describe Tanshuku::Url do
     context "when original_url is nil" do
       let(:original_url) { nil }
 
-      it "doesn't create any Tanshuku::Url record, reports ArgumentError, and returns the original_url" do
+      it "doesn’t create any Tanshuku::Url record, reports ArgumentError, and returns the original_url" do
         result =
           assert_no_difference -> { Tanshuku::Url.count } do
             Tanshuku::Url.shorten(original_url)
@@ -199,7 +199,7 @@ RSpec.describe Tanshuku::Url do
     context "when original_url is an empty string" do
       let(:original_url) { "" }
 
-      it "doesn't create any Tanshuku::Url record, reports ActiveRecord::RecordInvalid, and returns the original_url" do
+      it "doesn’t create any Tanshuku::Url record, reports ActiveRecord::RecordInvalid, and returns the original_url" do
         result =
           assert_no_difference -> { Tanshuku::Url.count } do
             Tanshuku::Url.shorten(original_url)
@@ -215,7 +215,7 @@ RSpec.describe Tanshuku::Url do
     context "when original_url is a non-URL string" do
       let(:original_url) { "invalid" }
 
-      it "doesn't create any Tanshuku::Url record, reports ActiveRecord::RecordInvalid, and returns the original_url" do
+      it "doesn’t create any Tanshuku::Url record, reports ActiveRecord::RecordInvalid, and returns the original_url" do
         result =
           assert_no_difference -> { Tanshuku::Url.count } do
             Tanshuku::Url.shorten(original_url)
@@ -232,7 +232,7 @@ RSpec.describe Tanshuku::Url do
       context "when original_url is #{valid_original_url.inspect}" do
         let(:original_url) { valid_original_url }
 
-        context "and namespace isn't given" do
+        context "and namespace isn’t given" do
           context "and there are no records for the same URL" do
             before do
               expect(Tanshuku::Url.where(url: original_url)).not_to exist
@@ -242,7 +242,7 @@ RSpec.describe Tanshuku::Url do
               expect(Tanshuku::Url.where(url: original_url)).to exist
             end
 
-            it "creates a new record, doesn't report any exceptions, and returns a shortened URL string" do
+            it "creates a new record, doesn’t report any exceptions, and returns a shortened URL string" do
               result =
                 assert_difference -> { Tanshuku::Url.count }, 1 do
                   Tanshuku::Url.shorten(original_url)
@@ -266,7 +266,7 @@ RSpec.describe Tanshuku::Url do
               expect(Tanshuku::Url.where(url: original_url)).to exist
             end
 
-            it "doesn't create an additional record" do
+            it "doesn’t create an additional record" do
               result =
                 assert_no_difference -> { Tanshuku::Url.count } do
                   Tanshuku::Url.shorten(original_url)
@@ -293,7 +293,7 @@ RSpec.describe Tanshuku::Url do
               )
             end
 
-            it "creates a new record, doesn't report any exceptions, and returns a shortened URL string" do
+            it "creates a new record, doesn’t report any exceptions, and returns a shortened URL string" do
               result =
                 assert_difference -> { Tanshuku::Url.count }, 1 do
                   Tanshuku::Url.shorten(original_url, namespace: "new")
@@ -309,7 +309,7 @@ RSpec.describe Tanshuku::Url do
               expect(created.key).to match(/\A\w{20}\z/)
             end
 
-            it "doesn't create an additional record with the same namespace for the same URL" do
+            it "doesn’t create an additional record with the same namespace for the same URL" do
               result =
                 assert_no_difference -> { Tanshuku::Url.count } do
                   Tanshuku::Url.shorten(original_url, namespace: "existing")
@@ -344,7 +344,7 @@ RSpec.describe Tanshuku::Url do
     context "when called multiple times for the same URL" do
       let(:original_url) { "https://google.com/" }
 
-      it "creates only 1 Tanshuku::Url record, doesn't report any exceptions, and returns same shortened URL string every time" do
+      it "creates only 1 Tanshuku::Url record, doesn’t report any exceptions, and returns same shortened URL string every time" do
         result1 =
           assert_difference -> { Tanshuku::Url.count }, 1 do
             Tanshuku::Url.shorten(original_url)
@@ -427,7 +427,7 @@ RSpec.describe Tanshuku::Url do
           expect(Tanshuku::Url).not_to have_received(:generate_key)
         end
 
-        it "retries generating an other key, so creates a new Tanshuku::Url record, doesn't report any exceptions, and returns a shortened URL string" do
+        it "retries generating an other key, so creates a new Tanshuku::Url record, doesn’t report any exceptions, and returns a shortened URL string" do
           result =
             assert_difference -> { Tanshuku::Url.count }, 1 do
               Tanshuku::Url.shorten(original_url)
@@ -452,7 +452,7 @@ RSpec.describe Tanshuku::Url do
           expect(Tanshuku::Url).not_to have_received(:generate_key)
         end
 
-        it "retries generating an other key but finally raises ActiveRecord::RecordNotUnique, so doesn't create any Tanshuku::Url record, reports ActiveRecord::RecordInvalid, and returns the original_url" do
+        it "retries generating an other key but finally raises ActiveRecord::RecordNotUnique, so doesn’t create any Tanshuku::Url record, reports ActiveRecord::RecordInvalid, and returns the original_url" do
           result =
             assert_no_difference -> { Tanshuku::Url.count } do
               Tanshuku::Url.shorten(original_url)
@@ -488,7 +488,7 @@ RSpec.describe Tanshuku::Url do
     context "when called simultaneously for a same URL" do
       let(:original_url) { "https://google.com/" }
 
-      it "creates only 1 Tanshuku::Url record, doesn't report any exceptions, and returns same shortened URL string every time" do
+      it "creates only 1 Tanshuku::Url record, doesn’t report any exceptions, and returns same shortened URL string every time" do
         result1 = result2 = result3 = result4 = nil
 
         assert_difference -> { Tanshuku::Url.count }, 1 do
@@ -525,15 +525,15 @@ RSpec.describe Tanshuku::Url do
         expect(Tanshuku::Url).not_to exist
       end
 
-      context "and namespace isn't given" do
-        it "doesn't find any record" do
+      context "and namespace isn’t given" do
+        it "doesn’t find any record" do
           result = Tanshuku::Url.find_by_url(url)
           expect(result).to be_nil
         end
       end
 
       context "and namespace is given" do
-        it "doesn't find any record" do
+        it "doesn’t find any record" do
           result = Tanshuku::Url.find_by_url(url, namespace: "test")
           expect(result).to be_nil
         end
@@ -553,7 +553,7 @@ RSpec.describe Tanshuku::Url do
         let!(:shortened_url) { Tanshuku::Url.shorten(url) }
 
         context "and the very url is given" do
-          context "and namespace isn't given" do
+          context "and namespace isn’t given" do
             it "finds the record without namespace" do
               result = Tanshuku::Url.find_by_url(url)
               expect(result.url).to eq url
@@ -562,7 +562,7 @@ RSpec.describe Tanshuku::Url do
           end
 
           context "and a namespace is given" do
-            it "doesn't find any record" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(url, namespace: "test")
               expect(result).to be_nil
             end
@@ -572,7 +572,7 @@ RSpec.describe Tanshuku::Url do
         context "and an essentially same url is given" do
           let(:essentially_same_url) { "https://google.com" }
 
-          context "and namespace isn't given" do
+          context "and namespace isn’t given" do
             it "finds the record without namespace" do
               result = Tanshuku::Url.find_by_url(essentially_same_url)
               expect(result.url).to eq url
@@ -581,7 +581,7 @@ RSpec.describe Tanshuku::Url do
           end
 
           context "and a namespace is given" do
-            it "doesn't find any record" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(essentially_same_url, namespace: "test")
               expect(result).to be_nil
             end
@@ -591,15 +591,15 @@ RSpec.describe Tanshuku::Url do
         context "and an unknown url is given" do
           let(:unknown_url) { "https://google.com/foo" }
 
-          context "and namespace isn't given" do
-            it "doesn't find any record" do
+          context "and namespace isn’t given" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(unknown_url)
               expect(result).to be_nil
             end
           end
 
           context "and a namespace is given" do
-            it "doesn't find any record" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(unknown_url, namespace: "test")
               expect(result).to be_nil
             end
@@ -611,8 +611,8 @@ RSpec.describe Tanshuku::Url do
         let!(:shortened_url) { Tanshuku::Url.shorten(url, namespace: "test") }
 
         context "and the very url is given" do
-          context "and namespace isn't given" do
-            it "doesn't find any record" do
+          context "and namespace isn’t given" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(url)
               expect(result).to be_nil
             end
@@ -627,7 +627,7 @@ RSpec.describe Tanshuku::Url do
           end
 
           context "and an unknown namespace is given" do
-            it "doesn't find any record" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(url, namespace: "unknown")
               expect(result).to be_nil
             end
@@ -637,8 +637,8 @@ RSpec.describe Tanshuku::Url do
         context "and an essentially same url is given" do
           let(:essentially_same_url) { "https://google.com" }
 
-          context "and namespace isn't given" do
-            it "doesn't find any record" do
+          context "and namespace isn’t given" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(essentially_same_url)
               expect(result).to be_nil
             end
@@ -653,7 +653,7 @@ RSpec.describe Tanshuku::Url do
           end
 
           context "and an unknown namespace is given" do
-            it "doesn't find any record" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(url, namespace: "unknown")
               expect(result).to be_nil
             end
@@ -663,22 +663,22 @@ RSpec.describe Tanshuku::Url do
         context "and an unknown url is given" do
           let(:unknown_url) { "https://google.com/foo" }
 
-          context "and namespace isn't given" do
-            it "doesn't find any record" do
+          context "and namespace isn’t given" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(unknown_url)
               expect(result).to be_nil
             end
           end
 
           context "and the same namespace is given" do
-            it "doesn't find any record" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(unknown_url, namespace: "test")
               expect(result).to be_nil
             end
           end
 
           context "and an unknown namespace is given" do
-            it "doesn't find any record" do
+            it "doesn’t find any record" do
               result = Tanshuku::Url.find_by_url(unknown_url, namespace: "unknown")
               expect(result).to be_nil
             end
@@ -715,7 +715,7 @@ RSpec.describe Tanshuku::Url do
       end
 
       context "and the very url is given" do
-        context "and namespace isn't given" do
+        context "and namespace isn’t given" do
           it "finds the each corresponding record without namespace" do
             result1 = Tanshuku::Url.find_by_url(url1)
             expect(result1.url).to eq url1
@@ -748,7 +748,7 @@ RSpec.describe Tanshuku::Url do
         end
 
         context "and unknown namespace is given" do
-          it "doesn't find any record" do
+          it "doesn’t find any record" do
             result1 = Tanshuku::Url.find_by_url(url1, namespace: "unknown")
             expect(result1).to be_nil
 
@@ -765,7 +765,7 @@ RSpec.describe Tanshuku::Url do
         let(:essentially_same_url1) { "https://google.com"      }
         let(:essentially_same_url2) { "https://google.com/foo?" }
 
-        context "and namespace isn't given" do
+        context "and namespace isn’t given" do
           it "finds the each corresponding record without namespace" do
             result1 = Tanshuku::Url.find_by_url(essentially_same_url1)
             expect(result1.url).to eq url1
@@ -790,7 +790,7 @@ RSpec.describe Tanshuku::Url do
         end
 
         context "and an unknown namespace is given" do
-          it "doesn't find any record" do
+          it "doesn’t find any record" do
             result1 = Tanshuku::Url.find_by_url(essentially_same_url1, namespace: "unknown")
             expect(result1).to be_nil
 
@@ -842,12 +842,12 @@ RSpec.describe Tanshuku::Url do
       expect(Digest::SHA512).not_to have_received(:hexdigest)
     end
 
-    context "when url_hasher isn't configured" do
+    context "when url_hasher isn’t configured" do
       before do
         expect(Tanshuku.config).to have_attributes(url_hasher: Tanshuku::Configuration::DefaultUrlHasher)
       end
 
-      context "and namespace isn't given" do
+      context "and namespace isn’t given" do
         [
           {
             url: "https://google.com/",
@@ -955,7 +955,7 @@ RSpec.describe Tanshuku::Url do
         end
       end
 
-      context "and namespace isn't given" do
+      context "and namespace isn’t given" do
         it "returns a string via the custom URL hasher" do
           result = Tanshuku::Url.hash_url("https://google.com/")
           expect(result).to eq "-HTTPS://GOOGLE.COM/"
@@ -979,14 +979,14 @@ RSpec.describe Tanshuku::Url do
       expect(SecureRandom).not_to have_received(:alphanumeric)
     end
 
-    context "when key_generator isn't configured" do
+    context "when key_generator isn’t configured" do
       let(:default_key_length) { 20 }
 
       before do
         expect(Tanshuku.config).to have_attributes(key_generator: Tanshuku::Configuration::DefaultKeyGenerator)
       end
 
-      context "and key_length isn't configured" do
+      context "and key_length isn’t configured" do
         before do
           expect(Tanshuku.config).to have_attributes(key_length: default_key_length)
         end
@@ -1055,7 +1055,7 @@ RSpec.describe Tanshuku::Url do
       expect(Rails.logger).not_to have_received(:warn)
     end
 
-    context "when exception_reporter isn't configured" do
+    context "when exception_reporter isn’t configured" do
       before do
         expect(Tanshuku.config).to have_attributes(
           exception_reporter: Tanshuku::Configuration::DefaultExceptionReporter
@@ -1107,7 +1107,7 @@ RSpec.describe Tanshuku::Url do
     let!(:original_default_url_options) { Tanshuku::Engine.routes.default_url_options }
 
     before do
-      # Don't clear the original routes.
+      # Don’t clear the original routes.
       Tanshuku::Engine.routes.disable_clear_and_finalize = true
 
       forced_value = default_url_options
@@ -1126,7 +1126,7 @@ RSpec.describe Tanshuku::Url do
     context "when Tanshuku::Engine.default_url_options is nil" do
       let(:default_url_options) { nil }
 
-      context "and url_options isn't given" do
+      context "and url_options isn’t given" do
         it "raises NoMethodError due to `nil.merge`" do
           expect { tanshuku_url.shortened_url }.to raise_error(
             NoMethodError,
@@ -1150,7 +1150,7 @@ RSpec.describe Tanshuku::Url do
     context "when Tanshuku::Engine.default_url_options is an empty hash" do
       let(:default_url_options) { {} }
 
-      context "and url_options isn't given" do
+      context "and url_options isn’t given" do
         it "raises ArgumentError due to missing host" do
           expect { tanshuku_url.shortened_url }.to raise_error ArgumentError, /Missing host to link to!/
         end
@@ -1168,7 +1168,7 @@ RSpec.describe Tanshuku::Url do
     context "when Tanshuku::Engine.default_url_options has nil host" do
       let(:default_url_options) { { host: nil } }
 
-      context "and url_options isn't given" do
+      context "and url_options isn’t given" do
         it "raises ArgumentError due to missing host" do
           expect { tanshuku_url.shortened_url }.to raise_error ArgumentError, /Missing host to link to!/
         end
@@ -1186,7 +1186,7 @@ RSpec.describe Tanshuku::Url do
     context "when Tanshuku::Engine.default_url_options has a string host" do
       let(:default_url_options) { { host: "google.com" } }
 
-      context "and url_options isn't given" do
+      context "and url_options isn’t given" do
         it "returns a shortened URL" do
           expect(tanshuku_url.shortened_url).to eq "http://google.com/t/#{tanshuku_url.key}"
         end
@@ -1204,7 +1204,7 @@ RSpec.describe Tanshuku::Url do
     context "when Tanshuku::Engine.default_url_options has a string host and some options" do
       let(:default_url_options) { { host: "google.com", protocol: :https, port: 50_443 } }
 
-      context "and url_options isn't given" do
+      context "and url_options isn’t given" do
         it "returns a shortened URL" do
           expect(tanshuku_url.shortened_url).to eq "https://google.com:50443/t/#{tanshuku_url.key}"
         end

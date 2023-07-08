@@ -20,7 +20,7 @@ RSpec.describe Tanshuku::InstallGenerator do
   end
 
   before do
-    # A directory to `destination_root` will be created. Don't forget to clean it up.
+    # A directory to `destination_root` will be created. Don’t forget to clean it up.
     prepare_destination
 
     travel_to now

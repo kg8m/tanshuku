@@ -4,7 +4,7 @@ require_relative "tanshuku/configuration"
 require_relative "tanshuku/engine"
 require_relative "tanshuku/version"
 
-# Tanshuku's namespace.
+# Tanshuku’s namespace.
 module Tanshuku
   # Returns a configuration object for Tanshuku.
   #
