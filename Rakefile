@@ -18,7 +18,7 @@ RuboCop::RakeTask.new
 namespace :steep do
   desc "Prepare for typecheck"
   task :prepare do
-    sh "bundle exec rbs collection install"
+    sh "bundle exec rbs collection install --frozen"
   end
 
   desc "Run typecheck"

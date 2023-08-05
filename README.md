@@ -180,7 +180,7 @@ A. Does Tanshuku have some missing features? Please [create an issue](https://gi
 
 1. Fork this repository
 1. `git clone` your fork
-1. `bundle install`
+1. `bundle install` and `rake steep:prepare`
 1. Update sources
 1. `rake`
 1. Fix `rake` errors if `rake` fails
