@@ -127,7 +127,7 @@ RSpec.describe Tanshuku::Url do
             let(:url) { invalid_url_string }
 
             it "is invalid" do
-              expect(record).to be_invalid
+              expect(record).not_to be_valid
               expect(record.errors).to be_of_kind :url, :invalid
             end
           end
@@ -162,7 +162,7 @@ RSpec.describe Tanshuku::Url do
           it "is invalid" do
             ["foo", "foo/bar/baz", "foo.bar", "foo-bar"].each do |invalid_url|
               record.url = invalid_url
-              expect(record).to be_invalid, "url: #{invalid_url.inspect}"
+              expect(record).not_to be_valid, "url: #{invalid_url.inspect}"
               expect(record.errors).to(be_of_kind(:url, :invalid), "url: #{invalid_url.inspect}")
             end
           end
