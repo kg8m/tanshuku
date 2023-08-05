@@ -168,13 +168,13 @@ bin/rails db:migrate
 
 ## Q&amp;A
 
-### What does “tanshuku” mean?
+### Q. What does “tanshuku” mean?
 
-“Tanshuku” is a Japanese word “短縮.” It means “shortening.” “短縮URL” in Japanese means “shortened URL” in English.
+A. “Tanshuku” is a Japanese word “短縮.” It means “shortening.” And “短縮URL” in Japanese means “shortened URL” in English.
 
-### \*\* (anything you want) isn’t implemented?
+### Q. \*\* (anything you want) isn’t implemented?
 
-Does Tanshuku have some missing features? Please [create an issue](https://github.com/kg8m/tanshuku/issues/new).
+A. Does Tanshuku have some missing features? Please [create an issue](https://github.com/kg8m/tanshuku/issues/new).
 
 ## How to develop
 
