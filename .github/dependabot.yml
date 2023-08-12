@@ -18,9 +18,11 @@ updates:
       time: "10:00"
       timezone: Asia/Tokyo
     groups:
-      dev-dependencies:
+      rspec:
         patterns:
           - "rspec*"
+      rubocop:
+        patterns:
           - "rubocop*"
     allow:
       - dependency-type: all
