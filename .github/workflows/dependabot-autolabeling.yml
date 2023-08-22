@@ -29,7 +29,7 @@ jobs:
           PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          if bundle exec ruby -r ./tools/reverse_dependencies -e "exit ReverseDependencies.tanshuku_depends_on?('${{ steps.dependabot-metadata.outputs.dependency-names }}')"; then
+          if bundle exec ruby -r ./tools/reverse_dependencies -e "exit '${{ steps.dependabot-metadata.outputs.dependency-names }}'.split(/,\s*/).any? { |dep| ReverseDependencies.tanshuku_depends_on?(dep) }"; then
             echo "Updated dependencies are for production."
           else
             gh pr edit "${PR_URL}" --add-label "dev-dependencies"
