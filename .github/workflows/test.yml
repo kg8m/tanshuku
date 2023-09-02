@@ -14,15 +14,15 @@ jobs:
       matrix:
         ruby-version:
           - "3.1"
-          - "ruby"
+          - "3.2"
         rails-version:
-          - ""
+          - "~> 7.0"
         addressable-version:
           - "~> 2.4.0"
           - "~> 2.5.0"
           - "~> 2.6.0"
           - "~> 2.7.0"
-          - ""
+          - "~> 2.8.0"
     runs-on: ubuntu-latest
     env:
       # Ignore `Gemfile.lock` on CI.
