@@ -89,7 +89,7 @@ GEM
     eventmachine (1.2.7)
     ffi (1.15.5)
     fileutils (1.7.1)
-    globalid (1.2.0)
+    globalid (1.2.1)
       activesupport (>= 6.1)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
@@ -111,7 +111,7 @@ GEM
     method_source (1.0.0)
     mini_mime (1.1.5)
     mini_portile2 (2.8.4)
-    minitest (5.19.0)
+    minitest (5.20.0)
     net-imap (0.3.7)
       date
       net-protocol
