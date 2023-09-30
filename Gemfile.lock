@@ -87,7 +87,7 @@ GEM
     diff-lcs (1.5.0)
     erubi (1.12.0)
     eventmachine (1.2.7)
-    ffi (1.15.5)
+    ffi (1.16.2)
     fileutils (1.7.1)
     globalid (1.2.1)
       activesupport (>= 6.1)
