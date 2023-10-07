@@ -38,6 +38,13 @@ RSpec.configure do |config|
   # `Rails::Generators::Testing::Behaviour` expects `FileUtils` to be included in generator tests.
   config.include FileUtils, type: :generator
 
-  require "rails/generators/testing/behaviour"
-  config.include Rails::Generators::Testing::Behaviour, type: :generator
+  begin
+    # For Rails 7.1+
+    require "rails/generators/testing/behavior"
+    config.include Rails::Generators::Testing::Behavior, type: :generator
+  rescue LoadError
+    # For Rails 7.0 or older
+    require "rails/generators/testing/behaviour"
+    config.include Rails::Generators::Testing::Behaviour, type: :generator
+  end
 end
