@@ -24,6 +24,8 @@ end
 group :development do
   gem "steep", require: false
 
+  gem "paint", require: false
+
   gem "rubocop", require: false
   gem "rubocop-md", require: false
   gem "rubocop-performance", require: false

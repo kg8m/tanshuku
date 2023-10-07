@@ -1,0 +1,4 @@
+# https://ruby-doc.org/3.2.2/exts/pty/PTY.html
+module PTY
+  def self.spawn: (String command) { (IO r, IO w, Integer pid) -> void } -> void
+end

@@ -42,35 +42,8 @@ end
 namespace :check do
   desc "Run all checks"
   task :all do
-    require "io/console"
-
-    win_width = IO.console.winsize[1]
-    line = "-" * win_width
-    exception = nil
-
-    %i[
-      rubocop
-      spec
-      steep:check
-      yard:check
-    ].each_with_index do |taskname, i|
-      puts "" if i.nonzero?
-      puts "#{line}\nExecute: #{taskname}\n#{line}\n\n"
-      Rake::Task[taskname].invoke
-    # rubocop:disable Lint/RescueException
-    rescue Exception => e
-      case e
-      # Abort in some cases, such as insufficient memory or interruption by `<C-c>`.
-      # https://ruby-doc.org/3.2.2/Exception.html#class-Exception-label-Built-In+Exception+Classes
-      when NoMemoryError, SignalException
-        raise
-      else
-        exception ||= e
-      end
-    end
-    # rubocop:enable Lint/RescueException
-
-    raise exception if exception
+    require "tasks/check_all"
+    CheckAll.call
   end
 end
 # rubocop:enable Rails/RakeEnvironment

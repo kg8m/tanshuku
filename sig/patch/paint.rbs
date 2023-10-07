@@ -1,0 +1,4 @@
+# https://github.com/janlelis/paint/blob/v2.3.0/lib/paint.rb
+module Paint
+  def self.[]: (String string, *untyped options) -> String
+end
