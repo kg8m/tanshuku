@@ -2,6 +2,8 @@
 
 Tanshuku is a simple and small Rails engine that makes it easier to shorten URLs.
 
+https://rubygems.org/gems/tanshuku
+
 ## Key Features
 
 - Generates a unique key for a URL.
