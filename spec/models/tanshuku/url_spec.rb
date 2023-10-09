@@ -26,7 +26,7 @@ RSpec.describe Tanshuku::Url do
 
             it "doesn’t have any error for url length" do
               record.valid?
-              expect(record.errors).not_to be_of_kind :url, :too_long
+              expect(record.errors).not_to be_added :url, :too_long
             end
           end
         end
@@ -38,7 +38,7 @@ RSpec.describe Tanshuku::Url do
 
           it "has a error for url length" do
             record.valid?
-            expect(record.errors).to be_of_kind :url, :too_long
+            expect(record.errors).to be_added :url, :too_long, count: default_max_url_length
           end
         end
       end
@@ -74,7 +74,7 @@ RSpec.describe Tanshuku::Url do
 
             it "doesn’t have any error for url length" do
               record.valid?
-              expect(record.errors).not_to be_of_kind :url, :too_long
+              expect(record.errors).not_to be_added :url, :too_long
             end
           end
         end
@@ -86,7 +86,7 @@ RSpec.describe Tanshuku::Url do
 
           it "has a error for url length" do
             record.valid?
-            expect(record.errors).to be_of_kind :url, :too_long
+            expect(record.errors).to be_added :url, :too_long, count: custom_max_url_length
           end
         end
       end
@@ -128,7 +128,7 @@ RSpec.describe Tanshuku::Url do
 
             it "is invalid" do
               expect(record).not_to be_valid
-              expect(record.errors).to be_of_kind :url, :invalid
+              expect(record.errors).to be_added :url, :invalid, value: invalid_url_string
             end
           end
         end
@@ -162,8 +162,8 @@ RSpec.describe Tanshuku::Url do
           it "is invalid" do
             ["foo", "foo/bar/baz", "foo.bar", "foo-bar"].each do |invalid_url|
               record.url = invalid_url
-              expect(record).not_to be_valid, "url: #{invalid_url.inspect}"
-              expect(record.errors).to(be_of_kind(:url, :invalid), "url: #{invalid_url.inspect}")
+              expect(record).to be_invalid, "url: #{invalid_url.inspect}"
+              expect(record.errors).to(be_added(:url, :invalid, value: invalid_url), "url: #{invalid_url.inspect}")
             end
           end
         end
@@ -177,7 +177,7 @@ RSpec.describe Tanshuku::Url do
     before do
       allow(Tanshuku::Url).to receive(:report_exception).and_wrap_original do |original_method, exception:, original_url:|
         reported_exceptions << exception
-        original_method.call(exception:, original_url:)
+        original_method.call(exception: exception, original_url: original_url)
       end
     end
 
@@ -208,7 +208,7 @@ RSpec.describe Tanshuku::Url do
 
         expect(reported_exceptions).to have_attributes(size: 1)
         expect(reported_exceptions[0]).to be_a ActiveRecord::RecordInvalid
-        expect(reported_exceptions[0].record.errors).to be_of_kind :url, :blank
+        expect(reported_exceptions[0].record.errors).to be_added :url, :blank
       end
     end
 
@@ -224,7 +224,7 @@ RSpec.describe Tanshuku::Url do
 
         expect(reported_exceptions).to have_attributes(size: 1)
         expect(reported_exceptions[0]).to be_a ActiveRecord::RecordInvalid
-        expect(reported_exceptions[0].record.errors).to be_of_kind :url, :invalid
+        expect(reported_exceptions[0].record.errors).to be_added :url, :invalid, value: original_url
       end
     end
 
@@ -1063,7 +1063,7 @@ RSpec.describe Tanshuku::Url do
       end
 
       it "reports the given exception and the given original_url via Rails.logger.warn" do
-        Tanshuku::Url.report_exception(exception:, original_url:)
+        Tanshuku::Url.report_exception(exception: exception, original_url: original_url)
         expect(Rails.logger).to have_received(:warn).with(
           "Tanshuku - Failed to shorten a URL: #{exception.inspect} for #{original_url.inspect}"
         )
@@ -1094,7 +1094,7 @@ RSpec.describe Tanshuku::Url do
       end
 
       it "reports the given exception and the given original_url via the custom reporter" do
-        Tanshuku::Url.report_exception(exception:, original_url:)
+        Tanshuku::Url.report_exception(exception: exception, original_url: original_url)
         expect(Rails.logger).not_to have_received(:warn)
         expect(reported_exceptions).to eq [exception]
         expect(reported_original_urls).to eq [original_url]
@@ -1244,7 +1244,7 @@ RSpec.describe Tanshuku::Url do
     url = "https://google.com/"
 
     {
-      url:,
+      url: url,
       hashed_url: Tanshuku::Url.hash_url(url),
       key: Tanshuku::Url.generate_key,
     }

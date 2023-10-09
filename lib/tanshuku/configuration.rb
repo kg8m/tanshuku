@@ -42,7 +42,68 @@ module Tanshuku
       end
     end
 
-    include ActiveModel::Attributes
+    if defined?(ActiveModel::Attributes)
+      include ActiveModel::Attributes
+    else
+      # https://github.com/rails/rails/blob/v5.2.8.1/activemodel/lib/active_model/attributes.rb
+      # https://github.com/rails/rails/blob/v5.2.8.1/activemodel/lib/active_model/type/integer.rb
+      concerning :PetitModelAttributes do
+        const_set :NO_DEFAULT_PROVIDED, Object.new
+
+        class_methods do
+          # rubocop:disable Metrics/MethodLength
+
+          # A petit and limited implementation of `ActiveModel::Attributes`'s `attribute` method for backward
+          # compatibility.
+          #
+          # @param name [Symbol] An attribute name.
+          # @param cast_type [Symbol,nil] A type to cast the attribute's value.
+          # @param default [Object] A default value of the attribute.
+          #
+          # @return [void]
+          def attribute(name, cast_type = nil, default: NO_DEFAULT_PROVIDED)
+            attr_reader name
+
+            case cast_type
+            when nil
+              attr_writer name
+            when :integer
+              class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
+                def #{name}=(value)          # def max_url_length=(value)
+                  @#{name} =                 #   @max_url_length =
+                    case value               #     case value
+                    when true                #     when true
+                      1                      #       1
+                    when false               #     when false
+                      0                      #       0
+                    when nil                 #     when nil
+                      nil                    #       nil
+                    else                     #     else
+                      value.to_i rescue nil  #       value.to_i rescue nil
+                    end                      #     end
+                end                          # end
+              RUBY
+            else
+              raise ArgumentError, "Non-supported cast type: #{cast_type.inspect}"
+            end
+
+            return if default == NO_DEFAULT_PROVIDED
+
+            mod =
+              Module.new do
+                class_eval(<<~RUBY, __FILE__, __LINE__ + 1)
+                  def initialize(*args)                # def initialize(*args)
+                    super                              #   super
+                    self.#{name} = #{default.inspect}  #   self.max_url_length = 10_000
+                  end                                  # end
+                RUBY
+              end
+            prepend mod
+          end
+          # rubocop:enable Metrics/MethodLength
+        end
+      end
+    end
 
     # @!attribute [rw] default_url_options
     #   Default URL options for Rails’ +url_for+. Defaults to +{}+.
@@ -166,12 +227,12 @@ module Tanshuku
     #     Tanshuku.configure do |config|
     #       config.exception_reporter =
     #         lambda { |exception:, original_url:|
-    #           Sentry.capture_exception(exception, tags: { original_url: })
+    #           Sentry.capture_exception(exception, tags: { original_url: original_url })
     #         }
     #     end
     attribute :exception_reporter, default: DefaultExceptionReporter
 
-    def initialize(...)
+    def initialize(*args)
       super
       @mutex = Mutex.new
     end

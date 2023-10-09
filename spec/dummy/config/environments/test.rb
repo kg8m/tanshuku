@@ -16,11 +16,17 @@ Rails.application.configure do
   # system, or in some way before deploying your code.
   config.eager_load = ENV["CI"].present?
 
-  # Configure public file server for tests with Cache-Control for performance.
-  config.public_file_server.enabled = true
-  config.public_file_server.headers = {
-    "Cache-Control" => "public, max-age=#{1.hour.to_i}"
-  }
+  if config.respond_to?(:public_file_server)
+    # Configure public file server for tests with Cache-Control for performance.
+    config.public_file_server.enabled = true
+    config.public_file_server.headers = {
+      "Cache-Control" => "public, max-age=#{1.hour.to_i}"
+    }
+  else
+    # Configure static asset server for tests with Cache-Control for performance
+    config.serve_static_files = true
+    config.static_cache_control = "public, max-age=3600"
+  end
 
   # Show full error reports and disable caching.
   config.consider_all_requests_local       = true
@@ -28,13 +34,15 @@ Rails.application.configure do
   config.cache_store = :null_store
 
   # Raise exceptions instead of rendering exception templates.
-  config.action_dispatch.show_exceptions = (Gem::Version.new(Rails.version) >= "7.1" ? :none : false)
+  config.action_dispatch.show_exceptions = false
 
   # Disable request forgery protection in test environment.
   config.action_controller.allow_forgery_protection = false
 
-  # Store uploaded files on the local file system in a temporary directory.
-  config.active_storage.service = :test
+  if config.respond_to?(:active_storage)
+    # Store uploaded files on the local file system in a temporary directory.
+    config.active_storage.service = :test
+  end
 
   config.action_mailer.perform_caching = false
 
