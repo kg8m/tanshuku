@@ -35,7 +35,7 @@ module Tanshuku
   #   Tanshuku.configure do |config|
   #     config.default_url_options = { host: "localhost", protocol: :https }
   #   end
-  def self.configure(&)
-    config.configure(&)
+  def self.configure(&block)
+    config.configure(&block)
   end
 end

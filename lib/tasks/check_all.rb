@@ -6,7 +6,7 @@ require "paint"
 require "pty"
 
 class CheckAll
-  TASKNAMES = %i[rubocop spec steep:check yard:check].freeze
+  TASKNAMES = %i[rubocop spec yard:check].freeze
   LINE = Paint["-" * (IO.console or raise).winsize[1], :bold]
   TITLE_TEMPLATE = Paint["\n#{LINE}\nExecute: %<command>s\n#{LINE}\n\n", :bold]
 
@@ -32,7 +32,7 @@ class CheckAll
       command = "bundle exec rake #{taskname}"
 
       outputs = []
-      outputs << format(TITLE_TEMPLATE, command:)
+      outputs << format(TITLE_TEMPLATE, command: command)
 
       # Use `PTY.spawn` to get colorized outputs of each command.
       PTY.spawn(command) do |reader, writer, pid|

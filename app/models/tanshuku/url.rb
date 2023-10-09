@@ -26,10 +26,11 @@ module Tanshuku
     DEFAULT_NAMESPACE = ""
 
     validates :url, :hashed_url, :key, presence: true
-    validates :url, length: { maximum: proc { Tanshuku.config.max_url_length } }
     validates :url, format: { with: proc { Tanshuku.config.url_pattern } }, allow_blank: true
 
     # Don’t validate uniqueness of unique attributes. Raise ActiveRecord::RecordNotUnique instead if the attributes get
+    validate :validates_length_of_url
+
     # duplicated. Then rescue the exception and try to retry.
     # validates :url, :hashed_url, :key, uniqueness: true
 
@@ -82,8 +83,8 @@ module Tanshuku
       begin
         transaction do
           record =
-            create_or_find_by!(hashed_url: hash_url(url, namespace:)) do |r|
-              r.attributes = { url:, key: generate_key }
+            create_or_find_by!(hashed_url: hash_url(url, namespace: namespace)) do |r|
+              r.attributes = { url: url, key: generate_key }
             end
 
           record.shortened_url(url_options)
@@ -94,13 +95,22 @@ module Tanshuku
           retries += 1
           retry
         else
-          report_exception(exception: e, original_url:)
+          report_exception(exception: e, original_url: original_url)
           original_url
         end
       end
     rescue StandardError => e
-      report_exception(exception: e, original_url:)
+      report_exception(exception: e, original_url: original_url)
       original_url
+    end
+
+    unless respond_to?(:create_or_find_by!)
+      # https://github.com/rails/rails/blob/v6.0.0/activerecord/lib/active_record/relation.rb#L218-L222
+      def self.create_or_find_by!(attributes, &block)
+        transaction(requires_new: true) { create!(attributes, &block) }
+      rescue ActiveRecord::RecordNotUnique
+        find_by!(attributes)
+      end
     end
 
     # Finds a {Tanshuku::Url} record by a non-shortened URL.
@@ -112,9 +122,9 @@ module Tanshuku
     # @return [nil] +nil+ unless found.
     def self.find_by_url(url, namespace: DEFAULT_NAMESPACE)
       normalized_url = normalize_url(url)
-      hashed_url = hash_url(normalized_url, namespace:)
+      hashed_url = hash_url(normalized_url, namespace: namespace)
 
-      find_by(hashed_url:)
+      find_by(hashed_url: hashed_url)
     end
 
     # Normalizes a URL. Adds or removes a trailing slash, removes +?+ for an empty query, and so on. And sorts query
@@ -138,7 +148,7 @@ module Tanshuku
     #
     # @return [String] Depends on your {Tanshuku::Configuration#url_hasher} configuration.
     def self.hash_url(url, namespace: DEFAULT_NAMESPACE)
-      Tanshuku.config.url_hasher.call(url, namespace:)
+      Tanshuku.config.url_hasher.call(url, namespace: namespace)
     end
 
     # Generates a unique key for a shortened URL.
@@ -159,7 +169,7 @@ module Tanshuku
     #
     # @return [void] Depends on your {Tanshuku::Configuration#exception_reporter} configuration.
     def self.report_exception(exception:, original_url:)
-      Tanshuku.config.exception_reporter.call(exception:, original_url:)
+      Tanshuku.config.exception_reporter.call(exception: exception, original_url: original_url)
     end
 
     # The record’s shortened URL.
@@ -174,6 +184,14 @@ module Tanshuku
       url_options[:key] = key
 
       Tanshuku::Engine.routes.url_for(url_options)
+    end
+
+    private
+
+    def validates_length_of_url
+      if url && url.length > Tanshuku.config.max_url_length
+        errors.add(:url, :too_long, count: Tanshuku.config.max_url_length)
+      end
     end
   end
   # rubocop:enable Rails/ApplicationRecord
