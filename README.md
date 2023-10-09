@@ -1,3 +1,7 @@
+[![RubyGems.org](https://img.shields.io/badge/RubyGems.org-Tanshuku%20v2-red)](https://rubygems.org/gems/tanshuku/versions/2.0.0)
+[![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Checks](https://github.com/kg8m/tanshuku/actions/workflows/checks.yml/badge.svg?branch=2-0-stable)](https://github.com/kg8m/tanshuku/blob/2-0-stable/.github/workflows/checks.yml)
+
 # Tanshuku
 
 Tanshuku is a simple and small Rails engine that makes it easier to shorten URLs.
