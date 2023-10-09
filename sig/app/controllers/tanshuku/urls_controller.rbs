@@ -1,5 +1,0 @@
-module Tanshuku
-  class UrlsController < ActionController::API
-    def show: -> void
-  end
-end

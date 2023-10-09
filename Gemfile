@@ -16,14 +16,14 @@ else
   gem "rails", ENV.fetch("RAILS_VERSION")
 end
 
+gem "psych", "~> 3.3"
+
 group :development, :test do
   gem "sprockets-rails"
   gem "sqlite3"
 end
 
 group :development do
-  gem "steep", require: false
-
   gem "paint", require: false
 
   gem "rubocop", require: false

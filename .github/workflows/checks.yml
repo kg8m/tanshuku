@@ -3,7 +3,7 @@ name: Checks
 on:
   push:
     branches:
-      - main
+      - 2-0-stable
   pull_request:
 
 jobs:
@@ -13,11 +13,10 @@ jobs:
       fail-fast: false
       matrix:
         ruby-version:
-          - "3.1"
-          - "3.2"
+          - "3.0"
         rails-version:
-          - "~> 7.0.0"
-          - "~> 7.1.0"
+          - "~> 6.0.0"
+          - "~> 6.1.0"
         addressable-version:
           - "~> 2.4.0"
           - "~> 2.5.0"
@@ -46,6 +45,10 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
 
+      - name: Setup database
+        run: bin/rails db:migrate RAILS_ENV=test
+        timeout-minutes: 5
+
       - name: RSpec
         run: bundle exec rake spec
         timeout-minutes: 5
@@ -53,6 +56,12 @@ jobs:
   lint:
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    env:
+      # Ignore `Gemfile.lock` on CI.
+      BUNDLE_GEMFILE: ${{ github.workspace }}/Gemfile.ci
+
+      RAILS_VERSION: "~> 6.1.0"
+      ADDRESSABLE_VERSION: "~> 2.8.0"
     name: Lint
     steps:
       - uses: actions/checkout@v4
@@ -61,36 +70,22 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ruby
+          ruby-version: "3.0"
           bundler-cache: true
 
       - name: RuboCop
         run: bundle exec rake rubocop
         timeout-minutes: 5
 
-  typecheck:
-    timeout-minutes: 10
-    runs-on: ubuntu-latest
-    name: Typecheck
-    steps:
-      - uses: actions/checkout@v4
-
-      # https://github.com/ruby/setup-ruby
-      - name: Setup Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: ruby
-          bundler-cache: true
-
-      - name: Run typecheck
-        run: |
-          bundle exec rake steep:prepare
-          bundle exec rake steep:check
-        timeout-minutes: 5
-
   documentation-check:
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    env:
+      # Ignore `Gemfile.lock` on CI.
+      BUNDLE_GEMFILE: ${{ github.workspace }}/Gemfile.ci
+
+      RAILS_VERSION: "~> 6.1.0"
+      ADDRESSABLE_VERSION: "~> 2.8.0"
     name: Documentation syntax check
     steps:
       - uses: actions/checkout@v4
@@ -99,7 +94,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: ruby
+          ruby-version: "3.0"
           bundler-cache: true
 
       - name: Check YARD docs

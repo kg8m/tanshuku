@@ -43,22 +43,6 @@ module Tanshuku
     end
 
     include ActiveModel::Attributes
-
-    # @!attribute [rw] default_url_options
-    #   Default URL options for Rails’ +url_for+. Defaults to +{}+.
-    #
-    #   @return [Hash]
-    #   @return [void] If you set an invalid object.
-    #
-    #   @note
-    #     The example below means that the configured host and protocol are used. Shortened URLs will be like
-    #     +https://example.com/t/abcdefghij0123456789+.
-    #
-    #   @example
-    #     # config/initializers/tanshuku.rb
-    #     Tanshuku.configure do |config|
-    #       config.default_url_options = { host: "example.com", protocol: :https }
-    #     end
     attribute :default_url_options, default: {}
 
     # @!attribute [rw] max_url_length
@@ -166,12 +150,12 @@ module Tanshuku
     #     Tanshuku.configure do |config|
     #       config.exception_reporter =
     #         lambda { |exception:, original_url:|
-    #           Sentry.capture_exception(exception, tags: { original_url: })
+    #           Sentry.capture_exception(exception, tags: { original_url: original_url })
     #         }
     #     end
     attribute :exception_reporter, default: DefaultExceptionReporter
 
-    def initialize(...)
+    def initialize(*args)
       super
       @mutex = Mutex.new
     end
