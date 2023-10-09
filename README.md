@@ -1,4 +1,6 @@
 [![RubyGems.org](https://img.shields.io/badge/RubyGems.org-Tanshuku-red)](https://rubygems.org/gems/tanshuku)
+[![Ruby 2.5+](https://img.shields.io/badge/Ruby-2.5+-red)](https://www.ruby-lang.org)
+[![Rails 5.1+](https://img.shields.io/badge/Rails-5.1+-red)](https://rubyonrails.org/)
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Checks](https://github.com/kg8m/tanshuku/actions/workflows/checks.yml/badge.svg)](https://github.com/kg8m/tanshuku/actions/workflows/checks.yml)
 
