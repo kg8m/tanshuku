@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_02_20_123456) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_20_123456) do
   create_table "tanshuku_urls", force: :cascade do |t|
     t.text "url", null: false
     t.string "hashed_url", limit: 128, null: false
