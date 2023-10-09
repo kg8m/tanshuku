@@ -68,4 +68,5 @@ jobs:
             ```
             ${{ steps.read-output.outputs.content }}
             ```
+          labels: dependencies,dev-dependencies
           assignees: kg8m
