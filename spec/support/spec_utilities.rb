@@ -10,7 +10,7 @@ module SpecUtilities
     shortened_url = Tanshuku::Url.shorten(url)
 
     key = shortened_url[SHORTENED_URL_PATTERN, 1]
-    Tanshuku::Url.find_by!(key:)
+    Tanshuku::Url.find_by!(key: key)
   end
 
   def gem_root

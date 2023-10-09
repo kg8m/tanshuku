@@ -177,7 +177,7 @@ RSpec.describe Tanshuku::Url do
     before do
       allow(Tanshuku::Url).to receive(:report_exception).and_wrap_original do |original_method, exception:, original_url:|
         reported_exceptions << exception
-        original_method.call(exception:, original_url:)
+        original_method.call(exception: exception, original_url: original_url)
       end
     end
 
@@ -1063,7 +1063,7 @@ RSpec.describe Tanshuku::Url do
       end
 
       it "reports the given exception and the given original_url via Rails.logger.warn" do
-        Tanshuku::Url.report_exception(exception:, original_url:)
+        Tanshuku::Url.report_exception(exception: exception, original_url: original_url)
         expect(Rails.logger).to have_received(:warn).with(
           "Tanshuku - Failed to shorten a URL: #{exception.inspect} for #{original_url.inspect}"
         )
@@ -1094,7 +1094,7 @@ RSpec.describe Tanshuku::Url do
       end
 
       it "reports the given exception and the given original_url via the custom reporter" do
-        Tanshuku::Url.report_exception(exception:, original_url:)
+        Tanshuku::Url.report_exception(exception: exception, original_url: original_url)
         expect(Rails.logger).not_to have_received(:warn)
         expect(reported_exceptions).to eq [exception]
         expect(reported_original_urls).to eq [original_url]
@@ -1244,7 +1244,7 @@ RSpec.describe Tanshuku::Url do
     url = "https://google.com/"
 
     {
-      url:,
+      url: url,
       hashed_url: Tanshuku::Url.hash_url(url),
       key: Tanshuku::Url.generate_key,
     }

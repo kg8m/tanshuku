@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_20_123456) do
+ActiveRecord::Schema.define(version: 2023_02_20_123456) do
+
   create_table "tanshuku_urls", force: :cascade do |t|
     t.text "url", null: false
     t.string "hashed_url", limit: 128, null: false
     t.string "key", limit: 20, null: false
-    t.datetime "created_at", precision: nil, null: false
+    t.datetime "created_at", null: false
     t.index ["hashed_url"], name: "index_tanshuku_urls_on_hashed_url", unique: true
     t.index ["key"], name: "index_tanshuku_urls_on_key", unique: true
   end

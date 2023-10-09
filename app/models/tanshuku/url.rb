@@ -82,8 +82,8 @@ module Tanshuku
       begin
         transaction do
           record =
-            create_or_find_by!(hashed_url: hash_url(url, namespace:)) do |r|
-              r.attributes = { url:, key: generate_key }
+            create_or_find_by!(hashed_url: hash_url(url, namespace: namespace)) do |r|
+              r.attributes = { url: url, key: generate_key }
             end
 
           record.shortened_url(url_options)
@@ -94,12 +94,12 @@ module Tanshuku
           retries += 1
           retry
         else
-          report_exception(exception: e, original_url:)
+          report_exception(exception: e, original_url: original_url)
           original_url
         end
       end
     rescue StandardError => e
-      report_exception(exception: e, original_url:)
+      report_exception(exception: e, original_url: original_url)
       original_url
     end
 
@@ -112,9 +112,9 @@ module Tanshuku
     # @return [nil] +nil+ unless found.
     def self.find_by_url(url, namespace: DEFAULT_NAMESPACE)
       normalized_url = normalize_url(url)
-      hashed_url = hash_url(normalized_url, namespace:)
+      hashed_url = hash_url(normalized_url, namespace: namespace)
 
-      find_by(hashed_url:)
+      find_by(hashed_url: hashed_url)
     end
 
     # Normalizes a URL. Adds or removes a trailing slash, removes +?+ for an empty query, and so on. And sorts query
@@ -138,7 +138,7 @@ module Tanshuku
     #
     # @return [String] Depends on your {Tanshuku::Configuration#url_hasher} configuration.
     def self.hash_url(url, namespace: DEFAULT_NAMESPACE)
-      Tanshuku.config.url_hasher.call(url, namespace:)
+      Tanshuku.config.url_hasher.call(url, namespace: namespace)
     end
 
     # Generates a unique key for a shortened URL.
@@ -159,7 +159,7 @@ module Tanshuku
     #
     # @return [void] Depends on your {Tanshuku::Configuration#exception_reporter} configuration.
     def self.report_exception(exception:, original_url:)
-      Tanshuku.config.exception_reporter.call(exception:, original_url:)
+      Tanshuku.config.exception_reporter.call(exception: exception, original_url: original_url)
     end
 
     # The record’s shortened URL.

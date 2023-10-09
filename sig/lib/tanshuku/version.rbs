@@ -1,3 +1,0 @@
-module Tanshuku
-  VERSION: String
-end

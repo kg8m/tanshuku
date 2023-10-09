@@ -65,7 +65,7 @@ The following example means that an exception and a URL will be reported to [Sen
 Tanshuku.configure do |config|
   config.exception_reporter =
     lambda { |exception:, original_url:|
-      Sentry.capture_exception(exception, tags: { original_url: })
+      Sentry.capture_exception(exception, tags: { original_url: original_url })
     }
 end
 ```
@@ -180,7 +180,7 @@ A. Does Tanshuku have some missing features? Please [create an issue](https://gi
 
 1. Fork this repository
 1. `git clone` your fork
-1. `bundle install` and `rake steep:prepare`
+1. `bundle install`
 1. Update sources
 1. `rake`
 1. Fix `rake` errors if `rake` fails
