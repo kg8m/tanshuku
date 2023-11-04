@@ -260,6 +260,9 @@ GEM
       rubocop-factory_bot (~> 2.22)
     rubocop-thread_safety (0.5.1)
       rubocop (>= 0.90.0)
+    rubocop-yard (0.7.0)
+      rubocop
+      yard
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
     securerandom (0.2.2)
@@ -330,6 +333,7 @@ DEPENDENCIES
   rubocop-rake
   rubocop-rspec
   rubocop-thread_safety
+  rubocop-yard
   sprockets-rails
   sqlite3
   steep

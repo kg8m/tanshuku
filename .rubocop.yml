@@ -10,6 +10,7 @@ require:
   - rubocop-rake
   - rubocop-rspec
   - rubocop-thread_safety
+  - rubocop-yard
 
 AllCops:
   TargetRubyVersion: 3.1

@@ -33,6 +33,7 @@ group :development do
   gem "rubocop-rake", require: false
   gem "rubocop-rspec", require: false
   gem "rubocop-thread_safety", require: false
+  gem "rubocop-yard", require: false
 
   gem "bump", require: false
   gem "yard", require: false
