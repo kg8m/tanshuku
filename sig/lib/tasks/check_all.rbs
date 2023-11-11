@@ -5,6 +5,8 @@ class CheckAll
 
   attr_reader failed_commands: Array[String]
 
+  def initialize: () -> void
+
   def self.call: () -> void
 
   def call: () -> void
