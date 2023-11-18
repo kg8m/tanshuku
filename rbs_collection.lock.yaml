@@ -1,10 +1,4 @@
 ---
-sources:
-- type: git
-  name: ruby/gem_rbs_collection
-  revision: 25286c51a19927f28623aee3cd36655f902399ba
-  remote: https://github.com/ruby/gem_rbs_collection.git
-  repo_dir: gems
 path: ".gem_rbs_collection"
 gems:
 - name: actionmailer
@@ -111,6 +105,10 @@ gems:
   version: '0'
   source:
     type: stdlib
+- name: dbm
+  version: '0'
+  source:
+    type: stdlib
 - name: digest
   version: '0'
   source:
@@ -167,6 +165,14 @@ gems:
   version: '0'
   source:
     type: stdlib
+- name: net-protocol
+  version: '0'
+  source:
+    type: stdlib
+- name: net-smtp
+  version: '0'
+  source:
+    type: stdlib
 - name: nokogiri
   version: '1.11'
   source:
@@ -175,6 +181,14 @@ gems:
     revision: 25286c51a19927f28623aee3cd36655f902399ba
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
+- name: pstore
+  version: '0'
+  source:
+    type: stdlib
+- name: psych
+  version: '0'
+  source:
+    type: stdlib
 - name: rack
   version: '2.2'
   source:
