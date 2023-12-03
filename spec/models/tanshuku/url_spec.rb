@@ -192,7 +192,7 @@ RSpec.describe Tanshuku::Url do
         expect(result).to eq original_url
 
         expect(reported_exceptions).to have_attributes(size: 1)
-        expect(reported_exceptions[0]).to be_a ArgumentError
+        expect(reported_exceptions.first).to be_a ArgumentError
       end
     end
 
@@ -207,8 +207,8 @@ RSpec.describe Tanshuku::Url do
         expect(result).to eq original_url
 
         expect(reported_exceptions).to have_attributes(size: 1)
-        expect(reported_exceptions[0]).to be_a ActiveRecord::RecordInvalid
-        expect(reported_exceptions[0].record.errors).to be_of_kind :url, :blank
+        expect(reported_exceptions.first).to be_a ActiveRecord::RecordInvalid
+        expect(reported_exceptions.first.record.errors).to be_of_kind :url, :blank
       end
     end
 
@@ -223,8 +223,8 @@ RSpec.describe Tanshuku::Url do
         expect(result).to eq original_url
 
         expect(reported_exceptions).to have_attributes(size: 1)
-        expect(reported_exceptions[0]).to be_a ActiveRecord::RecordInvalid
-        expect(reported_exceptions[0].record.errors).to be_of_kind :url, :invalid
+        expect(reported_exceptions.first).to be_a ActiveRecord::RecordInvalid
+        expect(reported_exceptions.first.record.errors).to be_of_kind :url, :invalid
       end
     end
 
@@ -460,7 +460,7 @@ RSpec.describe Tanshuku::Url do
           expect(result).to eq original_url
 
           expect(reported_exceptions).to have_attributes(size: 1)
-          expect(reported_exceptions[0]).to be_a ActiveRecord::RecordNotFound
+          expect(reported_exceptions.first).to be_a ActiveRecord::RecordNotFound
         end
       end
     end
@@ -480,8 +480,8 @@ RSpec.describe Tanshuku::Url do
         expect(result).to eq original_url
 
         expect(reported_exceptions).to have_attributes(size: 1)
-        expect(reported_exceptions[0]).to be_a ArgumentError
-        expect(reported_exceptions[0].message).to match(/Missing host to link to!/)
+        expect(reported_exceptions.first).to be_a ArgumentError
+        expect(reported_exceptions.first.message).to match(/Missing host to link to!/)
       end
     end
 
