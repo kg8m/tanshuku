@@ -83,10 +83,12 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
 
+      - name: Prepare for typecheck
+        run: bundle exec rake steep:prepare
+        timeout-minutes: 5
+
       - name: Run typecheck
-        run: |
-          bundle exec rake steep:prepare
-          bundle exec rake steep:check
+        run: bundle exec rake steep:check
         timeout-minutes: 5
 
   documentation-check:
