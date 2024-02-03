@@ -40,7 +40,7 @@ jobs:
 
       # https://github.com/peter-evans/create-pull-request
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
+        uses: peter-evans/create-pull-request@v6
         with:
           # Use my GitHub app’s temporary token because the default `GITHUB_TOKEN` prevents other workflows from being
           # triggered when a pull request is created.
