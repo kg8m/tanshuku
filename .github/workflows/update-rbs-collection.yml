@@ -24,7 +24,7 @@ jobs:
 
       - name: Generate token
         id: generate_token
-        uses: getsentry/action-github-app-token@v2
+        uses: getsentry/action-github-app-token@v3
         with:
           app_id: ${{ secrets.KG8M_BOT_APP_ID }}
           private_key: ${{ secrets.KG8M_BOT_PRIVATE_KEY }}
