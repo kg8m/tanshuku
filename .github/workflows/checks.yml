@@ -42,7 +42,7 @@ jobs:
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.170.0
+        uses: ruby/setup-ruby@v1.171.0
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
@@ -60,7 +60,7 @@ jobs:
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.170.0
+        uses: ruby/setup-ruby@v1.171.0
         with:
           ruby-version: "3.3"
           bundler-cache: true
@@ -78,7 +78,7 @@ jobs:
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.170.0
+        uses: ruby/setup-ruby@v1.171.0
         with:
           ruby-version: "3.3"
           bundler-cache: true
@@ -100,7 +100,7 @@ jobs:
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.170.0
+        uses: ruby/setup-ruby@v1.171.0
         with:
           ruby-version: "3.3"
           bundler-cache: true
