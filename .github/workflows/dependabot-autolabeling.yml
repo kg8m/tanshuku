@@ -12,18 +12,18 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.172.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
           bundler-cache: true
 
       - name: Fetch Dependabot metadata
         id: dependabot-metadata
-        uses: dependabot/fetch-metadata@v1.6.0
+        uses: dependabot/fetch-metadata@v1
       - name: Add the "dev-dependencies" label if the updated dependency is for development
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}

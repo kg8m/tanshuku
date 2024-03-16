@@ -38,11 +38,11 @@ jobs:
       Rails ${{ matrix.rails-version }} &&
       Addressable ${{ matrix.addressable-version }}
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.172.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
@@ -56,11 +56,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.172.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
           bundler-cache: true
@@ -74,11 +74,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Typecheck
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.172.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
           bundler-cache: true
@@ -96,11 +96,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Documentation syntax check
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
-        uses: ruby/setup-ruby@v1.172.0
+        uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
           bundler-cache: true
