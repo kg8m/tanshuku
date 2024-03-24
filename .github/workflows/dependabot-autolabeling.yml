@@ -23,7 +23,7 @@ jobs:
 
       - name: Fetch Dependabot metadata
         id: dependabot-metadata
-        uses: dependabot/fetch-metadata@v1
+        uses: dependabot/fetch-metadata@v2
       - name: Add the "dev-dependencies" label if the updated dependency is for development
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
