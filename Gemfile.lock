@@ -340,7 +340,7 @@ DEPENDENCIES
   rubocop-thread_safety
   rubocop-yard
   sprockets-rails
-  sqlite3
+  sqlite3 (~> 1.7)
   steep
   tanshuku!
   thin
