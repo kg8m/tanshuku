@@ -258,6 +258,9 @@ GEM
       rubocop (~> 1.0)
     rubocop-rspec (3.0.1)
       rubocop (~> 1.61)
+    rubocop-rspec_rails (2.30.0)
+      rubocop (~> 1.61)
+      rubocop-rspec (~> 3, >= 3.0.1)
     rubocop-thread_safety (0.5.1)
       rubocop (>= 0.90.0)
     rubocop-yard (0.9.3)
@@ -331,6 +334,7 @@ DEPENDENCIES
   rubocop-rails
   rubocop-rake
   rubocop-rspec
+  rubocop-rspec_rails
   rubocop-thread_safety
   rubocop-yard
   sprockets-rails
