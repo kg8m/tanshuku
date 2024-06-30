@@ -28,3 +28,4 @@ updates:
       - dependency-type: all
     reviewers:
       - kg8m
+    open-pull-requests-limit: 15
