@@ -29,7 +29,8 @@ Gem::Specification.new do |spec|
   spec.files =
     Dir.chdir(__dir__) do
       `git ls-files -z`.split("\x0").reject do |f|
-        (File.expand_path(f) == __FILE__) || f.match?(%r{\A(?:\.|Gemfile|Rakefile\z|(?:bin|sig/patch|spec|tmp|tools)/)})
+        (File.expand_path(f) == __FILE__) ||
+          f.match?(%r{\A(?:\.|Gemfile|Rakefile\z|Steepfile\z|rbs_collection|(?:bin|sig/patch|spec|tmp|tools)/)})
       end
     end
   spec.require_paths = ["lib"]
