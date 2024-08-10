@@ -19,6 +19,7 @@ jobs:
         rails-version:
           - "~> 7.0.0"
           - "~> 7.1.0"
+          - "~> 7.2.0"
         addressable-version:
           - "~> 2.4.0"
           - "~> 2.5.0"
