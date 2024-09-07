@@ -18,6 +18,12 @@ updates:
       time: "10:00"
       timezone: Asia/Tokyo
     groups:
+      rails:
+        patterns:
+          - "action*"
+          - "active*"
+          - "rails"
+          - "railties"
       rspec:
         patterns:
           - "rspec*"
