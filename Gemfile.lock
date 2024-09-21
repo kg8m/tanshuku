@@ -102,7 +102,7 @@ GEM
     fileutils (1.7.2)
     globalid (1.2.1)
       activesupport (>= 6.1)
-    i18n (1.14.5)
+    i18n (1.14.6)
       concurrent-ruby (~> 1.0)
     io-console (0.7.2)
     irb (1.14.0)
