@@ -1,5 +1,5 @@
 # https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions#enable-auto-merge-on-a-pull-request
-name: Dependabot Auto-merge
+name: Bot Auto-merge
 
 on:
   pull_request:
@@ -11,9 +11,11 @@ permissions:
   pull-requests: write
 
 jobs:
-  dependabot-auto-merge:
+  bot-auto-merge:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.event.label.name == 'dev-dependencies'
+    if: >-
+      contains(fromJSON('["dependabot[bot]", "kg8m-bot"]'), github.event.pull_request.user.login) &&
+      github.event.label.name == 'dev-dependencies'
     steps:
       - name: Generate token
         id: generate_token
@@ -21,7 +23,7 @@ jobs:
         with:
           app_id: "${{ secrets.KG8M_BOT_APP_ID }}"
           private_key: "${{ secrets.KG8M_BOT_PRIVATE_KEY }}"
-      - name: Enable auto-merge for Dependabot PRs
+      - name: Enable auto-merge for bot PRs
         run: gh pr merge --auto --merge "$PR_URL"
         env:
           PR_URL: "${{ github.event.pull_request.html_url }}"
