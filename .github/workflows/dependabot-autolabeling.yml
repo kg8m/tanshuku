@@ -21,13 +21,26 @@ jobs:
           ruby-version: "3.3"
           bundler-cache: true
 
+      - name: Generate token
+        id: generate_token
+        uses: getsentry/action-github-app-token@v3
+        with:
+          app_id: "${{ secrets.KG8M_BOT_APP_ID }}"
+          private_key: "${{ secrets.KG8M_BOT_PRIVATE_KEY }}"
+
       - name: Fetch Dependabot metadata
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@v2
+
       - name: Add the "dev-dependencies" label if the updated dependency is for development
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # Use my GitHub app’s temporary token because the default `GITHUB_TOKEN` prevents other workflows from being
+          # triggered on a pull request creation.
+          # cf. https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
+          GH_TOKEN: "${{ steps.generate_token.outputs.token }}"
+
         run: |
           if bundle exec ruby -r ./tools/reverse_dependencies -e "exit '${{ steps.dependabot-metadata.outputs.dependency-names }}'.split(/,\s*/).any? { |dep| ReverseDependencies.tanshuku_depends_on?(dep) }"; then
             echo "Updated dependencies are for production."
