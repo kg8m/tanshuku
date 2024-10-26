@@ -25,7 +25,7 @@ group :development, :test do
   #   LoadError:
   #     Error loading the 'sqlite3' Active Record adapter. Missing a gem it depends on? can't activate sqlite3 (~> 1.4),
   #     already activated sqlite3-2.0.1-x86_64-linux-gnu. Make sure all dependencies are added to Gemfile.
-  gem "sqlite3", "~> 1.7"
+  gem "sqlite3", "~> 2.1"
 end
 
 group :development do
