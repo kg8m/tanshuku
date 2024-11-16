@@ -21,7 +21,9 @@ class CheckAll
   end
 
   def call
+    # rubocop:disable ThreadSafety/NewThread
     TASKNAMES.map { |taskname| Thread.new(taskname, &executor) }.each(&:join)
+    # rubocop:enable ThreadSafety/NewThread
     output_result
   end
 
