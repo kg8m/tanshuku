@@ -15,9 +15,9 @@ module Tanshuku
   #   {Tanshuku.configure} for configuration.
   def self.config
     # Disable this cop but use `Tanshuku::Configuration#configure` for thread-safety.
-    # rubocop:disable ThreadSafety/InstanceVariableInClassMethod
+    # rubocop:disable ThreadSafety/ClassInstanceVariable
     @config ||= Configuration.new
-    # rubocop:enable ThreadSafety/InstanceVariableInClassMethod
+    # rubocop:enable ThreadSafety/ClassInstanceVariable
   end
 
   # Configures Tanshuku.

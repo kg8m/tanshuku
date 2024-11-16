@@ -109,7 +109,7 @@ Style/DisableCopsWithinSourceCodeDirective:
     - Rails/ApplicationRecord
     - Rails/RakeEnvironment
     - Rails/TimeZone
-    - ThreadSafety/InstanceVariableInClassMethod
+    - ThreadSafety/ClassInstanceVariable
     - ThreadSafety/NewThread
 Style/Documentation:
   Exclude:
@@ -147,3 +147,7 @@ Style/TrailingCommaInArrayLiteral:
   EnforcedStyleForMultiline: consistent_comma
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
+
+ThreadSafety/DirChdir:
+  Exclude:
+    - "tanshuku.gemspec"
