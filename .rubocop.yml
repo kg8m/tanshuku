@@ -14,7 +14,7 @@ require:
   - rubocop-yard
 
 AllCops:
-  TargetRubyVersion: 3.1
+  TargetRubyVersion: 3.2
   EnabledByDefault: true
   Exclude:
     - "spec/dummy/**/*"
