@@ -20,7 +20,7 @@ gem "loofah", "< 2.20"
 
 group :development, :test do
   gem "sprockets-rails"
-  gem "sqlite3"
+  gem "sqlite3", "< 1.7"
 end
 
 group :development do
