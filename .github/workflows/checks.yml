@@ -14,9 +14,12 @@ jobs:
       matrix:
         ruby-version:
           - "3.0"
+          - "3.1"
         rails-version:
           - "~> 6.0.0"
           - "~> 6.1.0"
+          - "~> 7.0.0"
+          - "~> 7.1.0"
         addressable-version:
           - "~> 2.4.0"
           - "~> 2.5.0"
