@@ -2,8 +2,6 @@
 
 require "generators/tanshuku/install_generator"
 
-# Disable the `RSpec/Rails/InferredSpecType` cop because older RuboCop doesn’t infer `generator` type.
-# rubocop:disable RSpec/Rails/InferredSpecType
 RSpec.describe Tanshuku::InstallGenerator, type: :generator do
   tests described_class
   destination Dir.mktmpdir(File.basename(__FILE__), SpecUtilities.gem_root.join("tmp"))
@@ -48,4 +46,3 @@ RSpec.describe Tanshuku::InstallGenerator, type: :generator do
     expect(generated_migration_filepath.read).to eq migration_content
   end
 end
-# rubocop:enable RSpec/Rails/InferredSpecType
