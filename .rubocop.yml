@@ -107,7 +107,7 @@ Style/DisableCopsWithinSourceCodeDirective:
     - Rails/ApplicationRecord
     - Rails/RakeEnvironment
     - Rails/TimeZone
-    - ThreadSafety/InstanceVariableInClassMethod
+    - ThreadSafety/ClassInstanceVariable
     - ThreadSafety/NewThread
 Style/Documentation:
   Exclude:
