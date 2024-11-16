@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: gh release create
-        run: gh release create "${{ github.ref_name }}" --generate-notes
+        run: gh release create "${{ github.ref_name }}" --generate-notes --latest=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     timeout-minutes: 5
