@@ -3,7 +3,7 @@ require "fileutils"
 
 APP_ROOT = File.expand_path("..", __dir__)
 
-case Gem::Version.new(Rails.version)
+case Gem::Version.new(ENV.fetch("RAILS_VERSION", "8.0")[/[\d.]+/])
 when "7.0"..."7.2"
   # noop
 when "7.2"..."8.0"
@@ -23,7 +23,7 @@ FileUtils.chdir APP_ROOT do
 
   puts "== Installing dependencies =="
 
-  case Gem::Version.new(Rails.version)
+  case Gem::Version.new(ENV.fetch("RAILS_VERSION", "8.0")[/[\d.]+/])
   when "7.0"..."8.0"
     system! "gem install bundler --conservative"
   else
