@@ -52,7 +52,7 @@ group :development do
   gem "yard", require: false
 
   # For `yard server`
-  gem "thin", require: false
+  gem "puma", require: false
 end
 
 group :test do
