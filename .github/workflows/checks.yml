@@ -49,6 +49,10 @@ jobs:
           ruby-version: ${{ matrix.ruby-version }}
           bundler-cache: true
 
+      - name: Setup DB
+        run: bin/rails db:migrate
+        timeout-minutes: 5
+
       - name: RSpec
         run: bundle exec rake spec
         timeout-minutes: 5
