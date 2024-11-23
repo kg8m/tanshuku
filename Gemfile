@@ -19,13 +19,18 @@ end
 group :development, :test do
   gem "sprockets-rails"
 
-  # Specify the version for resolving a `LoadError`.
-  # cf. https://github.com/kg8m/tanshuku/actions/runs/8965867396
-  #
-  #   LoadError:
-  #     Error loading the 'sqlite3' Active Record adapter. Missing a gem it depends on? can't activate sqlite3 (~> 1.4),
-  #     already activated sqlite3-2.0.1-x86_64-linux-gnu. Make sure all dependencies are added to Gemfile.
-  gem "sqlite3", "~> 1.7"
+  case Gem::Version.new(ENV.fetch("RAILS_VERSION", "8.0")[/[\d.]+/])
+  when "7.0"..."8.0"
+    # Specify the version for resolving a `LoadError`.
+    # cf. https://github.com/kg8m/tanshuku/actions/runs/8965867396
+    #
+    #   LoadError:
+    #     Error loading the 'sqlite3' Active Record adapter. Missing a gem it depends on? can't activate sqlite3 (~> 1.4),
+    #     already activated sqlite3-2.0.1-x86_64-linux-gnu. Make sure all dependencies are added to Gemfile.
+    gem "sqlite3", "~> 1.7"
+  else
+    gem "sqlite3"
+  end
 end
 
 group :development do

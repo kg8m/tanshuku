@@ -1104,12 +1104,25 @@ RSpec.describe Tanshuku::Url do
 
   describe "#shortened_url" do
     let!(:tanshuku_url) { Tanshuku::Url.create!(valid_attrs) }
-    let!(:original_default_url_options) { Tanshuku::Engine.routes.default_url_options }
+    let(:original_default_url_options) { Tanshuku::Engine.routes.default_url_options }
 
     before do
+      case Gem::Version.new(Rails.version)
+      when "7.0"..."8.0"
+        # noop
+      else
+        # Load the routes first as Tanshku depends on them.
+        # cf. https://github.com/rails/rails/pull/52353
+        Rails.application.reload_routes_unless_loaded
+      end
+
+      # Cache the original `default_url_options` value.
+      original_default_url_options
+
       # Don’t clear the original routes.
       Tanshuku::Engine.routes.disable_clear_and_finalize = true
 
+      # Overwrite Tanshuku’s `default_url_options` value.
       forced_value = default_url_options
       Tanshuku::Engine.routes.draw do
         default_url_options forced_value
@@ -1117,6 +1130,7 @@ RSpec.describe Tanshuku::Url do
     end
 
     after do
+      # Restore Tanshuku’s `default_url_options` value.
       original_value = original_default_url_options
       Tanshuku::Engine.routes.draw do
         default_url_options original_value
