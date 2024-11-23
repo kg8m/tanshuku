@@ -105,6 +105,7 @@ Style/Copyright:
 Style/DisableCopsWithinSourceCodeDirective:
   AutoCorrect: false
   AllowedCops:
+    - Lint/DuplicateMethods
     - Lint/RescueException
     - Rails/ApplicationRecord
     - Rails/RakeEnvironment
