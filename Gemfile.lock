@@ -257,7 +257,7 @@ GEM
       rubocop-rspec (~> 3, >= 3.0.1)
     rubocop-thread_safety (0.6.0)
       rubocop (>= 1.48.1)
-    rubocop-yard (0.9.3)
+    rubocop-yard (0.10.0)
       rubocop (~> 1.21)
       yard
     ruby-progressbar (1.13.0)
