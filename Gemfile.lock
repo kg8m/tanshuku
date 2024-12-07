@@ -260,7 +260,7 @@ GEM
       rubocop (~> 1.21)
       yard
     ruby-progressbar (1.13.0)
-    securerandom (0.3.2)
+    securerandom (0.4.0)
     sprockets (4.2.1)
       concurrent-ruby (~> 1.0)
       rack (>= 2.2.4, < 4)
