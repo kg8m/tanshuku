@@ -104,8 +104,8 @@ GEM
       activesupport (>= 6.1)
     i18n (1.14.6)
       concurrent-ruby (~> 1.0)
-    io-console (0.7.2)
-    irb (1.14.1)
+    io-console (0.8.0)
+    irb (1.14.3)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.9.0)
@@ -150,7 +150,8 @@ GEM
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
-    psych (5.2.0)
+    psych (5.2.2)
+      date
       stringio
     public_suffix (6.0.1)
     puma (6.5.0)
@@ -199,10 +200,10 @@ GEM
       ffi (~> 1.0)
     rbs (3.6.1)
       logger
-    rdoc (6.8.1)
+    rdoc (6.10.0)
       psych (>= 4.0.0)
     regexp_parser (2.9.3)
-    reline (0.5.11)
+    reline (0.6.0)
       io-console (~> 0.5)
     rspec (3.13.0)
       rspec-core (~> 3.13.0)
