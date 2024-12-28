@@ -1142,7 +1142,9 @@ RSpec.describe Tanshuku::Url do
 
       context "and url_options isn’t given" do
         it "raises NoMethodError due to `nil.merge`" do
-          expect { tanshuku_url.shortened_url }.to raise_error(NoMethodError, /\bundefined method `merge' for nil\b/)
+          # Error message with Ruby 3.3 or older: undefined method `merge' for nil
+          # Error message with Ruby 3.4 or newer: undefined method 'merge' for nil
+          expect { tanshuku_url.shortened_url }.to raise_error(NoMethodError, /\bundefined method [`']merge' for nil\b/)
         end
       end
 
@@ -1150,9 +1152,11 @@ RSpec.describe Tanshuku::Url do
         let(:url_options) { { host: "example.com", protocol: :https } }
 
         it "raises NoMethodError due to `nil.merge`" do
+          # Error message with Ruby 3.3 or older: undefined method `merge' for nil
+          # Error message with Ruby 3.4 or newer: undefined method 'merge' for nil
           expect { tanshuku_url.shortened_url(url_options) }.to raise_error(
             NoMethodError,
-            /\bundefined method `merge' for nil\b/
+            /\bundefined method [`']merge' for nil\b/
           )
         end
       end

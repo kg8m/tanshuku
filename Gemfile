@@ -16,6 +16,17 @@ else
   gem "rails", ENV.fetch("RAILS_VERSION")
 end
 
+# For Ruby 3.4+
+#
+#   warning: ... was loaded from the standard library, but is not part of the default gems starting from Ruby 3.4.0.
+#
+#   'Kernel.require': cannot load such file -- ... (LoadError)
+gem "base64"
+gem "benchmark"
+gem "bigdecimal"
+gem "drb"
+gem "mutex_m"
+
 group :development, :test do
   gem "sprockets-rails"
 

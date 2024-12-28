@@ -125,10 +125,6 @@ gems:
   version: '0'
   source:
     type: stdlib
-- name: dbm
-  version: '0'
-  source:
-    type: stdlib
 - name: delegate
   version: '0'
   source:
@@ -210,9 +206,9 @@ gems:
   source:
     type: stdlib
 - name: mutex_m
-  version: '0'
+  version: 0.3.0
   source:
-    type: stdlib
+    type: rubygems
 - name: net-protocol
   version: '0'
   source:
@@ -234,14 +230,6 @@ gems:
   source:
     type: stdlib
 - name: pathname
-  version: '0'
-  source:
-    type: stdlib
-- name: pstore
-  version: '0'
-  source:
-    type: stdlib
-- name: psych
   version: '0'
   source:
     type: stdlib
@@ -309,6 +297,10 @@ gems:
     revision: ccbd2bbc6be5c195df1d90aa68d64916a9e7d0ab
     remote: https://github.com/ruby/gem_rbs_collection.git
     repo_dir: gems
+- name: stringio
+  version: '0'
+  source:
+    type: stdlib
 - name: tempfile
   version: '0'
   source:
