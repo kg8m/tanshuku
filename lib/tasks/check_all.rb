@@ -33,7 +33,7 @@ class CheckAll
     lambda do |taskname|
       command = "bundle exec rake #{taskname}"
 
-      outputs = []
+      outputs = [] #: Array[String]
       outputs << format(TITLE_TEMPLATE, command:)
 
       # Use `PTY.spawn` to get colorized outputs of each command.
