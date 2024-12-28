@@ -17,7 +17,6 @@ RSpec.describe CollectPackageFiles do
       lib/tanshuku/configuration.rb
       lib/tanshuku/engine.rb
       lib/tanshuku/version.rb
-      lib/tasks/check_all.rb
       sig/app/controllers/tanshuku/urls_controller.rbs
       sig/app/models/tanshuku/url.rbs
       sig/db/migrate/create_tanshuku_urls.rbs
@@ -26,7 +25,6 @@ RSpec.describe CollectPackageFiles do
       sig/lib/tanshuku/configuration.rbs
       sig/lib/tanshuku/engine.rbs
       sig/lib/tanshuku/version.rbs
-      sig/lib/tasks/check_all.rbs
     ]
   end
   let(:expected_excluded_files) do
@@ -49,8 +47,10 @@ RSpec.describe CollectPackageFiles do
       Rakefile
       Steepfile
       bin/rails
+      lib/tasks/check_all.rb
       rbs_collection.lock.yaml
       rbs_collection.yaml
+      sig/lib/tasks/check_all.rbs
       sig/patch/actionpack.rbs
       sig/patch/activerecord.rbs
       sig/patch/english.rbs
