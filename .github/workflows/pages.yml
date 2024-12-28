@@ -26,7 +26,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     name: Build and deploy YARD
-    if: github.ref_name == 'main'
     steps:
       - uses: kachick/deploy-yard-to-pages@v1
         id: deployment
