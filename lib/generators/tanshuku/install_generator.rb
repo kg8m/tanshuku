@@ -24,8 +24,16 @@ module Tanshuku
       # rubocop:disable Rails/TimeZone
       old_filename = "20230220123456_create_tanshuku_urls.rb"
       new_filename = old_filename.sub("20230220123456", Time.now.strftime("%Y%m%d%H%M%S"))
-      copy_file "../../../db/migrate/#{old_filename}", "db/migrate/#{new_filename}"
       # rubocop:enable Rails/TimeZone
+
+      old_filepath = "../../../db/migrate/#{old_filename}"
+      new_filepath = "db/migrate/#{new_filename}"
+
+      copy_file old_filepath, new_filepath
+
+      # rubocop:disable Lint/NumberConversion
+      gsub_file new_filepath, "Rails::VERSION::STRING.to_f", Rails::VERSION::STRING.to_f.to_s
+      # rubocop:enable Lint/NumberConversion
     end
   end
 end

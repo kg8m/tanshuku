@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateTanshukuUrls < ActiveRecord::Migration[7.0]
+class CreateTanshukuUrls < ActiveRecord::Migration[Rails::VERSION::STRING.to_f]
   def change
     create_table :tanshuku_urls do |t|
       t.text :url, null: false
