@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateTanshukuUrls < ActiveRecord::Migration[7.0]
+class CreateTanshukuUrls < ActiveRecord::Migration[Rails::VERSION::STRING.to_f]
   def change
     create_table :tanshuku_urls do |t|
       t.text :url, null: false
@@ -11,7 +11,7 @@ class CreateTanshukuUrls < ActiveRecord::Migration[7.0]
       # You might adjust the `limit: 20` depending on `.key_length` and `.key_generator` of `Tanshuku.config`.
       t.string :key, null: false, limit: 20, index: { unique: true }, comment: "cf. Tanshuku::Url.generate_key"
 
-      t.datetime :created_at, null: false, precision: nil
+      t.datetime :created_at, null: false
     end
   end
 end

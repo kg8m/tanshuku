@@ -43,6 +43,9 @@ Layout/SingleLineBlockChain:
 # Forcing full qualifying constants isn’t worth doing.
 Lint/ConstantResolution:
   Enabled: false
+Lint/NumberConversion:
+  Exclude:
+    - "db/migrate/20230220123456_create_tanshuku_urls.rb"
 Lint/RedundantCopDisableDirective:
   AutoCorrect: false
 Lint/UnusedBlockArgument:
@@ -108,6 +111,7 @@ Style/DisableCopsWithinSourceCodeDirective:
   AutoCorrect: false
   AllowedCops:
     - Lint/DuplicateMethods
+    - Lint/NumberConversion
     - Lint/RescueException
     - Rails/ApplicationRecord
     - Rails/RakeEnvironment
