@@ -12,7 +12,7 @@ require:
   - rubocop-thread_safety
 
 AllCops:
-  TargetRubyVersion: 3.0
+  TargetRubyVersion: 2.7
   EnabledByDefault: true
   Exclude:
     - "spec/dummy/**/*"
