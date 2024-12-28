@@ -28,6 +28,8 @@ Bundler/GemVersion:
 
 Layout/ExtraSpacing:
   AllowBeforeTrailingComments: true
+Layout/LeadingCommentSpace:
+  AllowRBSInlineAnnotation: true
 Layout/LineLength:
   AllowedPatterns:
     - "'.{50,}'"
@@ -124,9 +126,9 @@ Style/DocumentationMethod:
 Style/FrozenStringLiteralComment:
   Exclude:
     - "bin/*"
+# Use inline comments like `array = [] #: Array[String]` for RBS/Steep.
 Style/InlineComment:
-  Exclude:
-    - "**/*.md"
+  Enabled: false
 # Forcing parentheses of all method calls isn’t readable.
 # e.g., redirect_to, raise, create_table, t.string, RSpec’s expectations, assertions, and so on
 Style/MethodCallWithArgsParentheses:
