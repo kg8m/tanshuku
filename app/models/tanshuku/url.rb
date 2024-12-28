@@ -29,10 +29,10 @@ module Tanshuku
     validates :url, format: { with: proc { Tanshuku.config.url_pattern } }, allow_blank: true
 
     # Don’t validate uniqueness of unique attributes. Raise ActiveRecord::RecordNotUnique instead if the attributes get
-    validate :validates_length_of_url
-
     # duplicated. Then rescue the exception and try to retry.
     # validates :url, :hashed_url, :key, uniqueness: true
+
+    validate :validates_length_of_url
 
     # Shortens a URL. Builds and saves a {Tanshuku::Url} record with generating a unique key for the given URL and
     # namespace. Then returns the record’s shortened URL with the given URL options.
