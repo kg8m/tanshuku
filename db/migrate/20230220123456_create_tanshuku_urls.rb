@@ -11,7 +11,7 @@ class CreateTanshukuUrls < ActiveRecord::Migration[Rails::VERSION::STRING.to_f]
       # You might adjust the `limit: 20` depending on `.key_length` and `.key_generator` of `Tanshuku.config`.
       t.string :key, null: false, limit: 20, index: { unique: true }, comment: "cf. Tanshuku::Url.generate_key"
 
-      t.datetime :created_at, null: false, precision: nil
+      t.datetime :created_at, null: false
     end
   end
 end
