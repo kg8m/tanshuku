@@ -27,6 +27,18 @@ gem "bigdecimal"
 gem "drb"
 gem "mutex_m"
 
+case Gem::Version.new(ENV.fetch("RAILS_VERSION", "8.0")[/[\d.]+/])
+when "7.0"..."7.1"
+  # For Rails 7.0
+  # cf. https://github.com/rails/rails/pull/54264
+  #
+  #   uninitialized constant ActiveSupport::LoggerThreadSafeLevel::Logger (NameError)
+  #
+  #       Logger::Severity.constants.each do |severity|
+  #       ^^^^^^
+  gem "concurrent-ruby", "< 1.3.5"
+end
+
 group :development, :test do
   gem "sprockets-rails"
 
