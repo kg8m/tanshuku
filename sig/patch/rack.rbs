@@ -4,6 +4,6 @@ module Rack
     # This method can be called without block. If then, `method(:unescape)` is used instead.
     # https://github.com/rack/rack/blob/v3.0.7/lib/rack/utils.rb#L109-L111
     # https://github.com/rack/rack/blob/v3.0.7/lib/rack/query_parser.rb#L46-L67
-    def self.parse_query: (String? qs, ?String? d) ?{ -> untyped } -> untyped | ...
+    def self.parse_query: (String? qs, ?String? d) ?{ () -> untyped } -> untyped | ...
   end
 end

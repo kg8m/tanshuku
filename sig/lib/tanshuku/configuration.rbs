@@ -5,7 +5,7 @@ module Tanshuku
     end
 
     interface _KeyGenerator
-      def call: -> String
+      def call: () -> String
     end
 
     interface _ExceptionReporter
@@ -25,7 +25,7 @@ module Tanshuku
     attr_accessor exception_reporter (): _ExceptionReporter
 
     def initialize: (*bot noname) -> void
-    def configure: { (Configuration) -> void } -> void
+    def configure: () { (Configuration) -> void } -> void
 
     module DefaultUrlHasher
       extend _UrlHasher
