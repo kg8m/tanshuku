@@ -63,6 +63,7 @@ group :development do
 
   gem "rubocop", require: false
   gem "rubocop-md", require: false
+  gem "rubocop-on-rbs", require: false
   gem "rubocop-performance", require: false
   gem "rubocop-rails", require: false
   gem "rubocop-rake", require: false

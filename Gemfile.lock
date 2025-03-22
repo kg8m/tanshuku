@@ -249,6 +249,10 @@ GEM
     rubocop-md (2.0.0)
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1)
+    rubocop-on-rbs (1.4.2)
+      rbs (~> 3.5)
+      rubocop (~> 1.61)
+      zlib
     rubocop-performance (1.24.0)
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1, < 2.0)
@@ -325,6 +329,7 @@ GEM
     websocket-extensions (0.1.5)
     yard (0.9.37)
     zeitwerk (2.7.2)
+    zlib (3.2.1)
 
 PLATFORMS
   arm64-darwin
@@ -347,6 +352,7 @@ DEPENDENCIES
   rspec-rails
   rubocop
   rubocop-md
+  rubocop-on-rbs
   rubocop-performance
   rubocop-rails
   rubocop-rake
