@@ -1,4 +1,6 @@
 module Tanshuku
   class InstallGenerator < Rails::Generators::Base
+    def copy_initializer_file: -> void
+    def copy_migration_file: -> void
   end
 end
