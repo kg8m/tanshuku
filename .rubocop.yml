@@ -3,15 +3,17 @@ inherit_mode:
     - Exclude
     - Include
 
-require:
+plugins:
   - rubocop-md
-  - rubocop-on-rbs
   - rubocop-performance
   - rubocop-rails
   - rubocop-rake
   - rubocop-rspec
   - rubocop-rspec_rails
   - rubocop-thread_safety
+
+require:
+  - rubocop-on-rbs
   - rubocop-yard
 
 AllCops:
