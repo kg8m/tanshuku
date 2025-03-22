@@ -1,2 +1,3 @@
 class CreateTanshukuUrls < ActiveRecord::Migration::Current
+  def change: -> void
 end
