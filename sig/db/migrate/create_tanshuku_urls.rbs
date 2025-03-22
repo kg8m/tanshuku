@@ -1,2 +1,2 @@
-class CreateTanshukuUrls < ActiveRecord::Migration::Compatibility::V7_0
+class CreateTanshukuUrls < ActiveRecord::Migration::Current
 end
