@@ -131,6 +131,9 @@ Style/DocumentationMethod:
     - "tools/*"
 Style/FrozenStringLiteralComment:
   Exclude:
+    # Temporary workaround (cf. https://github.com/ksss/rubocop-on-rbs/pull/76)
+    - "**/*.rbs"
+
     - "bin/*"
 # Use inline comments like `array = [] #: Array[String]` for RBS/Steep.
 Style/InlineComment:
