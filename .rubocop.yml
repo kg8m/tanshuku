@@ -5,6 +5,7 @@ inherit_mode:
 
 plugins:
   - rubocop-md
+  - rubocop-on-rbs
   - rubocop-performance
   - rubocop-rails
   - rubocop-rake
@@ -13,7 +14,6 @@ plugins:
   - rubocop-thread_safety
 
 require:
-  - rubocop-on-rbs
   - rubocop-yard
 
 AllCops:
