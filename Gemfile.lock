@@ -94,6 +94,7 @@ GEM
     date (3.4.1)
     diff-lcs (1.6.2)
     drb (2.2.3)
+    erb (5.0.1)
     erubi (1.13.1)
     ffi (1.17.2)
     ffi (1.17.2-arm64-darwin)
@@ -157,7 +158,7 @@ GEM
       prettyprint
     prettyprint (0.2.0)
     prism (1.4.0)
-    psych (5.2.4)
+    psych (5.2.6)
       date
       stringio
     public_suffix (6.0.2)
@@ -208,7 +209,8 @@ GEM
       ffi (~> 1.0)
     rbs (3.9.4)
       logger
-    rdoc (6.13.1)
+    rdoc (6.14.0)
+      erb
       psych (>= 4.0.0)
     regexp_parser (2.10.0)
     reline (0.6.1)
