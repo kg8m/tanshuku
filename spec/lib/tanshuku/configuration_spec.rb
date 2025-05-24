@@ -57,8 +57,8 @@ RSpec.describe Tanshuku::Configuration do
 
       new_reporter =
         lambda { |exception:, originla_url:|
-          p exception
-          p originla_url
+          Rails.logger.debug exception
+          Rails.logger.debug originla_url
         }
       configuration.exception_reporter = new_reporter
       expect(configuration).to have_attributes(exception_reporter: new_reporter)
