@@ -30,6 +30,7 @@ RSpec.describe CollectPackageFiles do
   let(:expected_excluded_files) do
     %w[
       .gitattributes
+      .github/CODEOWNERS
       .github/dependabot.yml
       .github/release.yml
       .github/workflows/bot-auto-merge.yml
