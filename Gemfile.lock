@@ -253,7 +253,7 @@ GEM
     rubocop-md (2.0.1)
       lint_roller (~> 1.1)
       rubocop (>= 1.72.1)
-    rubocop-on-rbs (1.7.0)
+    rubocop-on-rbs (1.8.0)
       lint_roller (~> 1.1)
       rbs (~> 3.5)
       rubocop (>= 1.72.1, < 2.0)
@@ -282,8 +282,9 @@ GEM
       lint_roller (~> 1.1)
       rubocop (~> 1.72, >= 1.72.1)
       rubocop-ast (>= 1.44.0, < 2.0)
-    rubocop-yard (0.10.0)
-      rubocop (~> 1.21)
+    rubocop-yard (1.0.0)
+      lint_roller
+      rubocop (~> 1.72)
       yard
     ruby-progressbar (1.13.0)
     securerandom (0.4.1)
