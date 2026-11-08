@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Generate token
         id: generate_token
-        uses: getsentry/action-github-app-token@v3
+        uses: getsentry/action-github-app-token@v3.0.0
         with:
           app_id: "${{ secrets.KG8M_BOT_APP_ID }}"
           private_key: "${{ secrets.KG8M_BOT_PRIVATE_KEY }}"
