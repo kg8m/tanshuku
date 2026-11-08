@@ -33,6 +33,7 @@ RSpec.describe CollectPackageFiles do
       .github/CODEOWNERS
       .github/dependabot.yml
       .github/release.yml
+      .github/workflows/actions.lock
       .github/workflows/bot-auto-merge.yml
       .github/workflows/checks.yml
       .github/workflows/create-release.yml

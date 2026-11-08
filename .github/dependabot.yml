@@ -8,6 +8,9 @@ updates:
       day: saturday
       time: "10:00"
       timezone: Asia/Tokyo
+    # Wait for new releases to settle before updating `.github/workflows/actions.lock`.
+    cooldown:
+      default-days: 7
   - package-ecosystem: bundler
     directory: /
     schedule:
