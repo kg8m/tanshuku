@@ -30,6 +30,7 @@ jobs:
           - "~> 2.6.0"
           - "~> 2.7.0"
           - "~> 2.8.0"
+          - "~> 2.9.0"
     runs-on: ubuntu-latest
     env:
       # Ignore `Gemfile.lock` on CI.
