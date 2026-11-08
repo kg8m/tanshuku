@@ -12,7 +12,7 @@ workflows:
         - 'actions/checkout@v7.0.1'
     '.github/workflows/dependabot-autolabeling.yml':
         - 'actions/checkout@v7.0.1'
-        - 'dependabot/fetch-metadata@v2.5.0'
+        - 'dependabot/fetch-metadata@v3.1.0'
         - 'getsentry/action-github-app-token@v3.0.0'
         - 'ruby/setup-ruby@v1.338.0'
     '.github/workflows/pages.yml':
@@ -56,9 +56,9 @@ dependencies:
         repo_id: 496012378
         uses:
             - 'actions/upload-artifact@v4'
-    'dependabot/fetch-metadata@v2.5.0':
-        ref: 'v2.5.0'
-        commit: 'sha1-21025c705c08248db411dc16f3619e6b5f9ea21a'
+    'dependabot/fetch-metadata@v3.1.0':
+        ref: 'v3.1.0'
+        commit: 'sha1-25dd0e34f4fe68f24cc83900b1fe3fe149efef98'
         owner_id: 27347476
         repo_id: 371068214
     'getsentry/action-github-app-token@v3.0.0':
