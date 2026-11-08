@@ -107,11 +107,19 @@ Rails.application.configure do
   end
 
   case Gem::Version.new(Rails.version)
-  when "7.0"..."8.0"
+  when "7.0"..."8.1"
+    # noop
+  else
+    # Highlight code that triggered redirect in logs.
+    config.action_dispatch.verbose_redirect_logs = true
+  end
+
+  case Gem::Version.new(Rails.version)
+  when "8.0"..."8.1"
+    # noop
+  else
     # Suppress logger output for asset requests.
     config.assets.quiet = true
-  else
-    # noop
   end
 
   # Raises error for missing translations.

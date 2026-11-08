@@ -51,8 +51,10 @@ RSpec.describe Tanshuku::InstallGenerator do
         "7.1"
       when "7.2"..."8.0"
         "7.2"
-      else
+      when "8.0"..."8.1"
         "8.0"
+      else
+        "8.1"
       end
     expect(generated_migration_filepath.read).to eq(<<~RUBY)
       # frozen_string_literal: true
