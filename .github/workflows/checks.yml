@@ -17,6 +17,7 @@ jobs:
           - "3.2"
           - "3.3"
           - "3.4"
+          - "4.0"
         rails-version:
           - "~> 7.0.0"
           - "~> 7.1.0"
@@ -70,7 +71,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.4"
+          ruby-version: "4.0"
           bundler-cache: true
 
       - name: RuboCop
@@ -88,7 +89,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.4"
+          ruby-version: "4.0"
           bundler-cache: true
 
       - name: Prepare for typecheck
@@ -110,7 +111,7 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: "3.4"
+          ruby-version: "4.0"
           bundler-cache: true
 
       - name: Check YARD docs
