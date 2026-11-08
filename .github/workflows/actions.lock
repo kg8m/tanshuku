@@ -4,7 +4,7 @@
 version: 'v0.0.3'
 workflows:
     '.github/workflows/bot-auto-merge.yml':
-        - 'getsentry/action-github-app-token@v3.0.0'
+        - 'getsentry/action-github-app-token@v4.0.0'
     '.github/workflows/checks.yml':
         - 'actions/checkout@v7.0.1'
         - 'ruby/setup-ruby@v1.338.0'
@@ -13,13 +13,13 @@ workflows:
     '.github/workflows/dependabot-autolabeling.yml':
         - 'actions/checkout@v7.0.1'
         - 'dependabot/fetch-metadata@v3.1.0'
-        - 'getsentry/action-github-app-token@v3.0.0'
+        - 'getsentry/action-github-app-token@v4.0.0'
         - 'ruby/setup-ruby@v1.338.0'
     '.github/workflows/pages.yml':
         - 'kachick/deploy-yard-to-pages@v1.4.0'
     '.github/workflows/update-rbs-collection.yml':
         - 'actions/checkout@v7.0.1'
-        - 'getsentry/action-github-app-token@v3.0.0'
+        - 'getsentry/action-github-app-token@v4.0.0'
         - 'juliangruber/read-file-action@v1.1.8'
         - 'peter-evans/create-pull-request@v7.0.11'
         - 'ruby/setup-ruby@v1.338.0'
@@ -61,9 +61,9 @@ dependencies:
         commit: 'sha1-25dd0e34f4fe68f24cc83900b1fe3fe149efef98'
         owner_id: 27347476
         repo_id: 371068214
-    'getsentry/action-github-app-token@v3.0.0':
-        ref: 'v3.0.0'
-        commit: 'sha1-d4b5da6c5e37703f8c3b3e43abb5705b46e159cc'
+    'getsentry/action-github-app-token@v4.0.0':
+        ref: 'v4.0.0'
+        commit: 'sha1-5c1e90706fe007857338ac1bfbd7a4177db2f789'
         owner_id: 1396951
         repo_id: 286789610
     'juliangruber/read-file-action@v1.1.8':
