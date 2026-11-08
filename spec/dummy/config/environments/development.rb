@@ -4,12 +4,7 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Make code changes take effect immediately without server restart.
-  case Gem::Version.new(Rails.version)
-  when "7.0"..."7.1"
-    config.cache_classes = false
-  else
-    config.enable_reloading = true
-  end
+  config.enable_reloading = true
 
   # Do not eager load code on boot.
   config.eager_load = false
@@ -25,33 +20,13 @@ Rails.application.configure do
   if Rails.root.join("tmp/caching-dev.txt").exist?
     config.action_controller.perform_caching = true
     config.action_controller.enable_fragment_cache_logging = true
-
-    case Gem::Version.new(Rails.version)
-    when "7.0"..."8.0"
-      config.cache_store = :memory_store
-    else
-      # noop
-    end
-
     config.public_file_server.headers = { "cache-control" => "public, max-age=#{2.days.to_i}" }
   else
     config.action_controller.perform_caching = false
-
-    case Gem::Version.new(Rails.version)
-    when "7.0"..."8.0"
-      config.cache_store = :null_store
-    else
-      # noop
-    end
   end
 
-  case Gem::Version.new(Rails.version)
-  when "7.0"..."8.0"
-    # noop
-  else
-    # Change to :null_store to avoid any caching.
-    config.cache_store = :memory_store
-  end
+  # Change to :null_store to avoid any caching.
+  config.cache_store = :memory_store
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   config.active_storage.service = :local
@@ -62,27 +37,11 @@ Rails.application.configure do
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false
 
-  case Gem::Version.new(Rails.version)
-  when "7.0"..."7.2"
-    # noop
-  else
-    # Set localhost to be used by links generated in mailer templates.
-    config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
-  end
+  # Set localhost to be used by links generated in mailer templates.
+  config.action_mailer.default_url_options = { host: "localhost", port: 3000 }
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
-
-  case Gem::Version.new(Rails.version)
-  when "7.0"..."8.0"
-    # Raise exceptions for disallowed deprecations.
-    config.active_support.disallowed_deprecation = :raise
-
-    # Tell Active Support which deprecation messages to disallow.
-    config.active_support.disallowed_deprecation_warnings = []
-  else
-    # noop
-  end
 
   # Raise an error on page load if there are pending migrations.
   config.active_record.migration_error = :page_load
@@ -90,57 +49,21 @@ Rails.application.configure do
   # Highlight code that triggered database queries in logs.
   config.active_record.verbose_query_logs = true
 
-  case Gem::Version.new(Rails.version)
-  when "7.0"..."8.0"
-    # noop
-  else
-    # Append comments with runtime information tags to SQL queries in logs.
-    config.active_record.query_log_tags_enabled = true
-  end
+  # Append comments with runtime information tags to SQL queries in logs.
+  config.active_record.query_log_tags_enabled = true
 
-  case Gem::Version.new(Rails.version)
-  when "7.0"..."7.1"
-    # noop
-  else
-    # Highlight code that enqueued background job in logs.
-    config.active_job.verbose_enqueue_logs = true
-  end
-
-  case Gem::Version.new(Rails.version)
-  when "7.0"..."8.1"
-    # noop
-  else
-    # Highlight code that triggered redirect in logs.
-    config.action_dispatch.verbose_redirect_logs = true
-  end
-
-  case Gem::Version.new(Rails.version)
-  when "8.0"..."8.1"
-    # noop
-  else
-    # Suppress logger output for asset requests.
-    config.assets.quiet = true
-  end
+  # Highlight code that enqueued background job in logs.
+  config.active_job.verbose_enqueue_logs = true
 
   # Raises error for missing translations.
   # config.i18n.raise_on_missing_translations = true
 
   # Annotate rendered view with file names.
-  case Gem::Version.new(Rails.version)
-  when "7.0"..."7.2"
-    # config.action_view.annotate_rendered_view_with_filenames = true
-  else
-    config.action_view.annotate_rendered_view_with_filenames = true
-  end
+  config.action_view.annotate_rendered_view_with_filenames = true
 
   # Uncomment if you wish to allow Action Cable access from any origin.
   # config.action_cable.disable_request_forgery_protection = true
 
-  case Gem::Version.new(Rails.version)
-  when "7.0"..."7.1"
-    # noop
-  else
-    # Raise error when a before_action's only/except options reference missing actions.
-    config.action_controller.raise_on_missing_callback_actions = true
-  end
+  # Raise error when a before_action's only/except options reference missing actions.
+  config.action_controller.raise_on_missing_callback_actions = true
 end

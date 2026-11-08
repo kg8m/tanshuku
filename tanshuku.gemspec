@@ -17,7 +17,7 @@ Gem::Specification.new do |spec|
   TXT
   spec.homepage = "https://github.com/kg8m/tanshuku"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 3.2"
+  spec.required_ruby_version = ">= 3.3"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage
@@ -28,8 +28,8 @@ Gem::Specification.new do |spec|
   spec.files = CollectPackageFiles.call
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "addressable", ">= 2.4"
-  spec.add_dependency "rails", ">= 7.0"
+  spec.add_dependency "addressable", ">= 2.8"
+  spec.add_dependency "rails", ">= 8.0"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

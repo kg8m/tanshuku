@@ -9,7 +9,7 @@ module Tanshuku
     #
     # @raise [ActiveRecord::NotFound] If no {Tanshuku::Url} record is found for the given +key+.
     def show
-      url = Url.find_by!(key: params[:key])
+      url = Url.find_by!(key: params.expect(:key))
       redirect_to url.url, status: :moved_permanently, allow_other_host: true
     end
   end
