@@ -9,8 +9,9 @@ RSpec.describe Tanshuku::UrlsController do
         expect(Tanshuku::Url).not_to exist
       end
 
-      it "raises ActiveRecord::RecordNotFound" do
-        expect { get "/t/#{unknown_key}" }.to raise_error(ActiveRecord::RecordNotFound)
+      it "responds with status code 404" do
+        get "/t/#{unknown_key}"
+        expect(response).to have_attributes(status: 404)
       end
     end
 
@@ -30,8 +31,9 @@ RSpec.describe Tanshuku::UrlsController do
       end
 
       context "and an unknown key is given" do
-        it "raises ActiveRecord::RecordNotFound" do
-          expect { get "/t/#{unknown_key}" }.to raise_error(ActiveRecord::RecordNotFound)
+        it "responds with status code 404" do
+          get "/t/#{unknown_key}"
+          expect(response).to have_attributes(status: 404)
         end
       end
 

@@ -44,12 +44,6 @@ RSpec.describe Tanshuku::InstallGenerator do
 
     rails_version_string =
       case Gem::Version.new(Rails.version)
-      when "7.0"..."7.1"
-        "7.0"
-      when "7.1"..."7.2"
-        "7.1"
-      when "7.2"..."8.0"
-        "7.2"
       when "8.0"..."8.1"
         "8.0"
       else

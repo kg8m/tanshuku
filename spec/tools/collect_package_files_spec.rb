@@ -64,11 +64,8 @@ RSpec.describe CollectPackageFiles do
       spec/config/locales/en_spec.rb
       spec/config/locales/ja_spec.rb
       spec/dummy/Rakefile
-      spec/dummy/app/assets/config/manifest.js
       spec/dummy/app/assets/images/.keep
       spec/dummy/app/assets/stylesheets/application.css
-      spec/dummy/app/channels/application_cable/channel.rb
-      spec/dummy/app/channels/application_cable/connection.rb
       spec/dummy/app/controllers/application_controller.rb
       spec/dummy/app/controllers/concerns/.keep
       spec/dummy/app/helpers/application_helper.rb
@@ -103,16 +100,13 @@ RSpec.describe CollectPackageFiles do
       spec/dummy/config/puma.rb
       spec/dummy/config/routes.rb
       spec/dummy/config/storage.yml
-      spec/dummy/lib/assets/.keep
       spec/dummy/log/.keep
       spec/dummy/public/400.html
       spec/dummy/public/404.html
       spec/dummy/public/406-unsupported-browser.html
       spec/dummy/public/422.html
       spec/dummy/public/500.html
-      spec/dummy/public/apple-touch-icon-precomposed.png
-      spec/dummy/public/apple-touch-icon.png
-      spec/dummy/public/favicon.ico
+      spec/dummy/public/icon.png
       spec/dummy/public/icon.svg
       spec/generator/tanshuku/install_generator_spec.rb
       spec/lib/tanshuku/configuration_spec.rb

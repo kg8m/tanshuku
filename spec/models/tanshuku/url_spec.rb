@@ -1107,14 +1107,9 @@ RSpec.describe Tanshuku::Url do
     let(:original_default_url_options) { Tanshuku::Engine.routes.default_url_options }
 
     before do
-      case Gem::Version.new(Rails.version)
-      when "7.0"..."8.0"
-        # noop
-      else
-        # Load the routes first as Tanshku depends on them.
-        # cf. https://github.com/rails/rails/pull/52353
-        Rails.application.reload_routes_unless_loaded
-      end
+      # Load the routes first as Tanshku depends on them.
+      # cf. https://github.com/rails/rails/pull/52353
+      Rails.application.reload_routes_unless_loaded
 
       # Cache the original `default_url_options` value.
       original_default_url_options

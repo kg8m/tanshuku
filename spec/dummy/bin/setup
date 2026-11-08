@@ -3,15 +3,6 @@ require "fileutils"
 
 APP_ROOT = File.expand_path("..", __dir__)
 
-case Gem::Version.new(ENV.fetch("RAILS_VERSION", "8.0")[/[\d.]+/])
-when "7.0"..."7.2"
-  # noop
-when "7.2"..."8.0"
-  APP_NAME = "dummy"
-else
-  # noop
-end
-
 def system!(*args)
   system(*args, exception: true)
 end
@@ -22,14 +13,6 @@ FileUtils.chdir APP_ROOT do
   # Add necessary setup steps to this file.
 
   puts "== Installing dependencies =="
-
-  case Gem::Version.new(ENV.fetch("RAILS_VERSION", "8.0")[/[\d.]+/])
-  when "7.0"..."8.0"
-    system! "gem install bundler --conservative"
-  else
-    # noop
-  end
-
   system("bundle check") || system!("bundle install")
 
   # puts "\n== Copying sample files =="

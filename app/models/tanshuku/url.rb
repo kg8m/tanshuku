@@ -169,33 +169,17 @@ module Tanshuku
     # @return [String] A shortened URL.
     #
     # @note
-    #   In Rails 8.0 or later, this method loads the routes before calling +url_for+ as Tanshuku depends on them.
+    #   This method loads the routes before calling +url_for+ as Tanshuku depends on them.
     #   cf. https://github.com/rails/rails/pull/52353
     def shortened_url(url_options = {})
+      Rails.application.reload_routes_unless_loaded
+
       url_options = url_options.symbolize_keys
       url_options[:controller] = "tanshuku/urls"
       url_options[:action] = :show
       url_options[:key] = key
 
       Tanshuku::Engine.routes.url_for(url_options)
-    end
-
-    case Gem::Version.new(Rails.version)
-    when "7.0"..."8.0"
-      # Don’t define `#shortened_url` in this branch because YARD doesn’t recognize the method.
-    else
-      # Overwrite the `#shortened_url` in Rails 8.0 or later.
-      # rubocop:disable-next Lint/DuplicateMethods
-      def shortened_url(url_options = {})
-        Rails.application.reload_routes_unless_loaded
-
-        url_options = url_options.symbolize_keys
-        url_options[:controller] = "tanshuku/urls"
-        url_options[:action] = :show
-        url_options[:key] = key
-
-        Tanshuku::Engine.routes.url_for(url_options)
-      end
     end
   end
   # rubocop:enable Rails/ApplicationRecord
