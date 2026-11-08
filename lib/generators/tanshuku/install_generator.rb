@@ -31,9 +31,8 @@ module Tanshuku
 
       copy_file old_filepath, new_filepath
 
-      # rubocop:disable Lint/NumberConversion
+      # rubocop:disable-next Lint/NumberConversion
       gsub_file new_filepath, "Rails::VERSION::STRING.to_f", Rails::VERSION::STRING.to_f.to_s
-      # rubocop:enable Lint/NumberConversion
     end
   end
 end

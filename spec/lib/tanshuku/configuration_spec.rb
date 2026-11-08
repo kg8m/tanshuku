@@ -102,7 +102,7 @@ RSpec.describe Tanshuku::Configuration do
 
         threads =
           Array.new(10) do
-            # rubocop:disable ThreadSafety/NewThread
+            # rubocop:disable-next ThreadSafety/NewThread
             Thread.new do
               configuration.configure do |config|
                 original_port = config.default_url_options[:port]
@@ -110,7 +110,6 @@ RSpec.describe Tanshuku::Configuration do
                 config.default_url_options[:port] = original_port + 1
               end
             end
-            # rubocop:enable ThreadSafety/NewThread
           end
         threads.each(&:join)
 

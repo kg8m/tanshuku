@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 # Configure Rails Environment
+# Mutate ENV before loading Rails and running any specs.
+# rubocop:disable-next ThreadSafety/EnvMutation
 ENV["RAILS_ENV"] = "test"
 
 require_relative "../spec/dummy/config/environment"
