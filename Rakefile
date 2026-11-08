@@ -5,7 +5,8 @@ require "bundler/setup"
 APP_RAKEFILE = File.expand_path("spec/dummy/Rakefile", __dir__)
 load "rails/tasks/engine.rake"
 
-load "rails/tasks/statistics.rake"
+# `rails/tasks/statistics.rake` is deprecated since Rails 8.1.
+load "rails/tasks/statistics.rake" if Rails.gem_version < Gem::Version.new("8.1")
 
 require "bundler/gem_tasks"
 require "rspec/core/rake_task"

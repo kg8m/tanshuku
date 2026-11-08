@@ -6,7 +6,12 @@
 #
 default: &default
   adapter: sqlite3
+<% case Gem::Version.new(Rails.version)
+   when "7.0"..."8.1" %>
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+<% else %>
+  max_connections: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+<% end %>
   timeout: 5000
 
 development:
