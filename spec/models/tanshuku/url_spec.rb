@@ -5,11 +5,11 @@ RSpec.describe Tanshuku::Url do
     let!(:record) { Tanshuku::Url.new(valid_attrs) }
 
     describe "url length" do
-      default_max_url_length = 10_000
+      def self.default_max_url_length = 10_000
 
       context "when max_url_length isn’t configured" do
         before do
-          expect(Tanshuku.config).to have_attributes(max_url_length: default_max_url_length)
+          expect(Tanshuku.config).to have_attributes(max_url_length: self.class.default_max_url_length)
         end
 
         [
@@ -33,7 +33,7 @@ RSpec.describe Tanshuku::Url do
 
         context "and url is a string over the default max URL length" do
           before do
-            record.url = "a" * (default_max_url_length + 1)
+            record.url = "a" * (self.class.default_max_url_length + 1)
           end
 
           it "has a error for url length" do
@@ -44,17 +44,17 @@ RSpec.describe Tanshuku::Url do
       end
 
       context "when max_url_length is configured" do
-        custom_max_url_length = 20_000
+        def self.custom_max_url_length = 20_000
 
         before do
           Tanshuku.configure do |config|
-            config.max_url_length = custom_max_url_length
+            config.max_url_length = self.class.custom_max_url_length
           end
         end
 
         after do
           Tanshuku.configure do |config|
-            config.max_url_length = default_max_url_length
+            config.max_url_length = self.class.default_max_url_length
           end
         end
 
@@ -81,7 +81,7 @@ RSpec.describe Tanshuku::Url do
 
         context "and url is a string over the custom max URL length" do
           before do
-            record.url = "a" * (custom_max_url_length + 1)
+            record.url = "a" * (self.class.custom_max_url_length + 1)
           end
 
           it "has a error for url length" do
@@ -93,7 +93,7 @@ RSpec.describe Tanshuku::Url do
     end
 
     describe "url format" do
-      default_url_pattern = %r{\A(?:https?://\w+|/)}
+      let(:default_url_pattern) { %r{\A(?:https?://\w+|/)} }
 
       context "when url_pattern isn’t configured" do
         before do
@@ -135,7 +135,7 @@ RSpec.describe Tanshuku::Url do
       end
 
       context "when url_pattern is configured" do
-        custom_url_pattern = %r{\A/}
+        let(:custom_url_pattern) { %r{\A/} }
 
         before do
           Tanshuku.configure do |config|
@@ -481,7 +481,7 @@ RSpec.describe Tanshuku::Url do
 
         expect(reported_exceptions).to have_attributes(size: 1)
         expect(reported_exceptions.first).to be_a ArgumentError
-        expect(reported_exceptions.first.message).to match(/Missing host to link to!/)
+        expect(reported_exceptions.first.message).to include("Missing host to link to!")
       end
     end
 
@@ -1024,9 +1024,9 @@ RSpec.describe Tanshuku::Url do
     end
 
     context "when key_generator is configured" do
-      count = 0
-
       before do
+        count = 0
+
         Tanshuku.configure do |config|
           config.key_generator = -> { (count += 1).to_s }
         end

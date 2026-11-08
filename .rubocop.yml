@@ -18,6 +18,7 @@ require:
 
 AllCops:
   TargetRubyVersion: 3.2
+  TargetRailsVersion: 7.0
   EnabledByDefault: true
   Exclude:
     - "spec/dummy/**/*"
@@ -111,16 +112,7 @@ Style/ConstantVisibility:
 Style/Copyright:
   Enabled: false
 Style/DisableCopsWithinSourceCodeDirective:
-  AutoCorrect: false
-  AllowedCops:
-    - Lint/DuplicateMethods
-    - Lint/NumberConversion
-    - Lint/RescueException
-    - Rails/ApplicationRecord
-    - Rails/RakeEnvironment
-    - Rails/TimeZone
-    - ThreadSafety/ClassInstanceVariable
-    - ThreadSafety/NewThread
+  Enabled: false
 Style/Documentation:
   Exclude:
     - "db/migrate/*"

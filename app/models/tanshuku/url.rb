@@ -185,7 +185,7 @@ module Tanshuku
       # Don’t define `#shortened_url` in this branch because YARD doesn’t recognize the method.
     else
       # Overwrite the `#shortened_url` in Rails 8.0 or later.
-      # rubocop:disable Lint/DuplicateMethods
+      # rubocop:disable-next Lint/DuplicateMethods
       def shortened_url(url_options = {})
         Rails.application.reload_routes_unless_loaded
 
@@ -196,7 +196,6 @@ module Tanshuku
 
         Tanshuku::Engine.routes.url_for(url_options)
       end
-      # rubocop:enable Lint/DuplicateMethods
     end
   end
   # rubocop:enable Rails/ApplicationRecord

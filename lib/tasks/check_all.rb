@@ -21,9 +21,8 @@ class CheckAll
   end
 
   def call
-    # rubocop:disable ThreadSafety/NewThread
+    # rubocop:disable-next ThreadSafety/NewThread
     TASKNAMES.map { |taskname| Thread.new(taskname, &executor) }.each(&:join)
-    # rubocop:enable ThreadSafety/NewThread
     output_result
   end
 
@@ -63,6 +62,8 @@ class CheckAll
     else
       puts Paint["\nChecks failed!!\n", :red, :bold]
       puts failed_commands.map { |command| "  - #{command}" }.join("\n")
+      # Exit with a non-zero status to make the Rake task fail.
+      # rubocop:disable-next Rails/Exit
       abort ""
     end
   end

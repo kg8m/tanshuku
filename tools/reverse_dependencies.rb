@@ -5,6 +5,8 @@ require "forwardable"
 
 module ReverseDependencies
   def self.tanshuku_depends_on?(gem_name)
+    # Raise a KeyError for an unknown gem instead of a NoMethodError for nil.
+    # rubocop:disable-next Style/HashLookupMethod
     parse.fetch(gem_name).tanshuku_depends_on?
   end
 
@@ -32,6 +34,7 @@ module ReverseDependencies
 
   class Specification
     extend Forwardable
+
     delegate hash: :name
 
     attr_reader :name
