@@ -43,7 +43,7 @@ jobs:
       Rails ${{ matrix.rails-version }} &&
       Addressable ${{ matrix.addressable-version }}
     steps:
-      - uses: actions/checkout@v6.1.0
+      - uses: actions/checkout@v7.0.1
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint
     steps:
-      - uses: actions/checkout@v6.1.0
+      - uses: actions/checkout@v7.0.1
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
@@ -83,7 +83,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Typecheck
     steps:
-      - uses: actions/checkout@v6.1.0
+      - uses: actions/checkout@v7.0.1
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
@@ -105,7 +105,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Documentation syntax check
     steps:
-      - uses: actions/checkout@v6.1.0
+      - uses: actions/checkout@v7.0.1
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
