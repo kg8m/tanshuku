@@ -12,8 +12,6 @@ plugins:
   - rubocop-rspec
   - rubocop-rspec_rails
   - rubocop-thread_safety
-
-require:
   - rubocop-yard
 
 AllCops:
