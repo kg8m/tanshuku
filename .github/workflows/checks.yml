@@ -117,3 +117,31 @@ jobs:
       - name: Check YARD docs
         run: bundle exec rake yard:check
         timeout-minutes: 5
+
+  actions-lock-verification:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    name: Verify actions lockfile
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      # https://github.com/github/gh-actions-lock
+      # Don’t pin the extension version because neither `.github/workflows/actions.lock` nor Dependabot updates it, and
+      # its checks should follow the runner’s ones.
+      - name: Install gh-actions-lock
+        run: gh extension install github/gh-actions-lock
+        env:
+          GH_TOKEN: ${{ github.token }}
+        timeout-minutes: 5
+
+      # Report a stale lockfile in pull request checks because runs blocked by the “Require lockfile” policy only
+      # result in `startup_failure`, which doesn’t appear in pull request checks.
+      - name: Verify actions lockfile
+        run: gh actions-lock --verify
+        env:
+          GH_TOKEN: ${{ github.token }}
+        timeout-minutes: 5
