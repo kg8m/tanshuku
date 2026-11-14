@@ -102,7 +102,7 @@ GEM
     ffi (1.17.4-arm64-darwin)
     ffi (1.17.4-x86_64-darwin)
     ffi (1.17.4-x86_64-linux-gnu)
-    fileutils (1.7.3)
+    fileutils (1.8.1)
     globalid (1.4.0)
       activesupport (>= 6.1)
     i18n (1.15.2)
