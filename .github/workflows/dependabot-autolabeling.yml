@@ -4,47 +4,68 @@ name: Dependabot Auto-labeling
 on: pull_request
 
 permissions:
-  pull-requests: write
+  contents: read
 
 jobs:
-  dependabot-autolabeling:
+  # Run the actions and the code of the pull request in a job without the GitHub App’s secrets.
+  check:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     if: ${{ github.event.pull_request.user.login == 'dependabot[bot]' }}
+    permissions:
+      contents: read
+      # For `dependabot/fetch-metadata`, which lists the pull request’s commits.
+      pull-requests: read
+    outputs:
+      for-production: ${{ steps.check.outputs.for-production }}
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1.338.0
         with:
           ruby-version: "4.0"
-          bundler-cache: true
-
-      - name: Generate token
-        id: generate_token
-        uses: getsentry/action-github-app-token@v4.0.0
-        with:
-          app_id: "${{ secrets.KG8M_BOT_APP_ID }}"
-          private_key: "${{ secrets.KG8M_BOT_PRIVATE_KEY }}"
 
       - name: Fetch Dependabot metadata
         id: dependabot-metadata
         uses: dependabot/fetch-metadata@v3.1.0
 
-      - name: Add the "dev-dependencies" label if the updated dependency is for development
+      - name: Check whether the updated dependencies are for production
+        id: check
+        env:
+          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
+        # Fail if the check fails, e.g., for an unknown dependency, instead of treating the dependencies as for
+        # development and merging the pull request automatically.
+        run: |
+          for_production="$(ruby -r ./tools/reverse_dependencies -e "puts ENV.fetch('DEPENDENCY_NAMES').split(/,\s*/).any? { |dep| ReverseDependencies.tanshuku_depends_on?(dep) }")"
+          echo "for-production=${for_production}" >> "${GITHUB_OUTPUT}"
+
+  label:
+    needs: check
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    if: ${{ needs.check.outputs.for-production == 'false' }}
+    permissions: {}
+    steps:
+      # https://github.com/actions/create-github-app-token
+      - name: Generate token
+        id: generate_token
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          client-id: ${{ secrets.KG8M_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.KG8M_BOT_PRIVATE_KEY }}
+          permission-pull-requests: write
+
+      - name: Add the "dev-dependencies" label
         env:
           PR_URL: ${{ github.event.pull_request.html_url }}
-          DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
 
           # Use my GitHub app’s temporary token because the default `GITHUB_TOKEN` prevents other workflows from being
           # triggered on a pull request creation.
           # cf. https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow
           GH_TOKEN: "${{ steps.generate_token.outputs.token }}"
 
-        run: |
-          if bundle exec ruby -r ./tools/reverse_dependencies -e "exit ENV.fetch('DEPENDENCY_NAMES').split(/,\s*/).any? { |dep| ReverseDependencies.tanshuku_depends_on?(dep) }"; then
-            echo "Updated dependencies are for production."
-          else
-            gh pr edit "${PR_URL}" --add-label "dev-dependencies"
-          fi
+        run: gh pr edit "${PR_URL}" --add-label "dev-dependencies"

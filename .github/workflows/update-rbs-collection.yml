@@ -8,12 +8,18 @@ on:
   # For debug
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
+  # Run gems’ code in a job without the GitHub App’s secrets.
   update-rbs-collection:
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
 
       # https://github.com/ruby/setup-ruby
       - name: Setup Ruby
@@ -22,21 +28,51 @@ jobs:
           ruby-version: "4.0"
           bundler-cache: true
 
-      - name: Generate token
-        id: generate_token
-        uses: getsentry/action-github-app-token@v4.0.0
-        with:
-          app_id: ${{ secrets.KG8M_BOT_APP_ID }}
-          private_key: ${{ secrets.KG8M_BOT_PRIVATE_KEY }}
-
       - name: Update RBS collection
-        run: bundle exec rbs collection update > ../output.txt
+        run: |
+          mkdir "${RUNNER_TEMP}/rbs-collection"
+          bundle exec rbs collection update > "${RUNNER_TEMP}/rbs-collection/output.txt"
+          cp rbs_collection.lock.yaml "${RUNNER_TEMP}/rbs-collection/"
 
-      - name: Read ../output.txt
+      - uses: actions/upload-artifact@v7.0.2
+        with:
+          name: rbs-collection
+          path: ${{ runner.temp }}/rbs-collection/
+          if-no-files-found: error
+          retention-days: 1
+
+  create-pull-request:
+    needs: update-rbs-collection
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/download-artifact@v8.0.2
+        with:
+          name: rbs-collection
+          path: ${{ runner.temp }}/rbs-collection/
+
+      - name: Apply the updated lockfile
+        run: cp "${RUNNER_TEMP}/rbs-collection/rbs_collection.lock.yaml" .
+
+      - name: Read output.txt
         id: read-output
         uses: juliangruber/read-file-action@v1.1.8
         with:
-          path: ../output.txt
+          path: ${{ runner.temp }}/rbs-collection/output.txt
+
+      # https://github.com/actions/create-github-app-token
+      - name: Generate token
+        id: generate_token
+        uses: actions/create-github-app-token@v3.3.0
+        with:
+          client-id: ${{ secrets.KG8M_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.KG8M_BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
 
       # https://github.com/peter-evans/create-pull-request
       - name: Create Pull Request
