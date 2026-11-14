@@ -369,6 +369,25 @@ RSpec.describe Tanshuku::Url do
         expect(result2).to eq created.shortened_url
         expect(result3).to eq created.shortened_url
       end
+
+      it "doesn’t generate any key or execute any INSERT query after the first call" do
+        Tanshuku::Url.shorten(original_url)
+
+        allow(Tanshuku::Url).to receive(:generate_key).and_call_original
+
+        executed_sqls = []
+        callback = ->(*, payload) { executed_sqls << payload[:sql] }
+
+        ActiveSupport::Notifications.subscribed(callback, "sql.active_record") do
+          Tanshuku::Url.shorten(original_url)
+          Tanshuku::Url.shorten(original_url)
+        end
+
+        expect(reported_exceptions).to be_empty
+        expect(Tanshuku::Url).not_to have_received(:generate_key)
+        expect(executed_sqls.grep(/\bINSERT\b/i)).to be_empty
+        expect(executed_sqls.grep(/\bSELECT\b/i)).to have_attributes(size: 2)
+      end
     end
 
     context "when original_urls are essentially same" do
