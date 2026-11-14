@@ -81,14 +81,17 @@ module Tanshuku
 
       begin
         transaction do
+          # Find an existing record first because the URL is often already shortened. Otherwise, try to create a new
+          # record. It also handles the race condition of creating records for the same URL.
           record =
-            create_or_find_by!(hashed_url: hash_url(url, namespace:)) do |r|
+            find_or_create_by!(hashed_url: hash_url(url, namespace:)) do |r|
               r.attributes = { url:, key: generate_key }
             end
 
           record.shortened_url(url_options)
         end
-      # ActiveRecord::RecordNotFound is raised when the key is duplicated.
+      # ActiveRecord::RecordNotFound is raised when the key is duplicated: creating a record raises
+      # ActiveRecord::RecordNotUnique, and then no record is found for the hashed URL.
       rescue ActiveRecord::RecordNotFound => e
         if retries < 10
           retries += 1
