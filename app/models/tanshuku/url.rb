@@ -7,7 +7,7 @@ require "rack"
 module Tanshuku
   # rubocop:disable Rails/ApplicationRecord
   #
-  # An +ActiveRecord::Base+ inherited class for a shortened URL. This class also have some logics for shortening URLs.
+  # An +ActiveRecord::Base+ inherited class for a shortened URL. This class also has some logic for shortening URLs.
   class Url < ActiveRecord::Base
     # @!attribute [rw] url
     #   @return [String] Original, i.e., non-shortened, URL of the record.
@@ -44,7 +44,7 @@ module Tanshuku
     #   +shorten("https://google.com")+ have the same result.
     #
     # @param original_url [String] The original, i.e., non-shortened, URL.
-    # @param namespace [String] A namespace for shorteting URL. Shortened URLs are unique in namespaces.
+    # @param namespace [String] A namespace for shortening the URL. Shortened URLs are unique in namespaces.
     # @param url_options [Hash] An option for Rails’ +url_for+.
     #
     # @return [String] A shortened URL if succeeded to shorten the original URL.
