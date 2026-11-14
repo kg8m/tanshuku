@@ -135,6 +135,80 @@ Tanshuku::Url.shorten("https://google.com/", namespace: "a")  #=> "https://examp
 Tanshuku::Url.shorten("https://google.com/", namespace: "a")  #=> "https://example.com/t/ab01cd23ef45gh67ij89"
 ```
 
+#### Security considerations
+
+##### Shortening URLs that contain secrets
+
+You can shorten URLs that contain secrets such as access tokens, but be aware of the following risks.
+
+- Original URLs are stored in the `tanshuku_urls` table as plain text. Anyone who can read the database or its backups can see the secrets.
+- Anyone who knows a shortened URL can access its original URL. Shortened URLs tend to spread through sharing and forwarding.
+- When shortening a URL fails, the default [`config.exception_reporter`](https://kg8m.github.io/tanshuku/Tanshuku/Configuration.html#exception_reporter-instance_method) logs the original URL as is.
+
+If you want to keep secrets out of your logs, configure `config.exception_reporter`. The following example filters query parameters of the original URL with your app’s `config.filter_parameters` and removes its fragment before logging it. If the URL can’t be parsed, it removes the query and the fragment instead.
+
+```rb
+# config/initializers/tanshuku.rb
+Tanshuku.configure do |config|
+  config.exception_reporter =
+    lambda { |exception:, original_url:|
+      filtered_url =
+        begin
+          parameter_filter = ActiveSupport::ParameterFilter.new(Rails.application.config.filter_parameters)
+          uri = Addressable::URI.parse(original_url)
+
+          if uri.query
+            params = parameter_filter.filter(Rack::Utils.parse_nested_query(uri.query))
+            uri.query = Rack::Utils.build_nested_query(params)
+          end
+
+          # Fragments might also contain secrets, e.g., `#access_token=...`.
+          uri.fragment = nil
+          uri.to_s
+        # Shortening a URL often fails because the URL is invalid.
+        rescue StandardError
+          original_url&.sub(/[?#].*/m, "")
+        end
+
+      # Log only the exception’s class because its message might contain the original URL.
+      Rails.logger.warn("Failed to shorten a URL: #{exception.class} for #{filtered_url.inspect}")
+    }
+end
+```
+
+##### Shortening URLs from user input
+
+Tanshuku redirects users to original URLs without checking their hosts, i.e., it redirects to any host. [`config.url_pattern`](https://kg8m.github.io/tanshuku/Tanshuku/Configuration.html#url_pattern-instance_method) only checks the format of URLs and doesn’t ensure that their destinations are safe. For example, both `https://evil.example/` and `//evil.example/` match the default pattern.
+
+So if you shorten URLs from user input, check them in your Rails app, e.g., with an allowlist of hosts. Otherwise, the following risks arise.
+
+- Attackers can abuse your shortened URLs as open redirects. They can lead users to phishing sites with URLs of your trusted domain.
+- Your domain might be added to blocklists of spam filters or safe browsing services. Then emails containing your legitimate shortened URLs might not be delivered, and browsers might show warnings when users access them.
+
+The following example shortens a URL only if it is an absolute path in your app, or if its scheme is HTTP(S) and its host is allowed.
+
+```rb
+# Checks whether a URL can be shortened.
+module ShortenableUrl
+  ALLOWED_HOSTS = %w[example.com www.example.com].freeze
+
+  # Returns true if the URL is an absolute path or an HTTP(S) URL with an allowed host.
+  def self.allowed?(url)
+    uri = Addressable::URI.parse(url)
+
+    if uri.host
+      %w[http https].include?(uri.normalized_scheme) && ALLOWED_HOSTS.include?(uri.normalized_host)
+    else
+      uri.scheme.nil? && uri.path.start_with?("/")
+    end
+  rescue Addressable::URI::InvalidURIError
+    false
+  end
+end
+
+Tanshuku::Url.shorten(user_input) if ShortenableUrl.allowed?(user_input)
+```
+
 #### More information
 
 cf. [`Tanshuku::Url.shorten`’s API documentation](https://kg8m.github.io/tanshuku/Tanshuku/Url.html#shorten-class_method)
