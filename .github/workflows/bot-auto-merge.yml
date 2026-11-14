@@ -6,9 +6,8 @@ on:
     types:
       - labeled
 
-permissions:
-  contents: write
-  pull-requests: write
+# Use my GitHub app’s token instead of `GITHUB_TOKEN`.
+permissions: {}
 
 jobs:
   bot-auto-merge:
@@ -17,12 +16,15 @@ jobs:
       contains(fromJSON('["dependabot[bot]", "kg8m-bot[bot]"]'), github.event.pull_request.user.login) &&
       github.event.label.name == 'dev-dependencies'
     steps:
+      # https://github.com/actions/create-github-app-token
       - name: Generate token
         id: generate_token
-        uses: getsentry/action-github-app-token@v4.0.0
+        uses: actions/create-github-app-token@v3.3.0
         with:
-          app_id: "${{ secrets.KG8M_BOT_APP_ID }}"
-          private_key: "${{ secrets.KG8M_BOT_PRIVATE_KEY }}"
+          client-id: ${{ secrets.KG8M_BOT_CLIENT_ID }}
+          private-key: ${{ secrets.KG8M_BOT_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
       - name: Enable auto-merge for bot PRs
         run: gh pr merge --auto --merge "$PR_URL"
         env:
