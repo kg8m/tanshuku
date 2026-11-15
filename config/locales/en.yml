@@ -6,6 +6,8 @@ en:
           attributes:
             url:
               invalid: should start with https://, http://, or /
+            key:
+              invalid: should not contain dots (.)
     models:
       tanshuku/url: Shortened URL
     attributes:

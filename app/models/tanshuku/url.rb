@@ -29,6 +29,10 @@ module Tanshuku
     validates :url, length: { maximum: proc { Tanshuku.config.max_url_length } }
     validates :url, format: { with: proc { Tanshuku.config.url_pattern } }, allow_blank: true
 
+    # Don’t allow dots in keys because a dot in a path is treated as a separator of the format by the routing, e.g.,
+    # `/t/abc.json` is routed to the key `abc` with the format `json`.
+    validates :key, format: { without: /\./ }, allow_blank: true
+
     # Don’t validate uniqueness of unique attributes. Raise ActiveRecord::RecordNotUnique instead if the attributes get
     # duplicated. Then rescue the exception and try to retry.
     # validates :url, :hashed_url, :key, uniqueness: true

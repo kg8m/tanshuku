@@ -6,6 +6,8 @@ ja:
           attributes:
             url:
               invalid: は https://、 http://、 / のいずれかで始まる必要があります
+            key:
+              invalid: に .（ドット）を含めることはできません
     models:
       tanshuku/url: 短縮URL
     attributes:

@@ -43,5 +43,15 @@ RSpec.describe "locales: ja" do
         expect(tanshuku_url.errors.full_messages_for(:url)).to eq ["URL は https://、 http://、 / のいずれかで始まる必要があります"]
       end
     end
+
+    describe "key.invalid" do
+      before do
+        tanshuku_url.errors.add(:key, :invalid)
+      end
+
+      it "uses a custom error message" do
+        expect(tanshuku_url.errors.full_messages_for(:key)).to eq ["ユニークキー に .（ドット）を含めることはできません"]
+      end
+    end
   end
 end
