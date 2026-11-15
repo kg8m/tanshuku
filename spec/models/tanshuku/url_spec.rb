@@ -169,6 +169,27 @@ RSpec.describe Tanshuku::Url do
         end
       end
     end
+
+    describe "key format" do
+      context "when key doesn’t contain any dot" do
+        it "is valid" do
+          ["abcdefghij0123456789", "a-b_c~d", "a/b", "a?b", "a#b", "a%b", "a b"].each do |valid_key|
+            record.key = valid_key
+            expect(record).to be_valid, "key: #{valid_key.inspect}"
+          end
+        end
+      end
+
+      context "when key contains dots" do
+        it "is invalid" do
+          ["a.b", ".abc", "abc.", "a.b.c"].each do |invalid_key|
+            record.key = invalid_key
+            expect(record).not_to be_valid, "key: #{invalid_key.inspect}"
+            expect(record.errors).to(be_of_kind(:key, :invalid), "key: #{invalid_key.inspect}")
+          end
+        end
+      end
+    end
   end
 
   describe ".shorten" do
@@ -481,6 +502,34 @@ RSpec.describe Tanshuku::Url do
           expect(reported_exceptions).to have_attributes(size: 1)
           expect(reported_exceptions.first).to be_a ActiveRecord::RecordNotFound
         end
+      end
+    end
+
+    context "when key_generator generates a key containing a dot" do
+      let(:original_url) { "https://google.com/" }
+
+      before do
+        Tanshuku.configure do |config|
+          config.key_generator = -> { "abcdefghij.123456789" }
+        end
+      end
+
+      after do
+        Tanshuku.configure do |config|
+          config.key_generator = Tanshuku::Configuration::DefaultKeyGenerator
+        end
+      end
+
+      it "doesn’t create any Tanshuku::Url record, reports ActiveRecord::RecordInvalid, and returns the original_url" do
+        result =
+          assert_no_difference -> { Tanshuku::Url.count } do
+            Tanshuku::Url.shorten(original_url)
+          end
+        expect(result).to eq original_url
+
+        expect(reported_exceptions).to have_attributes(size: 1)
+        expect(reported_exceptions.first).to be_a ActiveRecord::RecordInvalid
+        expect(reported_exceptions.first.record.errors).to be_of_kind :key, :invalid
       end
     end
 

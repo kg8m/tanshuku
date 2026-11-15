@@ -43,5 +43,15 @@ RSpec.describe "locales: en" do
         expect(tanshuku_url.errors.full_messages_for(:url)).to eq ["URL should start with https://, http://, or /"]
       end
     end
+
+    describe "key.invalid" do
+      before do
+        tanshuku_url.errors.add(:key, :invalid)
+      end
+
+      it "uses a custom error message" do
+        expect(tanshuku_url.errors.full_messages_for(:key)).to eq ["unique key should not contain dots (.)"]
+      end
+    end
   end
 end
