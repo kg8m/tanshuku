@@ -271,4 +271,5 @@ A. Does Tanshuku have some missing features? Please [create an issue](https://gi
 1. Make your repository fresh
 1. `bump current` and confirm the current version
 1. `bump patch`, `bump minor`, or `bump major`
-1. `rake release`
+1. `gem_push=no rake release` to create a tag and push it with the branch
+1. Approve the triggered [“Create a Release” workflow](.github/workflows/create-release.yml), which pushes the gem to RubyGems.org and creates a GitHub Release

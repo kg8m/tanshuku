@@ -7,15 +7,46 @@ on:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+*"
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
-  create-github-release:
-    name: Create a Release
+  release-gem:
+    name: Release the gem
     runs-on: ubuntu-latest
+    # The `release` environment requires approval before running this job.
+    environment: release
+    permissions:
+      contents: read
+      # For trusted publishing to RubyGems.org.
+      # https://guides.rubygems.org/trusted-publishing/
+      id-token: write
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      # https://github.com/ruby/setup-ruby
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1.338.0
+        with:
+          ruby-version: "4.0"
+          bundler-cache: true
+
+      # https://github.com/rubygems/release-gem
+      - name: Release the gem
+        uses: rubygems/release-gem@v1.4.1
+    timeout-minutes: 10
+
+  create-github-release:
+    name: Create a Release
+    needs: release-gem
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - name: gh release create
         run: gh release create "${TAG_NAME}" --generate-notes
         env:
