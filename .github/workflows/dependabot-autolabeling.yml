@@ -36,11 +36,24 @@ jobs:
       - name: Check whether the updated dependencies are for production
         id: check
         env:
+          PACKAGE_ECOSYSTEM: ${{ steps.dependabot-metadata.outputs.package-ecosystem }}
           DEPENDENCY_NAMES: ${{ steps.dependabot-metadata.outputs.dependency-names }}
-        # Fail if the check fails, e.g., for an unknown dependency, instead of treating the dependencies as for
-        # development and merging the pull request automatically.
+        # Fail if the check fails, e.g., for an unknown dependency or ecosystem, instead of treating the dependencies as
+        # for development and merging the pull request automatically.
         run: |
-          for_production="$(ruby -r ./tools/reverse_dependencies -e "puts ENV.fetch('DEPENDENCY_NAMES').split(/,\s*/).any? { |dep| ReverseDependencies.tanshuku_depends_on?(dep) }")"
+          case "${PACKAGE_ECOSYSTEM}" in
+            bundler)
+              for_production="$(ruby -r ./tools/reverse_dependencies -e "puts ENV.fetch('DEPENDENCY_NAMES').split(/,\s*/).any? { |dep| ReverseDependencies.tanshuku_depends_on?(dep) }")"
+              ;;
+            github_actions)
+              # Workflows aren’t included in the gem.
+              for_production="false"
+              ;;
+            *)
+              echo "Unknown package ecosystem: ${PACKAGE_ECOSYSTEM}" >&2
+              exit 1
+              ;;
+          esac
           echo "for-production=${for_production}" >> "${GITHUB_OUTPUT}"
 
   label:
